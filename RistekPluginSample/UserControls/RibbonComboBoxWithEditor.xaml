@@ -1,0 +1,69 @@
+﻿<RibbonComboBox x:Class="RistekPluginSample.UserControls.RibbonComboBoxWithEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:local="clr-namespace:RistekPluginSample.UserControls"
+             mc:Ignorable="d" 
+             SizeChanged="ComboBox_SizeChanged"
+             DropDownClosed="ComboBox_DropDownClosed"
+             Loaded="ComboBox_Loaded"
+             IsEditable="False"
+          >
+            <!--now its added programically-->
+            <!--
+             ItemTemplateSelector="{DynamicResource itemTemplateSelector}"
+            -->
+    <behaviors:Interaction.Triggers>
+        <behaviors:EventTrigger EventName="Loaded">
+            <behaviors:InvokeCommandAction Command="{Binding LoadedCommand}"/>
+        </behaviors:EventTrigger>
+    </behaviors:Interaction.Triggers>
+    <RibbonComboBox.Resources>
+        <!--now its added programically-->
+        <!--
+        <DataTemplate x:Key="selectedTemplate">
+            <TextBlock Name="textBlockSelectedDownTemplate" Text="{Binding Path=ShortDescriptionPropertyNamePutHere}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="dropDownTemplate">
+            <TextBlock Name="textBlockDropDownTemplate" Text="{Binding Path=FullDescriptionPropertyNamePutHere}"/>
+        </DataTemplate>
+        -->
+        <!--now its added programically-->
+        <!--
+        <local:ComboBoxItemTemplateSelector
+            x:Key="itemTemplateSelector"
+            SelectedTemplate="{StaticResource selectedTemplate}"
+            DropDownTemplate="{StaticResource dropDownTemplate}"
+            />
+        -->
+    </RibbonComboBox.Resources>
+    <!--now its added programically-->
+    <!--
+    <ComboBox.ItemContainerStyle>
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="ToolTip">
+                <Setter.Value>
+                    <TextBlock Text="{Binding Path=SnowExposureDesc}" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </ComboBox.ItemContainerStyle>
+    -->
+    <!--
+    <RibbonGallery
+        Name="ribbonGallery"
+        SelectionChanged="RibbonGallery_SelectionChanged"
+        >
+        <RibbonGallery.Resources>
+        </RibbonGallery.Resources>
+        <RibbonGalleryCategory 
+            Name="ribbonGalleryCategory"
+            >
+            <RibbonGalleryCategory.Resources>
+            </RibbonGalleryCategory.Resources>
+        </RibbonGalleryCategory>
+    </RibbonGallery>
+    -->
+</RibbonComboBox>

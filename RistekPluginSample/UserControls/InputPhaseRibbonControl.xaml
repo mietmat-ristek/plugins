@@ -1,0 +1,263 @@
+﻿    <RibbonGroup 
+        x:Class="RistekPluginSample.UserControls.InputPhaseRibbonControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RistekPluginSample.UserControls"
+			 xmlns:localRTSam="clr-namespace:RistekPluginSample"
+             xmlns:Converters="clr-namespace:RistekPluginSample.Converters"
+			 xmlns:Translate="clr-namespace:RistekPluginSample.Strings" 
+			 xmlns:controls_ParametricTrusses="clr-namespace:Epx.Ristek.ParametricTrusses;assembly=LLDesigner.ParametricTrusses"
+			 mc:Ignorable="d" 
+			 x:Name="ribbonGroup_locationParams" Header="_Parameters" 
+            Width="425"
+        >
+    <RibbonGroup.HeaderTemplate>
+        <DataTemplate>
+            <DockPanel
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                >
+                <TextBlock x:Name="HeaderModifiedBase" 
+                     Text="{Binding RelativeSource={RelativeSource AncestorType=RibbonGroup}, Path=Header, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                       />
+                <TextBlock x:Name="HeaderModifiedSpacePrefix" 
+                     Text=" ["
+                         Visibility="Collapsed"
+                       />
+                <TextBox x:Name="HeaderModifiedTextBoxAppendix" 
+                     BorderThickness="0"
+                     IsReadOnly="True"
+                     Background="Transparent"
+                     Text="v0.0.0.0 ()" 
+                         Style="{Binding RelativeSource={RelativeSource AncestorType=RibbonTabHeaderItemsControl}, Path=Style}"
+                         Visibility="Collapsed"
+                       />
+                <TextBlock x:Name="HeaderModifiedSpaceSufffix" 
+                     Text="]"
+                         Visibility="Collapsed"
+                       />
+            </DockPanel>
+        </DataTemplate>
+    </RibbonGroup.HeaderTemplate>
+    <Grid 
+            x:Name="grid"
+        Width="{Binding ElementName=ribbonGroup_locationParams, Path=ActualWidth}" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="24" />
+            <RowDefinition Height="24" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <WrapPanel
+            x:Name="ribbonComboBox_PlaneAlignement_WrapPanel"
+            Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" 
+            >
+            <Label
+                x:Name="ribbonComboBox_PlaneAlignement_externalLabel"
+                FontSize="20"
+                VerticalAlignment="Center"
+                />
+            <RibbonComboBox x:Name="ribbonComboBox_PlaneAlignement" 
+                VerticalAlignment="Center"
+                Label="1" 
+                IsEditable="False" 
+                >
+                <!--
+                Label="{Binding Source={x:Static Translate:Strings._PlaneAlignementDesc}}"
+                -->
+                <RibbonGallery MaxColumnCount="1"
+                           DisplayMemberPath="Description" 
+                           SelectedValue="{Binding Path=PlaneAlignement}"  
+                           SelectedValuePath="Value"
+                           >
+                    <RibbonGalleryCategory
+                        ItemsSource="{Binding Source={Converters:Enumeration {x:Type localRTSam:PlaneAlignementEnum}}}" 
+                        DisplayMemberPath="Description" 
+                        HorizontalContentAlignment="Stretch"
+                        />
+                    <!--
+                <RibbonGalleryCategory>
+                    <RibbonGalleryItem Content="Green" />
+                    <RibbonGalleryItem Content="Blue" />
+                    <RibbonGalleryItem Content="Orange" />
+                </RibbonGalleryCategory>
+                -->
+                </RibbonGallery>
+            </RibbonComboBox>
+        </WrapPanel>
+        <WrapPanel
+            x:Name="numberRibbonTextBox_OffsetPerpendicular_WrapPanel"
+            Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" 
+            >
+            <Label
+                x:Name="numberRibbonTextBox_OffsetPerpendicular_externalLabel"
+                FontSize="20"
+                VerticalAlignment="Center"
+                />
+            <local:NumberRibbonTextBox
+                VerticalAlignment="Center"
+                x:Name="numberRibbonTextBox_OffsetPerpendicular"
+                Text="{Binding Path=BeamTrussOffsetPerpendicular_mm, UpdateSourceTrigger=Explicit}"
+                Label="2" 
+                AllowNegative="True"
+                />
+        </WrapPanel>
+        <WrapPanel
+            x:Name="numberRibbonTextBox_OffsetLengwiseBottom_WrapPanel"
+            Grid.Column="1" Grid.Row="0" HorizontalAlignment="Right" 
+            >
+            <Label
+                x:Name="numberRibbonTextBox_OffsetLengwiseBottom_externalLabel"
+                FontSize="20"
+                VerticalAlignment="Center"
+                />
+            <local:NumberRibbonTextBox
+                x:Name="numberRibbonTextBox_OffsetLengwiseBottom"
+                VerticalAlignment="Center"
+                Label="3" 
+                Text="{Binding Path=BeamTrussOffsetLengwiseBottom_mm, UpdateSourceTrigger=Explicit}"
+                AllowNegative="True"
+                />
+        </WrapPanel>
+        <WrapPanel
+            x:Name="numberRibbonTextBox_OffsetLengwiseTop_WrapPanel"
+            Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" 
+            >
+            <Label
+                x:Name="numberRibbonTextBox_OffsetLengwiseTop_externalLabel"
+                FontSize="20"
+                VerticalAlignment="Center"
+                />
+            <local:NumberRibbonTextBox
+                x:Name="numberRibbonTextBox_OffsetLengwiseTop"
+                VerticalAlignment="Center"
+                Label="4" 
+                Text="{Binding Path=BeamTrussOffsetLengwiseTop_mm, UpdateSourceTrigger=Explicit}"
+                AllowNegative="True"
+                />
+        </WrapPanel>
+        <WrapPanel
+            x:Name="numberRibbonTextBox_OutreachPerpPrimary_WrapPanel"
+            Grid.Column="2" Grid.Row="0" HorizontalAlignment="Right" 
+            >
+            <Label
+                x:Name="numberRibbonTextBox_OutreachPerpPrimary_externalLabel"
+                FontSize="20"
+                VerticalAlignment="Center"
+                />
+            <local:NumberRibbonTextBox
+                x:Name="numberRibbonTextBox_OutreachPerpPrimary"
+                VerticalAlignment="Center"
+                Label="7" 
+                Text="{Binding Path=BeamTrussOutreachPerpPrimary_mm, UpdateSourceTrigger=Explicit}"
+                AllowNegative="True"
+                />
+        </WrapPanel>
+        <WrapPanel
+            x:Name="numberRibbonTextBox_OutreachPerpSeccondary_WrapPanel"
+            Grid.Column="2" Grid.Row="1" HorizontalAlignment="Right" 
+            >
+            <Label
+                x:Name="numberRibbonTextBox_OutreachPerpSeccondary_externalLabel"
+                FontSize="20"
+                VerticalAlignment="Center"
+                />
+            <local:NumberRibbonTextBox
+                x:Name="numberRibbonTextBox_OutreachPerpSeccondary"
+                VerticalAlignment="Center"
+                Label="8" 
+                Text="{Binding Path=BeamTrussOutreachPerpSeccondary_mm, UpdateSourceTrigger=Explicit}"
+                AllowNegative="True"
+                />
+        </WrapPanel>
+        <CheckBox
+            Grid.Column="0" Grid.Row="2" 
+            Grid.ColumnSpan="1"
+            HorizontalAlignment="Left" 
+            HorizontalContentAlignment="Left"
+                x:Name="checkBox_isKnagaMode"
+                VerticalAlignment="Top"
+                IsChecked="{Binding Path=IsKnagaMode_technicalExternallySettedFlag}"
+            IsEnabled="False" Checked="CheckBox_isKnagaMode_Checked"
+                >
+            <AccessText 
+                    Name="checkBox_isKnagaMode_AccessText" 
+                    TextWrapping="Wrap" Text="6"
+                    />
+        </CheckBox>
+        <CheckBox
+            Grid.Column="1" Grid.Row="2" 
+            Grid.ColumnSpan="1"
+            HorizontalAlignment="Left" 
+            HorizontalContentAlignment="Left"
+            Margin="8 0 0 0"
+                x:Name="checkBox_AutosetTrussParamsInEditMode"
+                VerticalAlignment="Top"
+                IsChecked="{Binding Path=AutosetTrussParamsInEditMode}"
+                >
+            <AccessText 
+                    Name="checkBox_AutosetTrussParamsInEditMode_AccessText" 
+                    TextWrapping="Wrap" Text="5"
+                    />
+        </CheckBox>
+        <CheckBox
+            Grid.Column="2" Grid.Row="2" 
+            Grid.ColumnSpan="1"
+            Margin="8 0 0 0"
+            HorizontalAlignment="Left" 
+            HorizontalContentAlignment="Left"
+                x:Name="checkBox_isAutoaddSupports"
+                VerticalAlignment="Top"
+                IsChecked="{Binding Path=AutoaddSupports}"
+            IsEnabled="False"
+                >
+            <AccessText 
+                    Name="checkBox_isAutoaddSupports_AccessText" 
+                    TextWrapping="Wrap" Text="9"
+                    />
+        </CheckBox>
+        <local:RibbonComboBoxWithEditor x:Name="ribbonComboBoxWithEditor_PlaneAlignement" 
+        Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right" 
+                                    IsExternalsInitialized="{Binding Path=IsRistekPluginInitializedFinal_technicalExternallySettedFlag, Mode=OneWay}"
+                                    ItemsSourceBindingPathSubstitution="PlaneAlignementListFull" 
+                                    SelectedValueBindingPathSubstitution="PlaneAlignementWrapperObj" 
+                                    ExternalItemEditableFieldName="StoredEnumDouble"
+                                    DataTemplateSelectedTemplatePropertyName="StoredEnumDoublePresentation"
+                                    DataTemplateDropDownTemplatePropertyName="StoredEnumPresentationFull"
+                                    ItemToolTipPropertyName="StoredEnumDesc"
+            Visibility="Collapsed"
+                                    />
+        <RibbonComboBox Name="RibbonComboBox_GreenTmp" Label="1" 
+        Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" 
+                  VerticalAlignment="Center" 
+                  IsEditable="False" 
+            Visibility="Collapsed"
+                        >
+            <RibbonGallery MaxColumnCount="1"
+                       SelectedValue="Green"
+                       SelectedValuePath="Content"
+                       >
+                <RibbonGalleryCategory>
+                    <RibbonGalleryItem Content="Green" Foreground="Green" />
+                    <RibbonGalleryItem Content="Blue" Foreground="Blue" ToolTip="xxxzzz" />
+                    <RibbonGalleryItem Content="Orange" Foreground="Orange" />
+                </RibbonGalleryCategory>
+            </RibbonGallery>
+        </RibbonComboBox>
+    </Grid>
+    <!--
+        <RibbonMenuButton LargeImageSource="Images\personal.png" Label="Employee" KeyTip="V">
+            <RibbonMenuItem ImageSource="Images\paste.png" Header="Keep Text Only" KeyTip="T"/>
+            <RibbonMenuItem ImageSource="Images\paste.png" Header="Paste Special..." KeyTip="S"/>
+        </RibbonMenuButton>
+        <RibbonButton SmallImageSource="Images\save.png" Label="Save" KeyTip="X" />
+        <RibbonButton SmallImageSource="Images\add.png" Label="Add" KeyTip="C" />
+        -->
+</RibbonGroup>
