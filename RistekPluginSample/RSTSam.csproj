@@ -75,6 +75,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="AdmSamplePlugin.cs" />
     <Compile Include="DataContainerClass.cs" />
     <Compile Include="InsertMemberPlugin.cs" />

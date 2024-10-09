@@ -548,6 +548,18 @@ namespace RistekPluginSample
             return (xAxis, yAxis, zAxis);
         }
 
+        public static Point3D RotateAroundZ(Point3D point, double angleInRadians)
+        {
+            double cosA = Math.Cos(angleInRadians);
+            double sinA = Math.Sin(angleInRadians);
+
+            double xNew = point.X * cosA - point.Y * sinA;
+            double yNew = point.X * sinA + point.Y * cosA;
+            double zNew = point.Z; 
+
+            return new Point3D(xNew, yNew, zNew);
+        }
+
         // not tested
         public static (Point3D, Vector3D) ConvertPlaneDefinitionToOriginAndNormal(Vector3D Xaxis, Vector3D Yaxis, Vector3D Zaxis)
         {

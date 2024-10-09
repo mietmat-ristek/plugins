@@ -194,13 +194,25 @@ namespace RistekPluginSample.Strings {
                 return ResourceManager.GetString("_LoadingFileError_DocumentSerializer", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Generating beam truss between two selected trusses..
         /// </summary>
-        internal static string _MenuToolTip {
-            get {
+        internal static string _MenuToolTip
+        {
+            get
+            {
                 return ResourceManager.GetString("_MenuToolTip", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Generating beam truss between two selected trusses..
+        /// </summary>
+        internal static string _MenuToolTipInsertMemberObject
+        {
+            get {
+                return ResourceManager.GetString("_MenuToolTipInsertMemberObject", resourceCulture);
             }
         }
         
@@ -381,6 +393,17 @@ namespace RistekPluginSample.Strings {
         internal static string adm_sample_plugin_member {
             get {
                 return ResourceManager.GetString("adm_sample_plugin_member", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Beam Truss with simplified input.
+        /// </summary>
+        internal static string insert_member_object_plugin
+        {
+            get
+            {
+                return ResourceManager.GetString("insert_member_object_plugin", resourceCulture);
             }
         }
     }

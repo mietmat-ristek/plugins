@@ -118,7 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="adm_sample_plugin_member" xml:space="preserve">
-    <value>Stężęnie (dodawanie uproszczone)</value>
+    <value>Stężenie (dodawanie uproszczone)</value>
+  </data>
+  <data name="insert_member_object_plugin" xml:space="preserve">
+    <value>Dodaj belkę</value>
   </data>
   <data name="_PlaneAlignementEnum_toAxis" xml:space="preserve">
     <value>oś</value>
@@ -176,6 +179,9 @@
   </data>
   <data name="_MenuToolTip" xml:space="preserve">
     <value>Automatyczne dodawanie stężenia pomiędzy dwoma wskazanymi wiązarami.</value>
+  </data>
+  <data name="_MenuToolTipInsertMemberObject" xml:space="preserve">
+    <value>Automatyczne dodawanie belki pomiędzy dwoma wskazanymi wiązarami.</value>
   </data>
   <data name="_preInputs0" xml:space="preserve">
     <value>Wybierz belkę w pierwszym wiązarze</value>

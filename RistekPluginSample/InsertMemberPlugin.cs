@@ -83,7 +83,6 @@ namespace RistekPluginSample
         /// Input object storage method 1.
         /// </summary>
         private List<PluginInput> _preInputs = null;
-
         /// <summary>
         /// Gets the next pre-dialog input. There are two methods to keep track of the inputs inside the plugin:
         /// 1. Initialize a private list with all of the inputs once and return the one with the next index. The input
@@ -101,17 +100,17 @@ namespace RistekPluginSample
             {
                 _preInputs = new List<PluginInput>();
 
-                PluginPointInput pointInput = new PluginPointInput();
-                pointInput.Index = 0;
-                pointInput.Prompt = "Select the point for first truss";
-                if (CurrentUICulture.ThreeLetterISOLanguageName == "fin") pointInput.Prompt = "Valitse ensimmäinen piste"; // alternative to Resx dictionary
-                _preInputs.Add(pointInput);
+                PluginObjectInput objectInput1 = new PluginObjectInput();
+                objectInput1.Index = 0;
+                objectInput1.Prompt = "Select the first beam";
+                if (CurrentUICulture.ThreeLetterISOLanguageName == "fin") objectInput1.Prompt = "Valitse ensimmäinen piste"; // alternative to Resx dictionary
+                _preInputs.Add(objectInput1);
 
-                PluginPointInput pointInput2 = new PluginPointInput();
-                pointInput2.Index = 1;
-                pointInput2.Prompt = "Select the point for second truss";
-                if (CurrentUICulture.ThreeLetterISOLanguageName == "fin") pointInput2.Prompt = "Valitse toinen piste";
-                _preInputs.Add(pointInput2);
+                PluginObjectInput objectInput2 = new PluginObjectInput();
+                objectInput2.Index = 1;
+                objectInput2.Prompt = "Select the second beam";
+                if (CurrentUICulture.ThreeLetterISOLanguageName == "fin") objectInput2.Prompt = "Valitse toinen piste";
+                _preInputs.Add(objectInput2);
             }
 
             if (previousInput == null) return _preInputs != null ? _preInputs[0] : null;
@@ -126,15 +125,15 @@ namespace RistekPluginSample
         /// <returns><c>true</c> if [is pre dialog input valid] [the specified plugin input]; otherwise, <c>false</c>.</returns>
         public override bool IsPreDialogInputValid(PluginInput pluginInput)
         {
-            if (pluginInput.Index == 0 && pluginInput is PluginPointInput)
+            if (pluginInput.Index == 0 && pluginInput is PluginObjectInput)
             {
                 pluginInput.Valid = true;
                 return true;
             }
             else if (pluginInput.Index == 1)
             {
-                PluginPointInput ppi = pluginInput as PluginPointInput;
-                if (ppi == null)
+                PluginObjectInput poi = pluginInput as PluginObjectInput;
+                if (poi == null)
                 {
                     pluginInput.Valid = false;
                     pluginInput.ErrorMessage = "Wrong input type";
@@ -143,7 +142,7 @@ namespace RistekPluginSample
                 }
                 else
                 {
-                    if ((ppi.Point - (_preInputs[0] as PluginPointInput).Point).Length < 1)
+                    if ((poi.Point - (_preInputs[0] as PluginObjectInput).Point).Length < 1)
                     {
                         pluginInput.Valid = false;
                         pluginInput.ErrorMessage = "First and second point cannot be the same";
@@ -169,6 +168,7 @@ namespace RistekPluginSample
         private System.Windows.Window _dialog;
         private TextBox _beamHeight;
         private TextBox _beamThickness;
+        private TextBox _beamHorizontalInsertionDistance;
         private TextBox _beamStartExtension;
         private TextBox _beamEndExtension;
         private ComboBox _comboBox;
@@ -205,6 +205,48 @@ namespace RistekPluginSample
             var mainStack = new StackPanel() { Name = "MainStack", Margin = new Thickness(8) };
             mainStack.Orientation = Orientation.Vertical;
 
+            CreateChapterTitleRow(mainStack, Constants.TitleChapter1BeamSettings);
+            CreateBeamDimensionsRow(mainStack);
+            CreateAlignementOptionRow(mainStack);
+            CreateBeamExtensionRow(mainStack);
+            CreateChapterTitleRow(mainStack, Constants.TitleChapter2BeamLocation);
+            CreateBeamLocationRow(mainStack);
+
+
+            CreateFinalButtonRow(mainStack);
+
+            _dialog.Content = mainStack;
+            _dialog.Closed += (s, a) => { _dialog = null; PluginEngine?.PluginDialogClosed(DialogResult); };
+            _dialog.Show();
+
+            return false;
+        }
+
+        private void CreateChapterTitleRow(StackPanel mainStack, string chapterTitle)
+        {
+            var chapetrTitleStack = new StackPanel() { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 8) };
+            var chapetrTitleStackText = new TextBlock()
+            {
+                Text = chapterTitle,
+                Margin = new Thickness(0, 0, 4, 0),
+                FontWeight = FontWeights.Bold
+            };
+            chapetrTitleStack.Children.Add(chapetrTitleStackText);
+            mainStack.Children.Add(chapetrTitleStack);
+        }
+
+        private void CreateFinalButtonRow(StackPanel mainStack)
+        {
+            var buttonStack = new StackPanel() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
+            var generateButton = new Button() { Content = "Draw Beam", Width = 80, Margin = new Thickness(0, 0, 4, 0) };
+            generateButton.Click += OnCreateButtonClicked;
+            generateButton.Click += (s, a) => { this.DialogResult = true; _dialog.Close(); };
+            buttonStack.Children.Add(generateButton);
+            mainStack.Children.Add(buttonStack);
+        }
+
+        private void CreateBeamDimensionsRow(StackPanel mainStack)
+        {
             var thicknessHeightStack = new StackPanel() { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 8) };
             var thicknessHeightStackText = new TextBlock() { Text = "Set beam dimensions: ", Margin = new Thickness(0, 0, 4, 0) };
             thicknessHeightStack.Children.Add(thicknessHeightStackText);
@@ -218,7 +260,23 @@ namespace RistekPluginSample
             thicknessHeightStack.Children.Add(_beamHeight);
 
             mainStack.Children.Add(thicknessHeightStack);
+        }
 
+        private void CreateBeamLocationRow(StackPanel mainStack)
+        {
+            var beamLocationStack = new StackPanel() { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 8) };
+            var beamLocationStackStackText = new TextBlock() { Text = "Set the beam horizontal insertion distance (from reference beam): ", Margin = new Thickness(0, 0, 4, 0) };
+            beamLocationStack.Children.Add(beamLocationStackStackText);
+
+            _beamHorizontalInsertionDistance = CreateTextBox("InputBox", 120, new Thickness(0, 0, 4, 0), "Beam horizontal distance [mm]");
+            HandleNumericTextBox(_beamHorizontalInsertionDistance);
+            beamLocationStack.Children.Add(_beamHorizontalInsertionDistance);
+
+            mainStack.Children.Add(beamLocationStack);
+        }
+
+        private void CreateAlignementOptionRow(StackPanel mainStack)
+        {
             var comboBoxStack = new StackPanel() { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 8) };
             var comboBoxText = new TextBlock() { Text = "Select Vertical Beam Alignement Option:", Margin = new Thickness(0, 0, 4, 0) };
             comboBoxStack.Children.Add(comboBoxText);
@@ -231,7 +289,10 @@ namespace RistekPluginSample
             comboBoxStack.Children.Add(_comboBox);
 
             mainStack.Children.Add(comboBoxStack);
+        }
 
+        private void CreateBeamExtensionRow(StackPanel mainStack)
+        {
             var beamExtensionStack = new StackPanel() { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 8) };
             var beamExtensionText = new TextBlock() { Text = "Set beam extension:", Margin = new Thickness(0, 0, 4, 0) };
             beamExtensionStack.Children.Add(beamExtensionText);
@@ -245,20 +306,6 @@ namespace RistekPluginSample
             beamExtensionStack.Children.Add(_beamEndExtension);
 
             mainStack.Children.Add(beamExtensionStack);
-
-            var buttonStack = new StackPanel() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
-            var generateButton = new Button() { Content = "Draw Beam", Width = 80, Margin = new Thickness(0, 0, 4, 0) };
-            generateButton.Click += OnCreateButtonClicked;
-            generateButton.Click += (s, a) => { this.DialogResult = true; _dialog.Close(); };
-            buttonStack.Children.Add(generateButton);
-
-            mainStack.Children.Add(buttonStack);
-
-            _dialog.Content = mainStack;
-            _dialog.Closed += (s, a) => { _dialog = null; PluginEngine?.PluginDialogClosed(DialogResult); };
-            _dialog.Show();
-
-            return false;
         }
 
         private void HandleNumericTextBox(TextBox textBox)
@@ -311,6 +358,7 @@ namespace RistekPluginSample
         {
             double beamHeight;
             double thickness;
+            double beamHorizontalInsertionDistance;
             double beamsStartExtension;
             double beamsEndExtension;
 
@@ -318,8 +366,61 @@ namespace RistekPluginSample
             _myTruss = new TrussFrame("Truss");
             Member member = new Member("AP");
 
-            _myTruss.Origin = (_preInputs[0] as PluginPointInput).Point;
-            _myTruss.XAxis = (_preInputs[1] as PluginPointInput).Point - (_preInputs[0] as PluginPointInput).Point;
+            Member m0 = GetTrussMemberFromPluginInput_(_preInputs[0]);
+            Member m1 = GetTrussMemberFromPluginInput_(_preInputs[1]);
+
+            if (double.TryParse(_beamHorizontalInsertionDistance.Text, out beamHorizontalInsertionDistance))
+            {
+                beamHorizontalInsertionDistance = double.Parse(_beamHorizontalInsertionDistance.Text);
+            }
+            else
+            {
+                MessageBox.Show("Wrong beam thickness value.");
+            }
+
+            var distXm0Center = m0.PartCSToGlobal.OffsetX;
+            var distYm0Center = m0.PartCSToGlobal.OffsetY;
+            var distZm0Center = m0.PartCSToGlobal.OffsetZ;
+            var distXm1Center = m1.PartCSToGlobal.OffsetX;
+            var distYm1Center = m1.PartCSToGlobal.OffsetY;
+            var distZm1Center = m1.PartCSToGlobal.OffsetZ;
+
+            double distanceBeetweenTrusses = Math.Abs(distYm1Center - distYm0Center) - m1.Thickness / 2;
+
+            double startPointXm0 = m0.AlignedStartPoint.X;
+            double endPointXm0 = m0.AlignedEndPoint.X;
+            double startPointZm0 = m0.AlignedStartPoint.Y;
+            double endPointZm0 = m0.AlignedEndPoint.Y;
+            double startPointXm1 = m1.AlignedStartPoint.X;
+            double endPointXm1 = m1.AlignedEndPoint.X;
+            double startPointZm1 = m1.AlignedStartPoint.Y;
+            double endPointZm1 = m1.AlignedEndPoint.Y;
+
+
+            Point3D startPoint3Dm0 = new Point3D(startPointXm0, distYm0Center, startPointZm0);
+            Point3D endPoint3Dm0 = new Point3D(endPointXm0, distYm0Center, endPointZm0);
+            Point3D startPoint3Dm1 = new Point3D(startPointXm1, distYm1Center, startPointZm1);
+            Point3D endPoint3Dm1 = new Point3D(endPointXm1, distYm1Center, endPointZm1);
+
+            var deltaX = endPoint3Dm0.X - startPoint3Dm0.X;
+            var deltaY = endPoint3Dm0.Y - startPoint3Dm0.Y;
+            var deltaZ = endPoint3Dm0.Z - startPoint3Dm0.Z;
+
+            var deltaTotal = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
+            var ux = deltaX / deltaTotal;
+            var uy = deltaY / deltaTotal;
+
+            var dH = beamHorizontalInsertionDistance;
+            var xNew = startPointXm0 + ux * dH;
+            var yNew = distYm0Center + uy * dH;
+            var zNew = startPointZm0 + dH / deltaTotal * deltaZ;
+
+            var newStartPoint3D = new Point3D(xNew, yNew, zNew);
+            var newEndPoint3D = new Point3D(xNew, distYm1Center, zNew);                     
+
+            _myTruss.Origin = newStartPoint3D;
+            var vectorMember = newStartPoint3D - newEndPoint3D;
+            _myTruss.XAxis = vectorMember;
             _modelViewNodes.Add(_myTruss); // show in 3D view while plugin is running
 
             if (double.TryParse(_beamHeight.Text, out beamHeight))
@@ -340,7 +441,7 @@ namespace RistekPluginSample
             {
                 MessageBox.Show("Wrong beam thickness value.");
             }
-
+                        
             string selectedAlignementOption = _comboBox.SelectedItem.ToString();
 
             try
@@ -353,26 +454,26 @@ namespace RistekPluginSample
                 MessageBox.Show($"Convert To Member Alignment error: {ex.Message}");
             }
 
-            member.AlignedStartPoint = new Point(0, 0);
+            member.AlignedStartPoint = new Point(- m0.Thickness / 2, 0);
 
             if (double.TryParse(_beamStartExtension.Text, out beamsStartExtension))
             {
-                member.AlignedStartPoint = new Point(0 - beamsStartExtension, 0);
+                member.AlignedStartPoint = new Point(-m0.Thickness + beamsStartExtension, 0);
             }
             else
             {
                 MessageBox.Show("Wrong beam start extension value.");
             }
 
-            var memberLengthX = Math.Abs((_preInputs[1] as PluginPointInput).Point.X - (_preInputs[0] as PluginPointInput).Point.X);
-            var memberLengthY = Math.Abs((_preInputs[1] as PluginPointInput).Point.Y - (_preInputs[0] as PluginPointInput).Point.Y);
-            var memberLengthZ = Math.Abs((_preInputs[1] as PluginPointInput).Point.Z - (_preInputs[0] as PluginPointInput).Point.Z);
+            var memberLengthX = Math.Abs((_preInputs[1] as PluginObjectInput).Point.X - (_preInputs[0] as PluginObjectInput).Point.X);
+            var memberLengthY = Math.Abs((_preInputs[1] as PluginObjectInput).Point.Y - (_preInputs[0] as PluginObjectInput).Point.Y);
+            var memberLengthZ = Math.Abs((_preInputs[1] as PluginObjectInput).Point.Z - (_preInputs[0] as PluginObjectInput).Point.Z);
 
 
             if (memberLengthX != 0)
             {
                 member.AlignedEndPoint = new Point(memberLengthX, 0);
-
+                 
                 if (double.TryParse(_beamEndExtension.Text, out beamsEndExtension))
                 {
                     member.AlignedEndPoint = new Point(memberLengthX + beamsEndExtension, 0);
@@ -409,10 +510,18 @@ namespace RistekPluginSample
                 }
             }
 
+            member.AlignedEndPoint = new Point(-distanceBeetweenTrusses-beamsEndExtension, 0);
+
+
             _myTruss.AddMember(member, true);
             _myTruss.UpdateMemberCuts(member, true);
 
             PluginEngine?.PluginUpdate3D(true);
+        }
+
+        private Vector3D? getReferenceEnforcementDirectionVector()
+        {
+            return new Vector3D(0, 0, 1);
         }
 
         private Member.MemberAlignment ConvertToMemberAlignment(string alignmentOption)
@@ -455,6 +564,13 @@ namespace RistekPluginSample
             ResetModelViewNodes();
 
             return addedNodes;
+        }
+
+        protected Member GetTrussMemberFromPluginInput_(PluginInput _pluginInput)
+        {
+            Member res = null;
+            res = (_pluginInput as PluginObjectInput).Object as Member;
+            return res;
         }
 
         public void DialogClosed(bool isCancel)
