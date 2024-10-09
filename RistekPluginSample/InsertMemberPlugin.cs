@@ -172,6 +172,8 @@ namespace RistekPluginSample
         private TextBox _beamStartExtension;
         private TextBox _beamEndExtension;
         private ComboBox _comboBox;
+        private bool IsRotatedToTheMainTruss;
+
         public bool DialogResult { get; set; }
         public IPluginEngine PluginEngine { get; set; }
 
@@ -209,6 +211,7 @@ namespace RistekPluginSample
             CreateBeamDimensionsRow(mainStack);
             CreateAlignementOptionRow(mainStack);
             CreateBeamExtensionRow(mainStack);
+            CreateBeamRotationRow(mainStack);
             CreateChapterTitleRow(mainStack, Constants.TitleChapter2BeamLocation);
             CreateBeamLocationRow(mainStack);
 
@@ -220,6 +223,25 @@ namespace RistekPluginSample
             _dialog.Show();
 
             return false;
+        }
+
+        private void CreateBeamRotationRow(StackPanel mainStack)
+        {
+            var beamStack = new StackPanel() { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 8) };
+            var beamText = new TextBlock() { Text = "Set the rotation relative to the roof slope:", Margin = new Thickness(0, 0, 15, 0) };
+            beamStack.Children.Add(beamText);
+
+            var beamRotationCheckBox = new CheckBox()
+            {
+                Content = "Rotate beam",
+                Margin = new Thickness(0, 0, 4, 0)
+            };
+            beamRotationCheckBox.Checked += (s, e) => IsRotatedToTheMainTruss = true;
+            beamRotationCheckBox.Unchecked += (s, e) => IsRotatedToTheMainTruss = false;
+
+            beamStack.Children.Add(beamRotationCheckBox);
+
+            mainStack.Children.Add(beamStack);
         }
 
         private void CreateChapterTitleRow(StackPanel mainStack, string chapterTitle)
@@ -416,11 +438,21 @@ namespace RistekPluginSample
             var zNew = startPointZm0 + dH / deltaTotal * deltaZ;
 
             var newStartPoint3D = new Point3D(xNew, yNew, zNew);
-            var newEndPoint3D = new Point3D(xNew, distYm1Center, zNew);                     
+            var newEndPoint3D = new Point3D(xNew, distYm1Center, zNew);
 
             _myTruss.Origin = newStartPoint3D;
             var vectorMember = newStartPoint3D - newEndPoint3D;
             _myTruss.XAxis = vectorMember;
+
+            if (IsRotatedToTheMainTruss)
+            {
+                Vector3D planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(startPoint3Dm0, endPoint3Dm0, endPoint3Dm1);
+                planeNormalToFutureBeamTruss.Normalize();
+
+                Point3D directionPoint = newEndPoint3D;
+
+                _myTruss.SetXAxis(newStartPoint3D - directionPoint, planeNormalToFutureBeamTruss);
+            }
             _modelViewNodes.Add(_myTruss); // show in 3D view while plugin is running
 
             if (double.TryParse(_beamHeight.Text, out beamHeight))
@@ -441,7 +473,7 @@ namespace RistekPluginSample
             {
                 MessageBox.Show("Wrong beam thickness value.");
             }
-                        
+
             string selectedAlignementOption = _comboBox.SelectedItem.ToString();
 
             try
@@ -454,11 +486,11 @@ namespace RistekPluginSample
                 MessageBox.Show($"Convert To Member Alignment error: {ex.Message}");
             }
 
-            member.AlignedStartPoint = new Point(- m0.Thickness / 2, 0);
+            member.AlignedStartPoint = new Point(-m0.Thickness / 2, 0);
 
             if (double.TryParse(_beamStartExtension.Text, out beamsStartExtension))
             {
-                member.AlignedStartPoint = new Point(-m0.Thickness + beamsStartExtension, 0);
+                member.AlignedStartPoint = new Point(-m0.Thickness / 2 + beamsStartExtension, 0);
             }
             else
             {
@@ -473,7 +505,7 @@ namespace RistekPluginSample
             if (memberLengthX != 0)
             {
                 member.AlignedEndPoint = new Point(memberLengthX, 0);
-                 
+
                 if (double.TryParse(_beamEndExtension.Text, out beamsEndExtension))
                 {
                     member.AlignedEndPoint = new Point(memberLengthX + beamsEndExtension, 0);
@@ -510,7 +542,7 @@ namespace RistekPluginSample
                 }
             }
 
-            member.AlignedEndPoint = new Point(-distanceBeetweenTrusses-beamsEndExtension, 0);
+            member.AlignedEndPoint = new Point(-distanceBeetweenTrusses - beamsEndExtension, 0);
 
 
             _myTruss.AddMember(member, true);
