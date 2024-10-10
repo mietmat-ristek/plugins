@@ -171,7 +171,8 @@ namespace RistekPluginSample
         private TextBox _beamHorizontalInsertionDistance;
         private TextBox _beamStartExtension;
         private TextBox _beamEndExtension;
-        private ComboBox _comboBox;
+        private ComboBox _comboBoxNewBeamAlignement;
+        private ComboBox _comboBoxExistBeamAlignement;
         private bool IsRotatedToTheMainTruss;
 
         public bool DialogResult { get; set; }
@@ -203,13 +204,15 @@ namespace RistekPluginSample
             _dialog.SizeToContent = SizeToContent.WidthAndHeight;
             _dialog.ResizeMode = ResizeMode.NoResize;
             _dialog.Title = NameForMenu;
+            _dialog.Cursor = Cursors.Arrow;
 
             var mainStack = new StackPanel() { Name = "MainStack", Margin = new Thickness(8) };
             mainStack.Orientation = Orientation.Vertical;
 
             CreateChapterTitleRow(mainStack, Constants.TitleChapter1BeamSettings);
             CreateBeamDimensionsRow(mainStack);
-            CreateAlignementOptionRow(mainStack);
+            CreateNewBeamAlignementOptionRow(mainStack);
+            CreateExistBeamAlignementOptionRow(mainStack);
             CreateBeamExtensionRow(mainStack);
             CreateBeamRotationRow(mainStack);
             CreateChapterTitleRow(mainStack, Constants.TitleChapter2BeamLocation);
@@ -228,7 +231,7 @@ namespace RistekPluginSample
         private void CreateBeamRotationRow(StackPanel mainStack)
         {
             var beamStack = new StackPanel() { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 8) };
-            var beamText = new TextBlock() { Text = "Set the rotation relative to the roof slope:", Margin = new Thickness(0, 0, 15, 0) };
+            var beamText = new TextBlock() { Text = "Set the rotation relative to the roof slope:", Margin = new Thickness(0, 0, 10, 0) };
             beamStack.Children.Add(beamText);
 
             var beamRotationCheckBox = new CheckBox()
@@ -270,14 +273,16 @@ namespace RistekPluginSample
         private void CreateBeamDimensionsRow(StackPanel mainStack)
         {
             var thicknessHeightStack = new StackPanel() { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 8) };
-            var thicknessHeightStackText = new TextBlock() { Text = "Set beam dimensions: ", Margin = new Thickness(0, 0, 4, 0) };
+            var thicknessHeightStackText = new TextBlock() { Text = "Set beam dimensions: ", Margin = new Thickness(0, 0, 8, 0) };
             thicknessHeightStack.Children.Add(thicknessHeightStackText);
-
-            _beamThickness = CreateTextBox("InputBox", 120, new Thickness(0, 0, 4, 0), "Beam Thickness [mm]");
+            string text = "Beam Thickness [mm]";
+            double textLength = text.Length * 7;
+            _beamThickness = CreateTextBox("InputBox", textLength, new Thickness(0, 0, 4, 0), text);
             HandleNumericTextBox(_beamThickness);
             thicknessHeightStack.Children.Add(_beamThickness);
-
-            _beamHeight = CreateTextBox("InputBox", 120, new Thickness(0, 0, 4, 0), "Beam Height [mm]");
+            text = "Beam Height [mm]";
+            textLength = text.Length * 7;
+            _beamHeight = CreateTextBox("InputBox", textLength, new Thickness(0, 0, 4, 0), text);
             HandleNumericTextBox(_beamHeight);
             thicknessHeightStack.Children.Add(_beamHeight);
 
@@ -287,28 +292,49 @@ namespace RistekPluginSample
         private void CreateBeamLocationRow(StackPanel mainStack)
         {
             var beamLocationStack = new StackPanel() { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 8) };
-            var beamLocationStackStackText = new TextBlock() { Text = "Set the beam horizontal insertion distance (from reference beam): ", Margin = new Thickness(0, 0, 4, 0) };
+            var beamLocationStackStackText = new TextBlock()
+            {
+                Text = "Set the beam horizontal insertion distance from reference beam start \npoint (to the new beam axis): ",
+                Margin = new Thickness(0, 0, 4, 0),
+                VerticalAlignment = VerticalAlignment.Center
+            };
             beamLocationStack.Children.Add(beamLocationStackStackText);
-
-            _beamHorizontalInsertionDistance = CreateTextBox("InputBox", 120, new Thickness(0, 0, 4, 0), "Beam horizontal distance [mm]");
+            string text = "Beam horizontal distance [mm]";
+            double textLength = text.Length * 7;
+            _beamHorizontalInsertionDistance = CreateTextBox("InputBox", textLength, new Thickness(0, 0, 0, 0), text);
+            _beamHorizontalInsertionDistance.VerticalAlignment = VerticalAlignment.Center;
             HandleNumericTextBox(_beamHorizontalInsertionDistance);
             beamLocationStack.Children.Add(_beamHorizontalInsertionDistance);
 
             mainStack.Children.Add(beamLocationStack);
         }
 
-        private void CreateAlignementOptionRow(StackPanel mainStack)
+        private void CreateNewBeamAlignementOptionRow(StackPanel mainStack)
         {
             var comboBoxStack = new StackPanel() { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 8) };
-            var comboBoxText = new TextBlock() { Text = "Select Vertical Beam Alignement Option:", Margin = new Thickness(0, 0, 4, 0) };
+            var comboBoxText = new TextBlock() { Text = "Select vertical alignment option for new beam:", Margin = new Thickness(0, 0, 8, 0) };
             comboBoxStack.Children.Add(comboBoxText);
+            _comboBoxNewBeamAlignement = new ComboBox() { Width = Double.NaN, Margin = new Thickness(0, 0, 4, 0) };
+            _comboBoxNewBeamAlignement.Items.Add("Top edge");
+            _comboBoxNewBeamAlignement.Items.Add("Bottom edge");
+            _comboBoxNewBeamAlignement.Items.Add("Center");
+            _comboBoxNewBeamAlignement.SelectedIndex = 0;
+            comboBoxStack.Children.Add(_comboBoxNewBeamAlignement);
 
-            _comboBox = new ComboBox() { Width = 120, Margin = new Thickness(0, 0, 4, 0) };
-            _comboBox.Items.Add("Top edge");
-            _comboBox.Items.Add("Bottom edge");
-            _comboBox.Items.Add("Center");
-            _comboBox.SelectedIndex = 0;
-            comboBoxStack.Children.Add(_comboBox);
+            mainStack.Children.Add(comboBoxStack);
+        }
+
+        private void CreateExistBeamAlignementOptionRow(StackPanel mainStack)
+        {
+            var comboBoxStack = new StackPanel() { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 8) };
+            var comboBoxText = new TextBlock() { Text = "Select vertical alignment option for exist beam:", Margin = new Thickness(0, 0, 8, 0) };
+            comboBoxStack.Children.Add(comboBoxText);
+            _comboBoxExistBeamAlignement = new ComboBox() { Width = Double.NaN, Margin = new Thickness(0, 0, 4, 0) };
+            _comboBoxExistBeamAlignement.Items.Add("Top edge");
+            _comboBoxExistBeamAlignement.Items.Add("Bottom edge");
+            _comboBoxExistBeamAlignement.Items.Add("Center");
+            _comboBoxExistBeamAlignement.SelectedIndex = 0;
+            comboBoxStack.Children.Add(_comboBoxExistBeamAlignement);
 
             mainStack.Children.Add(comboBoxStack);
         }
@@ -316,14 +342,16 @@ namespace RistekPluginSample
         private void CreateBeamExtensionRow(StackPanel mainStack)
         {
             var beamExtensionStack = new StackPanel() { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 8) };
-            var beamExtensionText = new TextBlock() { Text = "Set beam extension:", Margin = new Thickness(0, 0, 4, 0) };
+            var beamExtensionText = new TextBlock() { Text = "Set beam extension:", Margin = new Thickness(0, 0, 8, 0) };
             beamExtensionStack.Children.Add(beamExtensionText);
-
-            _beamStartExtension = CreateTextBox("InputBox", 140, new Thickness(0, 0, 4, 0), "Beam start extension [mm]");
+            string text = "Beam start extension [mm]";
+            double textLength = text.Length * 7;
+            _beamStartExtension = CreateTextBox("InputBox", textLength, new Thickness(0, 0, 4, 0), text);
             HandleNumericTextBox(_beamStartExtension);
             beamExtensionStack.Children.Add(_beamStartExtension);
-
-            _beamEndExtension = CreateTextBox("InputBox", 140, new Thickness(0, 0, 4, 0), "Beam end extension [mm]");
+            text = "Beam end extension [mm]";
+            textLength = text.Length * 7;
+            _beamEndExtension = CreateTextBox("InputBox", textLength, new Thickness(0, 0, 4, 0), text);
             HandleNumericTextBox(_beamEndExtension);
             beamExtensionStack.Children.Add(_beamEndExtension);
 
@@ -428,6 +456,10 @@ namespace RistekPluginSample
             var deltaY = endPoint3Dm0.Y - startPoint3Dm0.Y;
             var deltaZ = endPoint3Dm0.Z - startPoint3Dm0.Z;
 
+            double angleInRadians = Math.Atan2(deltaZ, deltaX);
+            double angleInDegrees = angleInRadians * (180.0 / Math.PI);
+            double cosOfRoofSlopeAngle = Math.Cos(angleInRadians);
+
             var deltaTotal = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
             var ux = deltaX / deltaTotal;
             var uy = deltaY / deltaTotal;
@@ -440,21 +472,6 @@ namespace RistekPluginSample
             var newStartPoint3D = new Point3D(xNew, yNew, zNew);
             var newEndPoint3D = new Point3D(xNew, distYm1Center, zNew);
 
-            _myTruss.Origin = newStartPoint3D;
-            var vectorMember = newStartPoint3D - newEndPoint3D;
-            _myTruss.XAxis = vectorMember;
-
-            if (IsRotatedToTheMainTruss)
-            {
-                Vector3D planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(startPoint3Dm0, endPoint3Dm0, endPoint3Dm1);
-                planeNormalToFutureBeamTruss.Normalize();
-
-                Point3D directionPoint = newEndPoint3D;
-
-                _myTruss.SetXAxis(newStartPoint3D - directionPoint, planeNormalToFutureBeamTruss);
-            }
-            _modelViewNodes.Add(_myTruss); // show in 3D view while plugin is running
-
             if (double.TryParse(_beamHeight.Text, out beamHeight))
             {
                 member.SetWidth(double.Parse(_beamHeight.Text));
@@ -464,6 +481,8 @@ namespace RistekPluginSample
                 MessageBox.Show("Wrong beam height value.");
             }
 
+            double verticalMoveForNewBeam = beamHeight / 2 / cosOfRoofSlopeAngle;
+            double verticalMoveForExistBeam = m0.Width / cosOfRoofSlopeAngle;
 
             if (double.TryParse(_beamThickness.Text, out thickness))
             {
@@ -473,18 +492,63 @@ namespace RistekPluginSample
             {
                 MessageBox.Show("Wrong beam thickness value.");
             }
-
-            string selectedAlignementOption = _comboBox.SelectedItem.ToString();
-
+            string selectedNewBeamAlignmentOption = _comboBoxNewBeamAlignement.SelectedItem.ToString();
+            string selectedExistBeamAlignmentOption = _comboBoxExistBeamAlignement.SelectedItem.ToString();
+            Member.MemberAlignment newBeamAlignment = Member.MemberAlignment.Center;
+            Member.MemberAlignment existBeamAlignment = Member.MemberAlignment.Center;
             try
             {
-                Member.MemberAlignment alignment = ConvertToMemberAlignment(selectedAlignementOption);
-                member.Alignment = alignment;
+                newBeamAlignment = ConvertToMemberAlignment(selectedNewBeamAlignmentOption);
+                existBeamAlignment = ConvertToMemberAlignment(selectedExistBeamAlignmentOption);
             }
             catch (ArgumentException ex)
             {
-                MessageBox.Show($"Convert To Member Alignment error: {ex.Message}");
+                MessageBox.Show($"ConvertToMemberAlignment error: {ex.Message}");
             }
+
+            if (!IsRotatedToTheMainTruss)
+            {
+                _myTruss.Origin = newStartPoint3D;
+                var vectorMember = newStartPoint3D - newEndPoint3D;
+                _myTruss.XAxis = vectorMember;
+                member.Alignment = newBeamAlignment;
+
+                if (existBeamAlignment == Member.MemberAlignment.RightEdge)
+                {
+                    _myTruss.Origin = new Point3D(xNew, yNew, zNew);
+                }
+                else if (existBeamAlignment == Member.MemberAlignment.LeftEdge)
+                {
+                    _myTruss.Origin = new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam);
+                }
+                else
+                {
+                    _myTruss.Origin = new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2);
+                }
+            }
+            else
+            {
+                Vector3D planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(startPoint3Dm0, endPoint3Dm0, endPoint3Dm1);
+                planeNormalToFutureBeamTruss.Normalize();
+
+                Point3D directionPoint = newEndPoint3D;
+
+                if (newBeamAlignment == Member.MemberAlignment.RightEdge)
+                {
+                    _myTruss.Origin = new Point3D(xNew, yNew, zNew - verticalMoveForNewBeam);
+                }
+                else if (newBeamAlignment == Member.MemberAlignment.LeftEdge)
+                {
+                    _myTruss.Origin = new Point3D(xNew, yNew, zNew + verticalMoveForNewBeam);
+                }
+                else
+                {
+                    _myTruss.Origin = new Point3D(xNew, yNew, zNew);
+                }
+
+                _myTruss.SetXAxis(newStartPoint3D - directionPoint, planeNormalToFutureBeamTruss);
+            }
+            _modelViewNodes.Add(_myTruss); // show in 3D view while plugin is running
 
             member.AlignedStartPoint = new Point(-m0.Thickness / 2, 0);
 
@@ -497,53 +561,14 @@ namespace RistekPluginSample
                 MessageBox.Show("Wrong beam start extension value.");
             }
 
-            var memberLengthX = Math.Abs((_preInputs[1] as PluginObjectInput).Point.X - (_preInputs[0] as PluginObjectInput).Point.X);
-            var memberLengthY = Math.Abs((_preInputs[1] as PluginObjectInput).Point.Y - (_preInputs[0] as PluginObjectInput).Point.Y);
-            var memberLengthZ = Math.Abs((_preInputs[1] as PluginObjectInput).Point.Z - (_preInputs[0] as PluginObjectInput).Point.Z);
-
-
-            if (memberLengthX != 0)
+            if (double.TryParse(_beamEndExtension.Text, out beamsEndExtension))
             {
-                member.AlignedEndPoint = new Point(memberLengthX, 0);
-
-                if (double.TryParse(_beamEndExtension.Text, out beamsEndExtension))
-                {
-                    member.AlignedEndPoint = new Point(memberLengthX + beamsEndExtension, 0);
-                }
-                else
-                {
-                    MessageBox.Show("Wrong beam end extension value.");
-                }
-            }
-            else if (memberLengthY != 0)
-            {
-                member.AlignedEndPoint = new Point(memberLengthY, 0);
-
-                if (double.TryParse(_beamEndExtension.Text, out beamsEndExtension))
-                {
-                    member.AlignedEndPoint = new Point(memberLengthY + beamsEndExtension, 0);
-                }
-                else
-                {
-                    MessageBox.Show("Wrong beam end extension value.");
-                }
+                member.AlignedEndPoint = new Point(-distanceBeetweenTrusses - beamsEndExtension, 0);
             }
             else
             {
-                member.AlignedEndPoint = new Point(memberLengthZ, 0);
-
-                if (double.TryParse(_beamEndExtension.Text, out beamsEndExtension))
-                {
-                    member.AlignedEndPoint = new Point(memberLengthZ + beamsEndExtension, 0);
-                }
-                else
-                {
-                    MessageBox.Show("Wrong beam end extension value.");
-                }
+                MessageBox.Show("Wrong beam end extension value.");
             }
-
-            member.AlignedEndPoint = new Point(-distanceBeetweenTrusses - beamsEndExtension, 0);
-
 
             _myTruss.AddMember(member, true);
             _myTruss.UpdateMemberCuts(member, true);
@@ -561,11 +586,27 @@ namespace RistekPluginSample
             switch (alignmentOption)
             {
                 case "Top edge":
-                    return Member.MemberAlignment.LeftEdge;
-                case "Bottom edge":
                     return Member.MemberAlignment.RightEdge;
+                case "Bottom edge":
+                    return Member.MemberAlignment.LeftEdge;
                 case "Center":
                     return Member.MemberAlignment.Center;
+                default:
+                    throw new ArgumentException("Unknown alignment option");
+            }
+        }
+
+
+        private TrussFrame.ModelPartAlignment ConvertToTrussFrameAlignment(string alignmentOption)
+        {
+            switch (alignmentOption)
+            {
+                case "Top edge":
+                    return TrussFrame.ModelPartAlignment.TopLeft;
+                case "Bottom edge":
+                    return TrussFrame.ModelPartAlignment.TopRight;
+                case "Center":
+                    return TrussFrame.ModelPartAlignment.TopCenter;
                 default:
                     throw new ArgumentException("Unknown alignment option");
             }
