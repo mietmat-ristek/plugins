@@ -280,7 +280,7 @@ namespace RistekPluginSample
             _beamThickness = CreateTextBox("InputBox", textLength, new Thickness(0, 0, 4, 0), text);
             HandleNumericTextBox(_beamThickness);
             thicknessHeightStack.Children.Add(_beamThickness);
-            text = "Beam Height [mm]";
+            text = "Beam Height [mm] (global axis-Z direction)";
             textLength = text.Length * 7;
             _beamHeight = CreateTextBox("InputBox", textLength, new Thickness(0, 0, 4, 0), text);
             HandleNumericTextBox(_beamHeight);
@@ -407,7 +407,7 @@ namespace RistekPluginSample
         private void OnCreateButtonClicked(object sender, RoutedEventArgs args)
         {
             double beamHeight;
-            double thickness;
+            double beamThickness;
             double beamHorizontalInsertionDistance;
             double beamsStartExtension;
             double beamsEndExtension;
@@ -481,10 +481,7 @@ namespace RistekPluginSample
                 MessageBox.Show("Wrong beam height value.");
             }
 
-            double verticalMoveForNewBeam = beamHeight / 2 / cosOfRoofSlopeAngle;
-            double verticalMoveForExistBeam = m0.Width / cosOfRoofSlopeAngle;
-
-            if (double.TryParse(_beamThickness.Text, out thickness))
+            if (double.TryParse(_beamThickness.Text, out beamThickness))
             {
                 _myTruss.Thickness = double.Parse(_beamThickness.Text);
             }
@@ -492,6 +489,11 @@ namespace RistekPluginSample
             {
                 MessageBox.Show("Wrong beam thickness value.");
             }
+
+            double verticalMoveForNewBeam = beamHeight / 2 / cosOfRoofSlopeAngle;
+            bool isNotSquareCrossSection = beamThickness != beamHeight;
+            double verticalMoveForExistBeam = m0.Width / cosOfRoofSlopeAngle;
+
             string selectedNewBeamAlignmentOption = _comboBoxNewBeamAlignement.SelectedItem.ToString();
             string selectedExistBeamAlignmentOption = _comboBoxExistBeamAlignement.SelectedItem.ToString();
             Member.MemberAlignment newBeamAlignment = Member.MemberAlignment.Center;
@@ -528,9 +530,6 @@ namespace RistekPluginSample
             }
             else
             {
-                Vector3D planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(startPoint3Dm0, endPoint3Dm0, endPoint3Dm1);
-                planeNormalToFutureBeamTruss.Normalize();
-                Point3D directionPoint = newEndPoint3D;
 
                 if (existBeamAlignment == Member.MemberAlignment.RightEdge)
                 {
@@ -578,7 +577,20 @@ namespace RistekPluginSample
                     }
                 }
                 member.Alignment = Member.MemberAlignment.Center;
-                _myTruss.SetXAxis(newStartPoint3D - directionPoint, planeNormalToFutureBeamTruss);
+
+                Point3D directionPoint = newEndPoint3D;
+                Vector3D planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(startPoint3Dm0, endPoint3Dm0, endPoint3Dm1);
+                planeNormalToFutureBeamTruss.Normalize();
+                if (isNotSquareCrossSection)
+                {
+                    Vector3D newXAxis = new Vector3D(planeNormalToFutureBeamTruss.Z, planeNormalToFutureBeamTruss.Y, -planeNormalToFutureBeamTruss.X);
+                    _myTruss.SetXAxis(newStartPoint3D - directionPoint, newXAxis);
+                }
+                else
+                {
+                    _myTruss.SetXAxis(newStartPoint3D - directionPoint, planeNormalToFutureBeamTruss);
+                }
+
             }
             _modelViewNodes.Add(_myTruss); // show in 3D view while plugin is running
 
