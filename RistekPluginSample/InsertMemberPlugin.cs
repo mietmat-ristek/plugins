@@ -530,22 +530,54 @@ namespace RistekPluginSample
             {
                 Vector3D planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(startPoint3Dm0, endPoint3Dm0, endPoint3Dm1);
                 planeNormalToFutureBeamTruss.Normalize();
-
                 Point3D directionPoint = newEndPoint3D;
 
-                if (newBeamAlignment == Member.MemberAlignment.RightEdge)
+                if (existBeamAlignment == Member.MemberAlignment.RightEdge)
                 {
-                    _myTruss.Origin = new Point3D(xNew, yNew, zNew - verticalMoveForNewBeam);
+                    if (newBeamAlignment == Member.MemberAlignment.RightEdge)
+                    {
+                        _myTruss.Origin = new Point3D(xNew, yNew, zNew - verticalMoveForNewBeam);
+                    }
+                    else if (newBeamAlignment == Member.MemberAlignment.LeftEdge)
+                    {
+                        _myTruss.Origin = new Point3D(xNew, yNew, zNew + verticalMoveForNewBeam);
+                    }
+                    else
+                    {
+                        _myTruss.Origin = new Point3D(xNew, yNew, zNew);
+                    }
                 }
-                else if (newBeamAlignment == Member.MemberAlignment.LeftEdge)
+                else if (existBeamAlignment == Member.MemberAlignment.LeftEdge)
                 {
-                    _myTruss.Origin = new Point3D(xNew, yNew, zNew + verticalMoveForNewBeam);
+                    if (newBeamAlignment == Member.MemberAlignment.RightEdge)
+                    {
+                        _myTruss.Origin = new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam - verticalMoveForNewBeam);
+                    }
+                    else if (newBeamAlignment == Member.MemberAlignment.LeftEdge)
+                    {
+                        _myTruss.Origin = new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam + verticalMoveForNewBeam);
+                    }
+                    else
+                    {
+                        _myTruss.Origin = new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam);
+                    }
                 }
                 else
                 {
-                    _myTruss.Origin = new Point3D(xNew, yNew, zNew);
+                    if (newBeamAlignment == Member.MemberAlignment.RightEdge)
+                    {
+                        _myTruss.Origin = new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 - verticalMoveForNewBeam);
+                    }
+                    else if (newBeamAlignment == Member.MemberAlignment.LeftEdge)
+                    {
+                        _myTruss.Origin = new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 + verticalMoveForNewBeam);
+                    }
+                    else
+                    {
+                        _myTruss.Origin = new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2);
+                    }
                 }
-
+                member.Alignment = Member.MemberAlignment.Center;
                 _myTruss.SetXAxis(newStartPoint3D - directionPoint, planeNormalToFutureBeamTruss);
             }
             _modelViewNodes.Add(_myTruss); // show in 3D view while plugin is running
