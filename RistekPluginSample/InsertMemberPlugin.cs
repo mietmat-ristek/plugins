@@ -167,13 +167,25 @@ namespace RistekPluginSample
 
         private System.Windows.Window _dialog;
         private TextBox _beamHeight;
+        private double beamHeight;
         private TextBox _beamThickness;
+        private double beamThickness;
         private TextBox _beamHorizontalInsertionDistance;
+        private double beamHorizontalInsertionDistance;
         private TextBox _beamStartExtension;
+        private double beamStartExtension;
         private TextBox _beamEndExtension;
+        private double beamEndExtension;
+        private TextBox _beamMultiplySpacing;
+        private double beamMultiplySpacing;
+        private double existBeamLength;
         private ComboBox _comboBoxNewBeamAlignement;
         private ComboBox _comboBoxExistBeamAlignement;
         private bool IsRotatedToTheMainTruss;
+        private bool IsNewBeamMultiplyed;
+        private Member m0;
+        private Member m1;
+        private double horizontalCastLength;
 
         public bool DialogResult { get; set; }
         public IPluginEngine PluginEngine { get; set; }
@@ -217,6 +229,7 @@ namespace RistekPluginSample
             CreateBeamRotationRow(mainStack);
             CreateChapterTitleRow(mainStack, Constants.TitleChapter2BeamLocation);
             CreateBeamLocationRow(mainStack);
+            CreateBeamMultiplicationRow(mainStack);
 
 
             CreateFinalButtonRow(mainStack);
@@ -307,6 +320,42 @@ namespace RistekPluginSample
             beamLocationStack.Children.Add(_beamHorizontalInsertionDistance);
 
             mainStack.Children.Add(beamLocationStack);
+        }
+
+
+        private void CreateBeamMultiplicationRow(StackPanel mainStack)
+        {
+            var beamStack = new StackPanel() { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 8) };
+            var beamText = new TextBlock() { Text = "Set the beam multiplication:", Margin = new Thickness(0, 0, 10, 0) };
+            beamStack.Children.Add(beamText);
+
+            var beamMultiplyCheckBox = new CheckBox()
+            {
+                Content = "Multiply beam with spacing",
+                Margin = new Thickness(0, 0, 4, 0)
+            };
+            beamMultiplyCheckBox.Checked += (s, e) => IsNewBeamMultiplyed = true;
+            beamMultiplyCheckBox.Unchecked += (s, e) => IsNewBeamMultiplyed = false;
+            beamStack.Children.Add(beamMultiplyCheckBox);
+
+            _beamMultiplySpacing = new TextBox()
+            {
+                Width = 50,
+                Margin = new Thickness(4, 0, 4, 0),
+                HorizontalAlignment = HorizontalAlignment.Left
+            };
+
+            var spacingLabel = new TextBlock()
+            {
+                Text = "mm",
+                Margin = new Thickness(4, 0, 0, 0),
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            beamStack.Children.Add(_beamMultiplySpacing);
+            beamStack.Children.Add(spacingLabel);
+
+            mainStack.Children.Add(beamStack);
         }
 
         private void CreateNewBeamAlignementOptionRow(StackPanel mainStack)
@@ -403,184 +452,105 @@ namespace RistekPluginSample
 
         private TrussFrame _myTruss;
         private ModelFolderNode _supportFolder;
+        Point3D startPoint3Dm0, endPoint3Dm0, startPoint3Dm1, endPoint3Dm1;
+        Point3D newStartPoint3D, newEndPoint3D;
 
         private void OnCreateButtonClicked(object sender, RoutedEventArgs args)
         {
-            double beamHeight;
-            double beamThickness;
-            double beamHorizontalInsertionDistance;
-            double beamsStartExtension;
-            double beamsEndExtension;
+            beamHeight = ParseDoubleFromText(_beamHeight.Text, "beam height"); ;
+            beamThickness = ParseDoubleFromText(_beamThickness.Text, "beam thickness");
+            beamHorizontalInsertionDistance = ParseDoubleFromText(_beamHorizontalInsertionDistance.Text, "beam horizontal insertion distance");
+            beamStartExtension = ParseDoubleFromText(_beamStartExtension.Text, "beam start extension");
+            beamEndExtension = ParseDoubleFromText(_beamEndExtension.Text, "beam end extension");
+            m0 = GetTrussMemberFromPluginInput_(_preInputs[0]);
+            m1 = GetTrussMemberFromPluginInput_(_preInputs[1]);
+            existBeamLength = m0.Length;
+            if (!IsNewBeamMultiplyed)
+            {
+                CreateSingleBeam();
+            }
+            else
+            {
+                beamMultiplySpacing = ParseDoubleFromText(_beamMultiplySpacing.Text, "beam multiply spacing");
 
+                double distYm0Center = m0.PartCSToGlobal.OffsetY;
+                double distYm1Center = m1.PartCSToGlobal.OffsetY;
 
+                startPoint3Dm0 = new Point3D(m0.AlignedStartPoint.X, distYm0Center, m0.AlignedStartPoint.Y);
+                endPoint3Dm0 = new Point3D(m0.AlignedEndPoint.X, distYm0Center, m0.AlignedEndPoint.Y);
+                horizontalCastLength = endPoint3Dm0.X - startPoint3Dm0.X;
+                int multipleMemberCount = (int)Math.Ceiling((horizontalCastLength - beamHorizontalInsertionDistance) / beamMultiplySpacing);
+                for (int i = 0; i < multipleMemberCount; i++)
+                {
+                    beamHorizontalInsertionDistance += beamMultiplySpacing;
+                    CreateSingleBeam();
+                    PluginEngine?.PluginUpdate3D(true);
+                }
+            }
+
+            PluginEngine?.PluginUpdate3D(true);
+        }
+
+        private void CreateSingleBeam()
+        {
             _myTruss = new TrussFrame("Truss");
             Member member = new Member("AP");
+            member.SetWidth(beamHeight);
+            _myTruss.Thickness = beamThickness;
 
-            Member m0 = GetTrussMemberFromPluginInput_(_preInputs[0]);
-            Member m1 = GetTrussMemberFromPluginInput_(_preInputs[1]);
-
-            if (double.TryParse(_beamHorizontalInsertionDistance.Text, out beamHorizontalInsertionDistance))
-            {
-                beamHorizontalInsertionDistance = double.Parse(_beamHorizontalInsertionDistance.Text);
-            }
-            else
-            {
-                MessageBox.Show("Wrong beam thickness value.");
-            }
-
-            var distXm0Center = m0.PartCSToGlobal.OffsetX;
             var distYm0Center = m0.PartCSToGlobal.OffsetY;
-            var distZm0Center = m0.PartCSToGlobal.OffsetZ;
-            var distXm1Center = m1.PartCSToGlobal.OffsetX;
             var distYm1Center = m1.PartCSToGlobal.OffsetY;
-            var distZm1Center = m1.PartCSToGlobal.OffsetZ;
 
-            double distanceBeetweenTrusses = Math.Abs(distYm1Center - distYm0Center) - m1.Thickness / 2;
+            CalculateTrussPoints(out startPoint3Dm0, out endPoint3Dm0, out startPoint3Dm1, out endPoint3Dm1);
+            CalculateNewTrussPoints(startPoint3Dm0, endPoint3Dm0, beamHorizontalInsertionDistance, out newStartPoint3D, out newEndPoint3D);
 
-            double startPointXm0 = m0.AlignedStartPoint.X;
-            double endPointXm0 = m0.AlignedEndPoint.X;
-            double startPointZm0 = m0.AlignedStartPoint.Y;
-            double endPointZm0 = m0.AlignedEndPoint.Y;
-            double startPointXm1 = m1.AlignedStartPoint.X;
-            double endPointXm1 = m1.AlignedEndPoint.X;
-            double startPointZm1 = m1.AlignedStartPoint.Y;
-            double endPointZm1 = m1.AlignedEndPoint.Y;
-
-
-            Point3D startPoint3Dm0 = new Point3D(startPointXm0, distYm0Center, startPointZm0);
-            Point3D endPoint3Dm0 = new Point3D(endPointXm0, distYm0Center, endPointZm0);
-            Point3D startPoint3Dm1 = new Point3D(startPointXm1, distYm1Center, startPointZm1);
-            Point3D endPoint3Dm1 = new Point3D(endPointXm1, distYm1Center, endPointZm1);
-
-            var deltaX = endPoint3Dm0.X - startPoint3Dm0.X;
-            var deltaY = endPoint3Dm0.Y - startPoint3Dm0.Y;
-            var deltaZ = endPoint3Dm0.Z - startPoint3Dm0.Z;
-
-            double angleInRadians = Math.Atan2(deltaZ, deltaX);
-            double angleInDegrees = angleInRadians * (180.0 / Math.PI);
-            double cosOfRoofSlopeAngle = Math.Cos(angleInRadians);
-
-            var deltaTotal = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
-            var ux = deltaX / deltaTotal;
-            var uy = deltaY / deltaTotal;
-
-            var dH = beamHorizontalInsertionDistance;
-            var xNew = startPointXm0 + ux * dH;
-            var yNew = distYm0Center + uy * dH;
-            var zNew = startPointZm0 + dH / deltaTotal * deltaZ;
-
-            var newStartPoint3D = new Point3D(xNew, yNew, zNew);
-            var newEndPoint3D = new Point3D(xNew, distYm1Center, zNew);
-
-            if (double.TryParse(_beamHeight.Text, out beamHeight))
-            {
-                member.SetWidth(double.Parse(_beamHeight.Text));
-            }
-            else
-            {
-                MessageBox.Show("Wrong beam height value.");
-            }
-
-            if (double.TryParse(_beamThickness.Text, out beamThickness))
-            {
-                _myTruss.Thickness = double.Parse(_beamThickness.Text);
-            }
-            else
-            {
-                MessageBox.Show("Wrong beam thickness value.");
-            }
-
+            double cosOfRoofSlopeAngle = CalculateCosOfRoofSlopeAngle(startPoint3Dm0, endPoint3Dm0);
             double verticalMoveForNewBeam = beamHeight / 2 / cosOfRoofSlopeAngle;
-            bool isNotSquareCrossSection = beamThickness != beamHeight;
             double verticalMoveForExistBeam = m0.Width / cosOfRoofSlopeAngle;
+            bool isNotSquareCrossSection = beamThickness != beamHeight;
 
-            string selectedNewBeamAlignmentOption = _comboBoxNewBeamAlignement.SelectedItem.ToString();
-            string selectedExistBeamAlignmentOption = _comboBoxExistBeamAlignement.SelectedItem.ToString();
-            Member.MemberAlignment newBeamAlignment = Member.MemberAlignment.Center;
-            Member.MemberAlignment existBeamAlignment = Member.MemberAlignment.Center;
+            Member.MemberAlignment newBeamAlignment = GetBeamAlignment(_comboBoxNewBeamAlignement.SelectedItem.ToString(), "new beam alignment");
+            Member.MemberAlignment existBeamAlignment = GetBeamAlignment(_comboBoxExistBeamAlignement.SelectedItem.ToString(), "exist beam alignment");
+
+            SetTrussOriginAndXAxis(newStartPoint3D, newEndPoint3D, verticalMoveForNewBeam, verticalMoveForExistBeam, newBeamAlignment, existBeamAlignment, isNotSquareCrossSection);
+
+            AddMemberToTruss(member, beamStartExtension, beamEndExtension, m0, newEndPoint3D);
+        }
+
+        private double CalculateCosOfRoofSlopeAngle(Point3D startPoint3Dm0, Point3D endPoint3Dm0)
+        {
+            double deltaX = endPoint3Dm0.X - startPoint3Dm0.X;
+            double deltaZ = endPoint3Dm0.Z - startPoint3Dm0.Z;
+            double angleInRadians = Math.Atan2(deltaZ, deltaX);
+            return Math.Cos(angleInRadians);
+        }
+
+        private Member.MemberAlignment GetBeamAlignment(string alignmentOption, string alignmentName)
+        {
             try
             {
-                newBeamAlignment = ConvertToMemberAlignment(selectedNewBeamAlignmentOption);
-                existBeamAlignment = ConvertToMemberAlignment(selectedExistBeamAlignmentOption);
+                return ConvertToMemberAlignment(alignmentOption);
             }
             catch (ArgumentException ex)
             {
-                MessageBox.Show($"ConvertToMemberAlignment error: {ex.Message}");
+                MessageBox.Show($"ConvertToMemberAlignment error for {alignmentName}: {ex.Message}");
+                throw;
             }
+        }
+
+        private void SetTrussOriginAndXAxis(Point3D newStartPoint3D, Point3D newEndPoint3D, double verticalMoveForNewBeam, double verticalMoveForExistBeam, Member.MemberAlignment newBeamAlignment, Member.MemberAlignment existBeamAlignment, bool isNotSquareCrossSection)
+        {
+            Point3D directionPoint = newEndPoint3D;
+            Vector3D planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(startPoint3Dm0, endPoint3Dm0, endPoint3Dm1);
+            planeNormalToFutureBeamTruss.Normalize();
 
             if (!IsRotatedToTheMainTruss)
             {
-                _myTruss.Origin = newStartPoint3D;
                 var vectorMember = newStartPoint3D - newEndPoint3D;
                 _myTruss.XAxis = vectorMember;
-                member.Alignment = newBeamAlignment;
-
-                if (existBeamAlignment == Member.MemberAlignment.RightEdge)
-                {
-                    _myTruss.Origin = new Point3D(xNew, yNew, zNew);
-                }
-                else if (existBeamAlignment == Member.MemberAlignment.LeftEdge)
-                {
-                    _myTruss.Origin = new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam);
-                }
-                else
-                {
-                    _myTruss.Origin = new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2);
-                }
             }
             else
             {
-
-                if (existBeamAlignment == Member.MemberAlignment.RightEdge)
-                {
-                    if (newBeamAlignment == Member.MemberAlignment.RightEdge)
-                    {
-                        _myTruss.Origin = new Point3D(xNew, yNew, zNew - verticalMoveForNewBeam);
-                    }
-                    else if (newBeamAlignment == Member.MemberAlignment.LeftEdge)
-                    {
-                        _myTruss.Origin = new Point3D(xNew, yNew, zNew + verticalMoveForNewBeam);
-                    }
-                    else
-                    {
-                        _myTruss.Origin = new Point3D(xNew, yNew, zNew);
-                    }
-                }
-                else if (existBeamAlignment == Member.MemberAlignment.LeftEdge)
-                {
-                    if (newBeamAlignment == Member.MemberAlignment.RightEdge)
-                    {
-                        _myTruss.Origin = new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam - verticalMoveForNewBeam);
-                    }
-                    else if (newBeamAlignment == Member.MemberAlignment.LeftEdge)
-                    {
-                        _myTruss.Origin = new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam + verticalMoveForNewBeam);
-                    }
-                    else
-                    {
-                        _myTruss.Origin = new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam);
-                    }
-                }
-                else
-                {
-                    if (newBeamAlignment == Member.MemberAlignment.RightEdge)
-                    {
-                        _myTruss.Origin = new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 - verticalMoveForNewBeam);
-                    }
-                    else if (newBeamAlignment == Member.MemberAlignment.LeftEdge)
-                    {
-                        _myTruss.Origin = new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 + verticalMoveForNewBeam);
-                    }
-                    else
-                    {
-                        _myTruss.Origin = new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2);
-                    }
-                }
-                member.Alignment = Member.MemberAlignment.Center;
-
-                Point3D directionPoint = newEndPoint3D;
-                Vector3D planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(startPoint3Dm0, endPoint3Dm0, endPoint3Dm1);
-                planeNormalToFutureBeamTruss.Normalize();
                 if (isNotSquareCrossSection)
                 {
                     Vector3D newXAxis = new Vector3D(planeNormalToFutureBeamTruss.Z, planeNormalToFutureBeamTruss.Y, -planeNormalToFutureBeamTruss.X);
@@ -590,34 +560,149 @@ namespace RistekPluginSample
                 {
                     _myTruss.SetXAxis(newStartPoint3D - directionPoint, planeNormalToFutureBeamTruss);
                 }
-
             }
-            _modelViewNodes.Add(_myTruss); // show in 3D view while plugin is running
 
-            member.AlignedStartPoint = new Point(-m0.Thickness / 2, 0);
+            _myTruss.Origin = DetermineTrussOrigin(newStartPoint3D, verticalMoveForNewBeam, verticalMoveForExistBeam, newBeamAlignment, existBeamAlignment);
+        }
 
-            if (double.TryParse(_beamStartExtension.Text, out beamsStartExtension))
+        private Point3D DetermineTrussOrigin(Point3D basePoint, double verticalMoveForNewBeam, double verticalMoveForExistBeam, Member.MemberAlignment newBeamAlignment, Member.MemberAlignment existBeamAlignment)
+        {
+            double xNew = basePoint.X;
+            double yNew = basePoint.Y;
+            double zNew = basePoint.Z;
+
+            if (IsRotatedToTheMainTruss)
             {
-                member.AlignedStartPoint = new Point(-m0.Thickness / 2 + beamsStartExtension, 0);
+                switch (existBeamAlignment)
+                {
+                    case Member.MemberAlignment.RightEdge:
+                        switch (newBeamAlignment)
+                        {
+                            case Member.MemberAlignment.RightEdge:
+                                return new Point3D(xNew, yNew, zNew - verticalMoveForNewBeam);
+                            case Member.MemberAlignment.LeftEdge:
+                                return new Point3D(xNew, yNew, zNew + verticalMoveForNewBeam);
+                            default:
+                                return new Point3D(xNew, yNew, zNew);
+                        }
+
+                    case Member.MemberAlignment.LeftEdge:
+                        switch (newBeamAlignment)
+                        {
+                            case Member.MemberAlignment.RightEdge:
+                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam - verticalMoveForNewBeam);
+                            case Member.MemberAlignment.LeftEdge:
+                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam + verticalMoveForNewBeam);
+                            default:
+                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam);
+                        }
+
+                    default:
+                        switch (newBeamAlignment)
+                        {
+                            case Member.MemberAlignment.RightEdge:
+                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 - verticalMoveForNewBeam);
+                            case Member.MemberAlignment.LeftEdge:
+                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 + verticalMoveForNewBeam);
+                            default:
+                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2);
+                        }
+                }
+
             }
             else
             {
-                MessageBox.Show("Wrong beam start extension value.");
+                switch (existBeamAlignment)
+                {
+                    case Member.MemberAlignment.RightEdge:
+                        switch (newBeamAlignment)
+                        {
+                            case Member.MemberAlignment.RightEdge:
+                                return new Point3D(xNew, yNew, zNew - beamHeight / 2);
+                            case Member.MemberAlignment.LeftEdge:
+                                return new Point3D(xNew, yNew, zNew + beamHeight / 2);
+                            default:
+                                return new Point3D(xNew, yNew, zNew);
+                        }
+
+                    case Member.MemberAlignment.LeftEdge:
+                        switch (newBeamAlignment)
+                        {
+                            case Member.MemberAlignment.RightEdge:
+                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam - beamHeight / 2);
+                            case Member.MemberAlignment.LeftEdge:
+                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam + beamHeight / 2);
+                            default:
+                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam);
+                        }
+
+                    default:
+                        switch (newBeamAlignment)
+                        {
+                            case Member.MemberAlignment.RightEdge:
+                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 - beamHeight / 2);
+                            case Member.MemberAlignment.LeftEdge:
+                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 + beamHeight / 2);
+                            default:
+                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2);
+                        }
+                }
             }
 
-            if (double.TryParse(_beamEndExtension.Text, out beamsEndExtension))
-            {
-                member.AlignedEndPoint = new Point(-distanceBeetweenTrusses - beamsEndExtension, 0);
-            }
-            else
-            {
-                MessageBox.Show("Wrong beam end extension value.");
-            }
 
+        }
+
+        private void AddMemberToTruss(Member member, double beamsStartExtension, double beamsEndExtension, Member m0, Point3D newEndPoint3D)
+        {
+            member.AlignedStartPoint = new Point(-m0.Thickness / 2 + beamsStartExtension, 0);
+            member.AlignedEndPoint = new Point(-Math.Abs(m0.PartCSToGlobal.OffsetY - newEndPoint3D.Y) - beamsEndExtension + m0.Thickness / 2, 0);
             _myTruss.AddMember(member, true);
             _myTruss.UpdateMemberCuts(member, true);
-
             PluginEngine?.PluginUpdate3D(true);
+        }
+
+        private void CalculateTrussPoints(out Point3D startPoint3Dm0, out Point3D endPoint3Dm0, out Point3D startPoint3Dm1, out Point3D endPoint3Dm1)
+        {
+            double distYm0Center = m0.PartCSToGlobal.OffsetY;
+            double distYm1Center = m1.PartCSToGlobal.OffsetY;
+
+            startPoint3Dm0 = new Point3D(m0.AlignedStartPoint.X, distYm0Center, m0.AlignedStartPoint.Y);
+            endPoint3Dm0 = new Point3D(m0.AlignedEndPoint.X, distYm0Center, m0.AlignedEndPoint.Y);
+            startPoint3Dm1 = new Point3D(m1.AlignedStartPoint.X, distYm1Center, m1.AlignedStartPoint.Y);
+            endPoint3Dm1 = new Point3D(m1.AlignedEndPoint.X, distYm1Center, m1.AlignedEndPoint.Y);
+        }
+
+        private void CalculateNewTrussPoints(Point3D startPoint3Dm0, Point3D endPoint3Dm0, double dH, out Point3D newStartPoint3D, out Point3D newEndPoint3D)
+        {
+            double deltaX = endPoint3Dm0.X - startPoint3Dm0.X;
+            double deltaY = endPoint3Dm0.Y - startPoint3Dm0.Y;
+            double deltaZ = endPoint3Dm0.Z - startPoint3Dm0.Z;
+
+            double deltaTotal = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
+
+            double ux = deltaX / deltaTotal;
+            double uy = deltaY / deltaTotal;
+
+            double xNew = startPoint3Dm0.X + ux * dH;
+            double yNew = startPoint3Dm0.Y + uy * dH;
+            double zNew = startPoint3Dm0.Z + dH / deltaTotal * deltaZ;
+
+            newStartPoint3D = new Point3D(xNew, yNew, zNew);
+            newEndPoint3D = new Point3D(xNew, m1.PartCSToGlobal.OffsetY, zNew);
+        }
+
+        private double ParseDoubleFromText(string text, string fieldName)
+        {
+            double result;
+            if (double.TryParse(text, out result))
+            {
+                return result;
+            }
+            else
+            {
+                MessageBox.Show($"Wrong {fieldName} value.");
+                throw new ArgumentException($"Invalid {fieldName} value");
+            }
         }
 
         private Vector3D? getReferenceEnforcementDirectionVector()
