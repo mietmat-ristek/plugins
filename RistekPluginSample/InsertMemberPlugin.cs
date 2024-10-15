@@ -451,6 +451,7 @@ namespace RistekPluginSample
         }
 
         private TrussFrame _myTruss;
+        private PlanarBeam _planarBeam;
         private ModelFolderNode _supportFolder;
         Point3D startPoint3Dm0, endPoint3Dm0, startPoint3Dm1, endPoint3Dm1;
         Point3D newStartPoint3D, newEndPoint3D;
@@ -486,14 +487,16 @@ namespace RistekPluginSample
                     CreateSingleBeam();
                 }
             }
+            PluginEngine?.PluginUpdate3D(true);
+
         }
 
         private void CreateSingleBeam()
         {
-            _myTruss = new TrussFrame("Truss");
+            _planarBeam = new PlanarBeam("PlanarBeam");
             Member member = new Member("AP");
             member.SetWidth(beamHeight);
-            _myTruss.Thickness = beamThickness;
+            _planarBeam.Thickness = beamThickness;
 
             var distYm0Center = m0.PartCSToGlobal.OffsetY;
             var distYm1Center = m1.PartCSToGlobal.OffsetY;
@@ -512,6 +515,8 @@ namespace RistekPluginSample
             SetTrussOriginAndXAxis(newStartPoint3D, newEndPoint3D, verticalMoveForNewBeam, verticalMoveForExistBeam, newBeamAlignment, existBeamAlignment, isNotSquareCrossSection);
 
             AddMemberToTruss(member, beamStartExtension, beamEndExtension, m0, newEndPoint3D);
+            PluginEngine?.PluginUpdate3D(true);
+
         }
 
         private double CalculateCosOfRoofSlopeAngle(Point3D startPoint3Dm0, Point3D endPoint3Dm0)
@@ -544,22 +549,22 @@ namespace RistekPluginSample
             if (!IsRotatedToTheMainTruss)
             {
                 var vectorMember = newStartPoint3D - newEndPoint3D;
-                _myTruss.XAxis = vectorMember;
+                _planarBeam.XAxis = vectorMember;
             }
             else
             {
                 if (isNotSquareCrossSection)
                 {
                     Vector3D newXAxis = new Vector3D(planeNormalToFutureBeamTruss.Z, planeNormalToFutureBeamTruss.Y, -planeNormalToFutureBeamTruss.X);
-                    _myTruss.SetXAxis(newStartPoint3D - directionPoint, newXAxis);
+                    _planarBeam.SetXAxis(newStartPoint3D - directionPoint, newXAxis);
                 }
                 else
                 {
-                    _myTruss.SetXAxis(newStartPoint3D - directionPoint, planeNormalToFutureBeamTruss);
+                    _planarBeam.SetXAxis(newStartPoint3D - directionPoint, planeNormalToFutureBeamTruss);
                 }
             }
 
-            _myTruss.Origin = DetermineTrussOrigin(newStartPoint3D, verticalMoveForNewBeam, verticalMoveForExistBeam, newBeamAlignment, existBeamAlignment);
+            _planarBeam.Origin = DetermineTrussOrigin(newStartPoint3D, verticalMoveForNewBeam, verticalMoveForExistBeam, newBeamAlignment, existBeamAlignment);
         }
 
         private Point3D DetermineTrussOrigin(Point3D basePoint, double verticalMoveForNewBeam, double verticalMoveForExistBeam, Member.MemberAlignment newBeamAlignment, Member.MemberAlignment existBeamAlignment)
@@ -651,8 +656,8 @@ namespace RistekPluginSample
         {
             member.AlignedStartPoint = new Point(-m0.Thickness / 2 + beamsStartExtension, 0);
             member.AlignedEndPoint = new Point(-Math.Abs(m0.PartCSToGlobal.OffsetY - newEndPoint3D.Y) - beamsEndExtension + m0.Thickness / 2, 0);
-            _myTruss.AddMember(member, true);
-            _myTruss.UpdateMemberCuts(member, true);
+            _planarBeam.AddMember(member, true);
+            PluginEngine?.PluginUpdate3D(true);
         }
 
         private void CalculateTrussPoints(out Point3D startPoint3Dm0, out Point3D endPoint3Dm0, out Point3D startPoint3Dm1, out Point3D endPoint3Dm1)
@@ -754,7 +759,7 @@ namespace RistekPluginSample
             update3DNodes = new List<Epx.BIM.BaseDataNode>(0); // no need to update any model nodes
 
             List<BaseDataNode> addedNodes = new List<BaseDataNode>();
-            addedNodes.Add(_myTruss);
+            addedNodes.Add(_planarBeam);
             addedNodes.Add(_supportFolder);
 
             ResetModelViewNodes();
