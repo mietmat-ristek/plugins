@@ -699,8 +699,8 @@ namespace RistekPluginSample
             }
             else
             {
-                MessageBox.Show($"Wrong {fieldName} value.");
-                throw new ArgumentException($"Invalid {fieldName} value");
+                MessageBox.Show($"Wrong {fieldName} value. Will be set to 0");
+                return 0;
             }
         }
 
