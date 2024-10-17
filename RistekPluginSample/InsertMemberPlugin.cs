@@ -126,24 +126,26 @@ namespace RistekPluginSample
         /// <returns><c>true</c> if [is pre dialog input valid] [the specified plugin input]; otherwise, <c>false</c>.</returns>
         public override bool IsPreDialogInputValid(PluginInput pluginInput)
         {
-            if (pluginInput.Index == 0 && pluginInput is PluginObjectInput)
+            PluginObjectInput pluginObjectInput1 = pluginInput as PluginObjectInput;
+
+            if (pluginInput.Index == 0 && pluginObjectInput1.Object is Member)
             {
                 pluginInput.Valid = true;
                 return true;
             }
             else if (pluginInput.Index == 1)
             {
-                PluginObjectInput poi = pluginInput as PluginObjectInput;
-                if (poi == null)
+                PluginObjectInput pluginObjectInput2 = pluginInput as PluginObjectInput;
+                if (pluginObjectInput2 == null || !(pluginObjectInput2.Object is Member))
                 {
                     pluginInput.Valid = false;
-                    pluginInput.ErrorMessage = "Wrong input type";
+                    pluginInput.ErrorMessage = "Wrong input type. Please select timber beam";
                     if (CurrentUICulture.ThreeLetterISOLanguageName == "fin") pluginInput.ErrorMessage = "Syötteen tyyppi on virheellinen";
                     return false;
                 }
                 else
                 {
-                    if ((poi.Point - (_preInputs[0] as PluginObjectInput).Point).Length < 1)
+                    if ((pluginObjectInput2.Point - (_preInputs[0] as PluginObjectInput).Point).Length < 1)
                     {
                         pluginInput.Valid = false;
                         pluginInput.ErrorMessage = "First and second point cannot be the same";
@@ -160,7 +162,7 @@ namespace RistekPluginSample
             else
             {
                 pluginInput.Valid = false;
-                pluginInput.ErrorMessage = "Wrong input index";
+                pluginInput.ErrorMessage = "Wrong input type. Please select timber beam";
                 if (CurrentUICulture.ThreeLetterISOLanguageName == "fin") pluginInput.ErrorMessage = "Syötteen indeksi on virheellinen";
                 return false;
             }
@@ -514,8 +516,8 @@ namespace RistekPluginSample
             _timberBeam.Width = beamHeight;
             _timberBeam.Thickness = beamThickness;
 
-            var distYm0Center = m0.PartCSToGlobal.OffsetY;
-            var distYm1Center = m1.PartCSToGlobal.OffsetY;
+            var distYm0Center = m0?.PartCSToGlobal.OffsetY;
+            var distYm1Center = m1?.PartCSToGlobal.OffsetY;
 
             CalculateTrussPoints(out startPoint3Dm0, out endPoint3Dm0, out startPoint3Dm1, out endPoint3Dm1);
             CalculateNewTrussPoints(startPoint3Dm0, endPoint3Dm0, beamHorizontalInsertionDistance, out newStartPoint3D, out newEndPoint3D);

@@ -7,7 +7,7 @@ echo *****
 echo post_build_event.bat %SolutionDir% %TargetName% %ConfigurationName% %PlatformName%
 echo *****
 
-set DllName=AdmPlugin
+set DllName=InsertMemberPlugin
 
 set tmp=%1
 set tmp=%tmp:"=%
