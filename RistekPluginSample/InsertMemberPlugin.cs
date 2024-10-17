@@ -828,6 +828,6 @@ namespace RistekPluginSample
         {
         }
 
-        // ADM test comment 2
+        // ADM test comment
     }
 }
