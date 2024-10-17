@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 15 for Windows Desktop
 VisualStudioVersion = 15.0.33529.398
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSTSam", "RistekPluginSample\RSTSam.csproj", "{33DA68D6-CCE2-4B47-867B-1B026624BF07}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InsertMemberPlugin", "RistekPluginSample\InsertMemberPlugin.csproj", "{33DA68D6-CCE2-4B47-867B-1B026624BF07}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{00F4F518-49DC-485B-97E4-EBA7D4430AA1}"
 EndProject
