@@ -1,5 +1,6 @@
 ﻿using Epx.BIM;
 using Epx.BIM.Models;
+using Epx.BIM.Models.Timber;
 using Epx.BIM.Plugins;
 using Epx.Ristek.Data.Models;
 using Epx.Ristek.Data.Plugins;
@@ -235,10 +236,25 @@ namespace RistekPluginSample
             CreateFinalButtonRow(mainStack);
 
             _dialog.Content = mainStack;
+            /*
             _dialog.Closed += (s, a) => { _dialog = null; PluginEngine?.PluginDialogClosed(DialogResult); };
             _dialog.Show();
 
             return false;
+            */
+
+#if DEBUG
+            _beamHeight.Text = 60.ToString();
+            _beamThickness.Text = 40.ToString();
+            _beamHorizontalInsertionDistance.Text = 0.ToString();
+            _beamStartExtension.Text = 0.ToString();
+            _beamEndExtension.Text = 0.ToString();
+#endif
+
+            this.DialogResult = _dialog.ShowDialog().Value;
+            //PluginEngine?.PluginDialogClosed(this.DialogResult);
+
+            return this.DialogResult;
         }
 
         private void CreateBeamRotationRow(StackPanel mainStack)
@@ -450,7 +466,7 @@ namespace RistekPluginSample
             return !regex.IsMatch(text);
         }
 
-        private TrussFrame _myTruss;
+        private TimberBeam _timberBeam;
         private ModelFolderNode _supportFolder;
         Point3D startPoint3Dm0, endPoint3Dm0, startPoint3Dm1, endPoint3Dm1;
         Point3D newStartPoint3D, newEndPoint3D;
@@ -486,14 +502,17 @@ namespace RistekPluginSample
                     CreateSingleBeam();
                 }
             }
+            _dialog.DialogResult = true;
         }
 
         private void CreateSingleBeam()
         {
-            _myTruss = new TrussFrame("Truss");
-            Member member = new Member("AP");
-            member.SetWidth(beamHeight);
-            _myTruss.Thickness = beamThickness;
+            _timberBeam = new TimberBeam("TimberBeam");
+            _timberBeam.AssemblyName = this.AssemblyName;
+            _timberBeam.FullClassName = this.FullClassName;
+
+            _timberBeam.Width = beamHeight;
+            _timberBeam.Thickness = beamThickness;
 
             var distYm0Center = m0.PartCSToGlobal.OffsetY;
             var distYm1Center = m1.PartCSToGlobal.OffsetY;
@@ -509,9 +528,9 @@ namespace RistekPluginSample
             Member.MemberAlignment newBeamAlignment = GetBeamAlignment(_comboBoxNewBeamAlignement.SelectedItem.ToString(), "new beam alignment");
             Member.MemberAlignment existBeamAlignment = GetBeamAlignment(_comboBoxExistBeamAlignement.SelectedItem.ToString(), "exist beam alignment");
 
-            SetTrussOriginAndXAxis(newStartPoint3D, newEndPoint3D, verticalMoveForNewBeam, verticalMoveForExistBeam, newBeamAlignment, existBeamAlignment, isNotSquareCrossSection);
+            _timberBeam.Origin = DetermineTrussOrigin(verticalMoveForNewBeam, verticalMoveForExistBeam, newBeamAlignment, existBeamAlignment);
 
-            AddMemberToTruss(member, beamStartExtension, beamEndExtension, m0, newEndPoint3D);
+            SetBeamLocationWithExtensions(_timberBeam, beamStartExtension, beamEndExtension);
         }
 
         private double CalculateCosOfRoofSlopeAngle(Point3D startPoint3Dm0, Point3D endPoint3Dm0)
@@ -535,38 +554,11 @@ namespace RistekPluginSample
             }
         }
 
-        private void SetTrussOriginAndXAxis(Point3D newStartPoint3D, Point3D newEndPoint3D, double verticalMoveForNewBeam, double verticalMoveForExistBeam, Member.MemberAlignment newBeamAlignment, Member.MemberAlignment existBeamAlignment, bool isNotSquareCrossSection)
+        private Point3D DetermineTrussOrigin(double verticalMoveForNewBeam, double verticalMoveForExistBeam, Member.MemberAlignment newBeamAlignment, Member.MemberAlignment existBeamAlignment)
         {
-            Point3D directionPoint = newEndPoint3D;
-            Vector3D planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(startPoint3Dm0, endPoint3Dm0, endPoint3Dm1);
-            planeNormalToFutureBeamTruss.Normalize();
-
-            if (!IsRotatedToTheMainTruss)
-            {
-                var vectorMember = newStartPoint3D - newEndPoint3D;
-                _myTruss.XAxis = vectorMember;
-            }
-            else
-            {
-                if (isNotSquareCrossSection)
-                {
-                    Vector3D newXAxis = new Vector3D(planeNormalToFutureBeamTruss.Z, planeNormalToFutureBeamTruss.Y, -planeNormalToFutureBeamTruss.X);
-                    _myTruss.SetXAxis(newStartPoint3D - directionPoint, newXAxis);
-                }
-                else
-                {
-                    _myTruss.SetXAxis(newStartPoint3D - directionPoint, planeNormalToFutureBeamTruss);
-                }
-            }
-
-            _myTruss.Origin = DetermineTrussOrigin(newStartPoint3D, verticalMoveForNewBeam, verticalMoveForExistBeam, newBeamAlignment, existBeamAlignment);
-        }
-
-        private Point3D DetermineTrussOrigin(Point3D basePoint, double verticalMoveForNewBeam, double verticalMoveForExistBeam, Member.MemberAlignment newBeamAlignment, Member.MemberAlignment existBeamAlignment)
-        {
-            double xNew = basePoint.X;
-            double yNew = basePoint.Y;
-            double zNew = basePoint.Z;
+            double xNew = newStartPoint3D.X;
+            double yNew = newStartPoint3D.Y;
+            double zNew = newStartPoint3D.Z;
 
             if (IsRotatedToTheMainTruss)
             {
@@ -647,12 +639,29 @@ namespace RistekPluginSample
             }
         }
 
-        private void AddMemberToTruss(Member member, double beamsStartExtension, double beamsEndExtension, Member m0, Point3D newEndPoint3D)
+        private void SetBeamLocationWithExtensions(TimberBeam beam, double beamsStartExtension, double beamsEndExtension)
         {
-            member.AlignedStartPoint = new Point(-m0.Thickness / 2 + beamsStartExtension, 0);
-            member.AlignedEndPoint = new Point(-Math.Abs(m0.PartCSToGlobal.OffsetY - newEndPoint3D.Y) - beamsEndExtension + m0.Thickness / 2, 0);
-            _myTruss.AddMember(member, true);
-            _myTruss.UpdateMemberCuts(member, true);
+            Vector3D planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(startPoint3Dm0, endPoint3Dm0, endPoint3Dm1);
+            planeNormalToFutureBeamTruss.Normalize();
+
+            double distanceBeetweenExistBeams = Math.Abs(m0.PartCSToGlobal.OffsetY - m1.PartCSToGlobal.OffsetY);
+
+            Point3D newStartPoint3DWithExtension = new Point3D(beam.Origin.X, beam.Origin.Y + beamsStartExtension, beam.Origin.Z);
+            Point3D newEndPoint3DWithExtension = new Point3D(beam.Origin.X, beam.Origin.Y - distanceBeetweenExistBeams + beamsStartExtension, beam.Origin.Z);
+
+            newStartPoint3DWithExtension.Y = newStartPoint3DWithExtension.Y - m0.Thickness / 2 + beamsStartExtension;
+            newEndPoint3DWithExtension.Y = newEndPoint3DWithExtension.Y + m0.Thickness / 2 - beamsEndExtension;
+
+            if (!IsRotatedToTheMainTruss)
+            {
+                beam.SetAlignedStartPoint(newStartPoint3DWithExtension, new Vector3D(0, 0, 1));
+                beam.SetAlignedEndPoint(newEndPoint3DWithExtension, new Vector3D(0, 0, 1));
+            }
+            else
+            {
+                beam.SetAlignedStartPoint(newStartPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                beam.SetAlignedEndPoint(newEndPoint3DWithExtension, planeNormalToFutureBeamTruss);
+            }
         }
 
         private void CalculateTrussPoints(out Point3D startPoint3Dm0, out Point3D endPoint3Dm0, out Point3D startPoint3Dm1, out Point3D endPoint3Dm1)
@@ -694,8 +703,8 @@ namespace RistekPluginSample
             }
             else
             {
-                MessageBox.Show($"Wrong {fieldName} value.");
-                throw new ArgumentException($"Invalid {fieldName} value");
+                MessageBox.Show($"Wrong {fieldName} value. Will be set to 0");
+                return 0;
             }
         }
 
@@ -749,15 +758,28 @@ namespace RistekPluginSample
         public override List<BaseDataNode> Excecute(out Action doDelegate, out Action undoDelegate, out List<BaseDataNode> update3DNodes)
         {
             PluginDataNode = null;
-            doDelegate = null;
-            undoDelegate = null;
+            //doDelegate = null;
+            //undoDelegate = null;
             update3DNodes = new List<Epx.BIM.BaseDataNode>(0); // no need to update any model nodes
 
             List<BaseDataNode> addedNodes = new List<BaseDataNode>();
-            addedNodes.Add(_myTruss);
-            addedNodes.Add(_supportFolder);
+            addedNodes.Add(_timberBeam);
+            //addedNodes.Add(_supportFolder);
+            if (_supportFolder != null)
+            {
+                addedNodes.Add(_supportFolder);
+            }
 
             ResetModelViewNodes();
+
+            doDelegate = delegate
+            {
+                this.Target.AddChild(_timberBeam);
+            };
+            undoDelegate = delegate
+            {
+                this.Target.RemoveChild(_timberBeam);
+            };
 
             return addedNodes;
         }
@@ -774,7 +796,6 @@ namespace RistekPluginSample
             _dialog?.Close();
             _dialog = null;
         }
-
 
         public void CancelPlugin()
         {
