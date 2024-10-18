@@ -489,7 +489,7 @@ namespace RistekPluginSample
 
         private bool IsTextNumeric(string text)
         {
-            Regex regex = new Regex(Constants.RegexForNumbersOnly); // Regex that matches disallowed text
+            Regex regex = new Regex(Constants.RegexForNumbersOnly);
             return !regex.IsMatch(text);
         }
 
@@ -501,19 +501,8 @@ namespace RistekPluginSample
 
         private void OnCreateButtonClicked(object sender, RoutedEventArgs args)
         {
-            if (_beamThickness.BorderBrush == Brushes.Red || _beamHeight.BorderBrush == Brushes.Red)
+            if (!NecessaryDataValidated())
             {
-                hasError = true;
-            }
-            else
-            {
-                hasError = false;
-            }
-
-            if (hasError)
-            {
-                MessageBox.Show(Strings.Strings.fillInRequiredFields, Strings.Strings.warning, MessageBoxButton.OK, MessageBoxImage.Warning);
-                _dialog.Activate();
                 return;
             }
 
@@ -549,6 +538,27 @@ namespace RistekPluginSample
                 }
             }
             _dialog.DialogResult = true;
+        }
+
+        private bool NecessaryDataValidated()
+        {
+            if (_beamThickness.BorderBrush == Brushes.Red || _beamHeight.BorderBrush == Brushes.Red)
+            {
+                hasError = true;
+            }
+            else
+            {
+                hasError = false;
+            }
+
+            if (hasError)
+            {
+                MessageBox.Show(Strings.Strings.fillInRequiredFields, Strings.Strings.warning, MessageBoxButton.OK, MessageBoxImage.Warning);
+                _dialog.Activate();
+                return false;
+            }
+
+            return true;
         }
 
         private void CreateSingleBeam()
