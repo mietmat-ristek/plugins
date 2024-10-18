@@ -498,7 +498,7 @@ namespace RistekPluginSample
         Point3D startPoint3Dm0, endPoint3Dm0, startPoint3Dm1, endPoint3Dm1;
         Point3D newStartPoint3D, newEndPoint3D;
         bool hasError = true;
-
+        bool changeExistBeamAlignement;
         private void OnCreateButtonClicked(object sender, RoutedEventArgs args)
         {
             if (!NecessaryDataValidated())
@@ -570,13 +570,17 @@ namespace RistekPluginSample
             _timberBeam.Width = beamHeight;
             _timberBeam.Thickness = beamThickness;
 
-            var distYm0Center = m0?.PartCSToGlobal.OffsetY;
-            var distYm1Center = m1?.PartCSToGlobal.OffsetY;
+            var distYm0Center = m0.PartCSToGlobal.OffsetY;
+            var distYm1Center = m1.PartCSToGlobal.OffsetY;
+
+            startPoint3Dm0 = new Point3D(m0.LeftEdgeLine.StartPoint.X, distYm0Center, m0.LeftEdgeLine.StartPoint.Y);
+            endPoint3Dm0 = new Point3D(m0.LeftEdgeLine.EndPoint.X, distYm0Center, m0.LeftEdgeLine.EndPoint.Y);
+
+            double cosOfRoofSlopeAngle = CalculateCosOfRoofSlopeAngle(startPoint3Dm0, endPoint3Dm0);
 
             CalculateTrussPoints(out startPoint3Dm0, out endPoint3Dm0, out startPoint3Dm1, out endPoint3Dm1);
             CalculateNewTrussPoints(startPoint3Dm0, endPoint3Dm0, beamHorizontalInsertionDistance, out newStartPoint3D, out newEndPoint3D);
 
-            double cosOfRoofSlopeAngle = CalculateCosOfRoofSlopeAngle(startPoint3Dm0, endPoint3Dm0);
             double verticalMoveForNewBeam = beamHeight / 2 / cosOfRoofSlopeAngle;
             double verticalMoveForExistBeam = m0.Width / cosOfRoofSlopeAngle;
             bool isNotSquareCrossSection = beamThickness != beamHeight;
@@ -591,9 +595,14 @@ namespace RistekPluginSample
 
         private double CalculateCosOfRoofSlopeAngle(Point3D startPoint3Dm0, Point3D endPoint3Dm0)
         {
-            double deltaX = endPoint3Dm0.X - startPoint3Dm0.X;
-            double deltaZ = endPoint3Dm0.Z - startPoint3Dm0.Z;
+            double deltaX = Math.Abs(endPoint3Dm0.X - startPoint3Dm0.X);
+            double deltaZ = Math.Abs(endPoint3Dm0.Z - startPoint3Dm0.Z);
             double angleInRadians = Math.Atan2(deltaZ, deltaX);
+            double angleInDegrees = angleInRadians * 180 / Math.PI;
+            if (angleInDegrees > Constants.degrees45)
+            {
+                changeExistBeamAlignement = true;
+            }
             return Math.Cos(angleInRadians);
         }
 
@@ -725,10 +734,57 @@ namespace RistekPluginSample
             double distYm0Center = m0.PartCSToGlobal.OffsetY;
             double distYm1Center = m1.PartCSToGlobal.OffsetY;
 
-            startPoint3Dm0 = new Point3D(m0.AlignedStartPoint.X, distYm0Center, m0.AlignedStartPoint.Y);
-            endPoint3Dm0 = new Point3D(m0.AlignedEndPoint.X, distYm0Center, m0.AlignedEndPoint.Y);
-            startPoint3Dm1 = new Point3D(m1.AlignedStartPoint.X, distYm1Center, m1.AlignedStartPoint.Y);
-            endPoint3Dm1 = new Point3D(m1.AlignedEndPoint.X, distYm1Center, m1.AlignedEndPoint.Y);
+            if (!changeExistBeamAlignement)
+            {
+                if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                {
+                    startPoint3Dm0 = new Point3D(m0.LeftEdgeLine.StartPoint.X, distYm0Center, m0.LeftEdgeLine.StartPoint.Y);
+                    endPoint3Dm0 = new Point3D(m0.LeftEdgeLine.EndPoint.X, distYm0Center, m0.LeftEdgeLine.EndPoint.Y);
+                    startPoint3Dm1 = new Point3D(m1.LeftEdgeLine.StartPoint.X, distYm1Center, m1.LeftEdgeLine.StartPoint.Y);
+                    endPoint3Dm1 = new Point3D(m1.LeftEdgeLine.EndPoint.X, distYm1Center, m1.LeftEdgeLine.EndPoint.Y);
+                }
+                else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                {
+                    startPoint3Dm0 = new Point3D(m0.RightEdgeLine.StartPoint.X, distYm0Center, m0.RightEdgeLine.StartPoint.Y);
+                    endPoint3Dm0 = new Point3D(m0.RightEdgeLine.EndPoint.X, distYm0Center, m0.RightEdgeLine.EndPoint.Y);
+                    startPoint3Dm1 = new Point3D(m1.RightEdgeLine.StartPoint.X, distYm1Center, m1.RightEdgeLine.StartPoint.Y);
+                    endPoint3Dm1 = new Point3D(m1.RightEdgeLine.EndPoint.X, distYm1Center, m1.RightEdgeLine.EndPoint.Y);
+                }
+                else
+                {
+                    startPoint3Dm0 = new Point3D(m0.RightEdgeLine.StartPoint.X, distYm0Center, m0.RightEdgeLine.StartPoint.Y);
+                    endPoint3Dm0 = new Point3D(m0.RightEdgeLine.EndPoint.X, distYm0Center, m0.RightEdgeLine.EndPoint.Y);
+                    startPoint3Dm1 = new Point3D(m1.RightEdgeLine.StartPoint.X, distYm1Center, m1.RightEdgeLine.StartPoint.Y);
+                    endPoint3Dm1 = new Point3D(m1.RightEdgeLine.EndPoint.X, distYm1Center, m1.RightEdgeLine.EndPoint.Y);
+                }
+            }
+            else
+            {
+                if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                {
+                    startPoint3Dm0 = new Point3D(m0.LeftEdgeLine.StartPoint.X, distYm0Center, m0.LeftEdgeLine.StartPoint.Y);
+                    endPoint3Dm0 = new Point3D(m0.LeftEdgeLine.EndPoint.X, distYm0Center, m0.LeftEdgeLine.EndPoint.Y);
+                    startPoint3Dm1 = new Point3D(m1.LeftEdgeLine.StartPoint.X, distYm1Center, m1.LeftEdgeLine.StartPoint.Y);
+                    endPoint3Dm1 = new Point3D(m1.LeftEdgeLine.EndPoint.X, distYm1Center, m1.LeftEdgeLine.EndPoint.Y);
+                }
+                else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                {
+                    startPoint3Dm0 = new Point3D(m0.RightEdgeLine.StartPoint.X, distYm0Center, m0.RightEdgeLine.StartPoint.Y);
+                    endPoint3Dm0 = new Point3D(m0.RightEdgeLine.EndPoint.X, distYm0Center, m0.RightEdgeLine.EndPoint.Y);
+                    startPoint3Dm1 = new Point3D(m1.RightEdgeLine.StartPoint.X, distYm1Center, m1.RightEdgeLine.StartPoint.Y);
+                    endPoint3Dm1 = new Point3D(m1.RightEdgeLine.EndPoint.X, distYm1Center, m1.RightEdgeLine.EndPoint.Y);
+                }
+                else
+                {
+                    startPoint3Dm0 = new Point3D(m0.LeftEdgeLine.StartPoint.X, distYm0Center, m0.LeftEdgeLine.StartPoint.Y);
+                    endPoint3Dm0 = new Point3D(m0.LeftEdgeLine.EndPoint.X, distYm0Center, m0.LeftEdgeLine.EndPoint.Y);
+                    startPoint3Dm1 = new Point3D(m1.LeftEdgeLine.StartPoint.X, distYm1Center, m1.LeftEdgeLine.StartPoint.Y);
+                    endPoint3Dm1 = new Point3D(m1.LeftEdgeLine.EndPoint.X, distYm1Center, m1.LeftEdgeLine.EndPoint.Y);
+                }
+            }
+
+
+
         }
 
         private void CalculateNewTrussPoints(Point3D startPoint3Dm0, Point3D endPoint3Dm0, double dH, out Point3D newStartPoint3D, out Point3D newEndPoint3D)
