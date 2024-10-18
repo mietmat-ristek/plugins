@@ -194,25 +194,13 @@ namespace RistekPluginSample.Strings {
                 return ResourceManager.GetString("_LoadingFileError_DocumentSerializer", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Generating beam truss between two selected trusses..
         /// </summary>
-        internal static string _MenuToolTip
-        {
-            get
-            {
-                return ResourceManager.GetString("_MenuToolTip", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Generating beam truss between two selected trusses..
-        /// </summary>
-        internal static string _MenuToolTipInsertMemberObject
-        {
+        internal static string _MenuToolTip {
             get {
-                return ResourceManager.GetString("_MenuToolTipInsertMemberObject", resourceCulture);
+                return ResourceManager.GetString("_MenuToolTip", resourceCulture);
             }
         }
         
@@ -395,15 +383,337 @@ namespace RistekPluginSample.Strings {
                 return ResourceManager.GetString("adm_sample_plugin_member", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to Beam Truss with simplified input.
+        ///   Looks up a localized string similar to Alignment for exist beam.
         /// </summary>
-        internal static string insert_member_object_plugin
-        {
-            get
-            {
+        internal static string alignementForExistBeam {
+            get {
+                return ResourceManager.GetString("alignementForExistBeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alignment for new beam.
+        /// </summary>
+        internal static string alignementForNewBeam {
+            get {
+                return ResourceManager.GetString("alignementForNewBeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Beam end extension [mm].
+        /// </summary>
+        internal static string beamEndExtension {
+            get {
+                return ResourceManager.GetString("beamEndExtension", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to beam height.
+        /// </summary>
+        internal static string beamHeight {
+            get {
+                return ResourceManager.GetString("beamHeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to beam horizontal insertion distance.
+        /// </summary>
+        internal static string beamHorizontalInsertionDistance {
+            get {
+                return ResourceManager.GetString("beamHorizontalInsertionDistance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to beam multiply spacing.
+        /// </summary>
+        internal static string beamMultiplySpacing {
+            get {
+                return ResourceManager.GetString("beamMultiplySpacing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Beam start extension [mm].
+        /// </summary>
+        internal static string beamStartExtension {
+            get {
+                return ResourceManager.GetString("beamStartExtension", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to beam thickness.
+        /// </summary>
+        internal static string beamThickness {
+            get {
+                return ResourceManager.GetString("beamThickness", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bottom plane.
+        /// </summary>
+        internal static string bottomEdge {
+            get {
+                return ResourceManager.GetString("bottomEdge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Center.
+        /// </summary>
+        internal static string center {
+            get {
+                return ResourceManager.GetString("center", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ConvertToMemberAlignment error for.
+        /// </summary>
+        internal static string convertToMemberAlignementError {
+            get {
+                return ResourceManager.GetString("convertToMemberAlignementError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Distance [mm].
+        /// </summary>
+        internal static string distance {
+            get {
+                return ResourceManager.GetString("distance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Draw the beam.
+        /// </summary>
+        internal static string drawBeam {
+            get {
+                return ResourceManager.GetString("drawBeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to exist beam alignement.
+        /// </summary>
+        internal static string existBeamAlignement {
+            get {
+                return ResourceManager.GetString("existBeamAlignement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please complete all required fields.
+        /// </summary>
+        internal static string fillInRequiredFields {
+            get {
+                return ResourceManager.GetString("fillInRequiredFields", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Horizontal dimension [mm].
+        /// </summary>
+        internal static string horizontalDimension {
+            get {
+                return ResourceManager.GetString("horizontalDimension", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add beam.
+        /// </summary>
+        internal static string insert_member_object_plugin {
+            get {
                 return ResourceManager.GetString("insert_member_object_plugin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Insert a member beetween two exist roof elements..
+        /// </summary>
+        internal static string insertMemberBeetweenTwoExistRoofElements {
+            get {
+                return ResourceManager.GetString("insertMemberBeetweenTwoExistRoofElements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Multiply beam with spacing.
+        /// </summary>
+        internal static string multiplyBeamWithSpacing {
+            get {
+                return ResourceManager.GetString("multiplyBeamWithSpacing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to new beam alignement.
+        /// </summary>
+        internal static string newBeamAlignement {
+            get {
+                return ResourceManager.GetString("newBeamAlignement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to First and second point cannot be the same.
+        /// </summary>
+        internal static string pointsCannotBeTheSame {
+            get {
+                return ResourceManager.GetString("pointsCannotBeTheSame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rotate the beam.
+        /// </summary>
+        internal static string rotateBeam {
+            get {
+                return ResourceManager.GetString("rotateBeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the first beam.
+        /// </summary>
+        internal static string selectTheFirstBeam {
+            get {
+                return ResourceManager.GetString("selectTheFirstBeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the second beam.
+        /// </summary>
+        internal static string selectTheSecondBeam {
+            get {
+                return ResourceManager.GetString("selectTheSecondBeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set beam dimensions.
+        /// </summary>
+        internal static string setBeamDimensions {
+            get {
+                return ResourceManager.GetString("setBeamDimensions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set beam extension.
+        /// </summary>
+        internal static string setBeamExtension {
+            get {
+                return ResourceManager.GetString("setBeamExtension", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set the beam multiplication.
+        /// </summary>
+        internal static string setBeamMultiplication {
+            get {
+                return ResourceManager.GetString("setBeamMultiplication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set the beam horizontal insertion distance from reference.
+        /// </summary>
+        internal static string setHorizontalInsertionFromReferencePart1 {
+            get {
+                return ResourceManager.GetString("setHorizontalInsertionFromReferencePart1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to beam start point (to the new beam axis).
+        /// </summary>
+        internal static string setHorizontalInsertionFromReferencePart2 {
+            get {
+                return ResourceManager.GetString("setHorizontalInsertionFromReferencePart2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set the rotation relative to the roof slope.
+        /// </summary>
+        internal static string setRotationRelativeToTheRoofSlope {
+            get {
+                return ResourceManager.GetString("setRotationRelativeToTheRoofSlope", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upper plane.
+        /// </summary>
+        internal static string topEdge {
+            get {
+                return ResourceManager.GetString("topEdge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown alignement option.
+        /// </summary>
+        internal static string unknownAlignementOption {
+            get {
+                return ResourceManager.GetString("unknownAlignementOption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vertical dimension [mm].
+        /// </summary>
+        internal static string verticalDimension {
+            get {
+                return ResourceManager.GetString("verticalDimension", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning.
+        /// </summary>
+        internal static string warning {
+            get {
+                return ResourceManager.GetString("warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Will be set to 0.
+        /// </summary>
+        internal static string willBeSetTo0 {
+            get {
+                return ResourceManager.GetString("willBeSetTo0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wrong.
+        /// </summary>
+        internal static string wrong {
+            get {
+                return ResourceManager.GetString("wrong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wrong input type. Please select timber beam.
+        /// </summary>
+        internal static string wrongInputType {
+            get {
+                return ResourceManager.GetString("wrongInputType", resourceCulture);
             }
         }
     }

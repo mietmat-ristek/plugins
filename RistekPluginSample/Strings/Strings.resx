@@ -120,6 +120,117 @@
   <data name="adm_sample_plugin_member" xml:space="preserve">
     <value>Beam Truss with simplified input</value>
   </data>
+  <data name="insert_member_object_plugin" xml:space="preserve">
+    <value>Add beam</value>
+  </data>
+  <data name="insertMemberBeetweenTwoExistRoofElements" xml:space="preserve">
+    <value>Insert a member beetween two exist roof elements.</value>
+  </data>
+  <data name="selectTheFirstBeam" xml:space="preserve">
+    <value>Select the first beam</value>
+  </data>
+  <data name="selectTheSecondBeam" xml:space="preserve">
+    <value>Select the second beam</value>
+  </data>
+  <data name="wrongInputType" xml:space="preserve">
+    <value>Wrong input type. Please select timber beam</value>
+  </data>
+  <data name="pointsCannotBeTheSame" xml:space="preserve">
+    <value>First and second point cannot be the same</value>
+  </data>
+  <data name="setRotationRelativeToTheRoofSlope" xml:space="preserve">
+    <value>Set the rotation relative to the roof slope</value>
+  </data>
+  <data name="rotateBeam" xml:space="preserve">
+    <value>Rotate the beam</value>
+  </data>
+  <data name="drawBeam" xml:space="preserve">
+    <value>Draw the beam</value>
+  </data>
+  <data name="setBeamDimensions" xml:space="preserve">
+    <value>Set beam dimensions</value>
+  </data>
+  <data name="horizontalDimension" xml:space="preserve">
+    <value>Horizontal dimension [mm]</value>
+  </data>
+  <data name="verticalDimension" xml:space="preserve">
+    <value>Vertical dimension [mm]</value>
+  </data>
+  <data name="setHorizontalInsertionFromReferencePart1" xml:space="preserve">
+    <value>Set the beam horizontal insertion distance from reference</value>
+  </data>
+  <data name="setHorizontalInsertionFromReferencePart2" xml:space="preserve">
+    <value>beam start point (to the new beam axis)</value>
+  </data>
+  <data name="distance" xml:space="preserve">
+    <value>Distance [mm]</value>
+  </data>
+  <data name="setBeamMultiplication" xml:space="preserve">
+    <value>Set the beam multiplication</value>
+  </data>
+  <data name="multiplyBeamWithSpacing" xml:space="preserve">
+    <value>Multiply beam with spacing</value>
+  </data>
+  <data name="alignementForNewBeam" xml:space="preserve">
+    <value>Alignment for new beam</value>
+  </data>
+  <data name="alignementForExistBeam" xml:space="preserve">
+    <value>Alignment for exist beam</value>
+  </data>
+  <data name="topEdge" xml:space="preserve">
+    <value>Upper plane</value>
+  </data>
+  <data name="bottomEdge" xml:space="preserve">
+    <value>Bottom plane</value>
+  </data>
+  <data name="center" xml:space="preserve">
+    <value>Center</value>
+  </data>
+  <data name="setBeamExtension" xml:space="preserve">
+    <value>Set beam extension</value>
+  </data>
+  <data name="beamStartExtension" xml:space="preserve">
+    <value>Beam start extension [mm]</value>
+  </data>
+  <data name="beamEndExtension" xml:space="preserve">
+    <value>Beam end extension [mm]</value>
+  </data>
+  <data name="beamHeight" xml:space="preserve">
+    <value>beam height</value>
+  </data>
+  <data name="beamThickness" xml:space="preserve">
+    <value>beam thickness</value>
+  </data>
+  <data name="beamHorizontalInsertionDistance" xml:space="preserve">
+    <value>beam horizontal insertion distance</value>
+  </data>
+  <data name="beamMultiplySpacing" xml:space="preserve">
+    <value>beam multiply spacing</value>
+  </data>
+  <data name="newBeamAlignement" xml:space="preserve">
+    <value>new beam alignement</value>
+  </data>
+  <data name="existBeamAlignement" xml:space="preserve">
+    <value>exist beam alignement</value>
+  </data>
+  <data name="convertToMemberAlignementError" xml:space="preserve">
+    <value>ConvertToMemberAlignment error for</value>
+  </data>
+  <data name="wrong" xml:space="preserve">
+    <value>Wrong</value>
+  </data>
+  <data name="willBeSetTo0" xml:space="preserve">
+    <value>Will be set to 0</value>
+  </data>
+  <data name="unknownAlignementOption" xml:space="preserve">
+    <value>Unknown alignement option</value>
+  </data>
+  <data name="warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="fillInRequiredFields" xml:space="preserve">
+    <value>Please complete all required fields</value>
+  </data>  
   <data name="_PlaneAlignementEnum_toAxis" xml:space="preserve">
     <value>to axis</value>
   </data>

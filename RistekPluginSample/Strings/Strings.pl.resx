@@ -123,6 +123,114 @@
   <data name="insert_member_object_plugin" xml:space="preserve">
     <value>Dodaj belkę</value>
   </data>
+  <data name="insertMemberBeetweenTwoExistRoofElements" xml:space="preserve">
+    <value>Dodaj belkę pomiędzy dwoma istniejącymi elementami dachu"</value>
+  </data>
+  <data name="selectTheFirstBeam" xml:space="preserve">
+    <value>Zaznacz pierwszą belkę</value>
+  </data>
+  <data name="selectTheSecondBeam" xml:space="preserve">
+    <value>Zaznacz drugą belkę</value>
+  </data>
+  <data name="wrongInputType" xml:space="preserve">
+    <value>Nieprawidłowy typ danych. Proszę wybrać belkę drewnianą</value>
+  </data>
+  <data name="pointsCannotBeTheSame" xml:space="preserve">
+    <value>Pierwszy i drugi punkt nie mogą być takie same</value>
+  </data>
+  <data name="setRotationRelativeToTheRoofSlope" xml:space="preserve">
+    <value>Ustaw obrót zgodny z nachyleniem dachu</value>
+  </data>
+  <data name="rotateBeam" xml:space="preserve">
+    <value>Obróć belkę</value>
+  </data>
+  <data name="drawBeam" xml:space="preserve">
+    <value>Rysuj belkę</value>
+  </data>
+  <data name="fillInRequiredFields" xml:space="preserve">
+    <value>Proszę uzupełnić wszystkie wymagane pola</value>
+  </data>
+  <data name="warning" xml:space="preserve">
+    <value>Ostrzeżenie</value>
+  </data>
+  <data name="setBeamDimensions" xml:space="preserve">
+    <value>Ustaw wymiary belki</value>
+  </data>
+  <data name="horizontalDimension" xml:space="preserve">
+    <value>Wymiar poziomy [mm]</value>
+  </data>
+  <data name="verticalDimension" xml:space="preserve">
+    <value>Wymiar pionowy [mm]</value>
+  </data>
+  <data name="setHorizontalInsertionFromReferencePart1" xml:space="preserve">
+    <value>Ustaw poziomą odległość wstawienia od początku belki</value>
+  </data>
+  <data name="setHorizontalInsertionFromReferencePart2" xml:space="preserve">
+    <value>referencyjnej (do osi wstawianej belki)</value>
+  </data>
+  <data name="distance" xml:space="preserve">
+    <value>Odległość [mm]</value>
+  </data>
+  <data name="setBeamMultiplication" xml:space="preserve">
+    <value>Ustaw duplikację belki</value>
+  </data>
+  <data name="multiplyBeamWithSpacing" xml:space="preserve">
+    <value>Duplikuj belkę w rozstawie</value>
+  </data>
+  <data name="alignementForNewBeam" xml:space="preserve">
+    <value>Miejsce licowania nowej belki</value>
+  </data>
+  <data name="alignementForExistBeam" xml:space="preserve">
+    <value>Miejsce licowania istniejącej belki</value>
+  </data>
+  <data name="topEdge" xml:space="preserve">
+    <value>Górna płaszczyzna</value>
+  </data>
+  <data name="bottomEdge" xml:space="preserve">
+    <value>Dolna płaszczyzna</value>
+  </data>
+  <data name="center" xml:space="preserve">
+    <value>Środek</value>
+  </data>
+  <data name="setBeamExtension" xml:space="preserve">
+    <value>Ustaw wydłużenie belki</value>
+  </data>
+  <data name="beamStartExtension" xml:space="preserve">
+    <value>Wydłużenie początku belki [mm]</value>
+  </data>
+  <data name="beamEndExtension" xml:space="preserve">
+    <value>Wydłużenie końca belki [mm]</value>
+  </data>
+  <data name="beamHeight" xml:space="preserve">
+    <value>pionowy wymiar belki</value>
+  </data>
+  <data name="beamThickness" xml:space="preserve">
+    <value>poziomy wymiar belki</value>
+  </data>
+  <data name="beamHorizontalInsertionDistance" xml:space="preserve">
+    <value>pozioma odległość wstawienia belki</value>
+  </data>
+  <data name="beamMultiplySpacing" xml:space="preserve">
+    <value>rozstaw duplikacji belki</value>
+  </data>
+  <data name="newBeamAlignement" xml:space="preserve">
+    <value>licowanie nowej belki</value>
+  </data>
+  <data name="existBeamAlignement" xml:space="preserve">
+    <value>licowanie istniejącej belki</value>
+  </data>
+  <data name="convertToMemberAlignementError" xml:space="preserve">
+    <value>ConvertToMemberAlignment błąd dla</value>
+  </data>
+  <data name="wrong" xml:space="preserve">
+    <value>Błędna</value>
+  </data>
+  <data name="willBeSetTo0" xml:space="preserve">
+    <value>Ustawiono wartość 0</value>
+  </data>
+  <data name="unknownAlignementOption" xml:space="preserve">
+    <value>Nieznana opcja wyrównania</value>
+  </data>
   <data name="_PlaneAlignementEnum_toAxis" xml:space="preserve">
     <value>oś</value>
   </data>
