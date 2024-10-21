@@ -599,11 +599,24 @@ namespace RistekPluginSample
             double deltaZ = Math.Abs(endPoint3Dm0.Z - startPoint3Dm0.Z);
             double angleInRadians = Math.Atan2(deltaZ, deltaX);
             double angleInDegrees = angleInRadians * 180 / Math.PI;
-            if (angleInDegrees > Constants.degrees45)
-            {
-                changeExistBeamAlignement = true;
-            }
+
+            changeExistBeamAlignement = ChangeExistBeamAlignement(angleInDegrees, startPoint3Dm0, endPoint3Dm0);
             return Math.Cos(angleInRadians);
+        }
+
+        private bool ChangeExistBeamAlignement(double angleInDegrees, Point3D startPoint3Dm0, Point3D endPoint3Dm0)
+        {
+            bool isStartPointXHigher = startPoint3Dm0.X > endPoint3Dm0.X;
+            if (!isStartPointXHigher && angleInDegrees > Constants.degrees45)
+            {
+                return true;
+            }
+            else if (isStartPointXHigher && angleInDegrees > Constants.degrees45)
+            {
+                return false;
+            }
+
+            return false;
         }
 
         private Member.MemberAlignment GetBeamAlignment(string alignmentOption, string alignmentName)
@@ -621,11 +634,26 @@ namespace RistekPluginSample
 
         private Point3D DetermineTrussOrigin(double verticalMoveForNewBeam, double verticalMoveForExistBeam, Member.MemberAlignment newBeamAlignment, Member.MemberAlignment existBeamAlignment)
         {
+
+            bool isLeftEdgeOnTop = m0.StartPoint.X < m0.EndPoint.X;
+
+            if (IsRotatedToTheMainTruss)
+            {
+                return PrepareOriginForRotatedBeam(isLeftEdgeOnTop, verticalMoveForNewBeam, verticalMoveForExistBeam, newBeamAlignment, existBeamAlignment);
+            }
+            else
+            {
+                return PrepareOriginForNotRotatedBeam(isLeftEdgeOnTop, verticalMoveForNewBeam, verticalMoveForExistBeam, newBeamAlignment, existBeamAlignment);
+            }
+        }
+
+        private Point3D PrepareOriginForNotRotatedBeam(bool isLeftEdgeOnTop, double verticalMoveForNewBeam, double verticalMoveForExistBeam, Member.MemberAlignment newBeamAlignment, Member.MemberAlignment existBeamAlignment)
+        {
             double xNew = newStartPoint3D.X;
             double yNew = newStartPoint3D.Y;
             double zNew = newStartPoint3D.Z;
 
-            if (IsRotatedToTheMainTruss)
+            if (isLeftEdgeOnTop)
             {
                 switch (existBeamAlignment)
                 {
@@ -633,36 +661,134 @@ namespace RistekPluginSample
                         switch (newBeamAlignment)
                         {
                             case Member.MemberAlignment.RightEdge:
-                                return new Point3D(xNew, yNew, zNew - verticalMoveForNewBeam);
+                                if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - beamHeight / 2);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam - beamHeight / 2);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2 - beamHeight / 2);
+                                }
                             case Member.MemberAlignment.LeftEdge:
-                                return new Point3D(xNew, yNew, zNew + verticalMoveForNewBeam);
+                                if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + beamHeight / 2);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam + beamHeight / 2);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2 + beamHeight / 2);
+                                }
                             default:
-                                return new Point3D(xNew, yNew, zNew);
+                                if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2);
+                                }
                         }
 
                     case Member.MemberAlignment.LeftEdge:
                         switch (newBeamAlignment)
                         {
                             case Member.MemberAlignment.RightEdge:
-                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam - verticalMoveForNewBeam);
+                                if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam - beamHeight / 2);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - beamHeight / 2);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 - beamHeight / 2);
+                                }
                             case Member.MemberAlignment.LeftEdge:
-                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam + verticalMoveForNewBeam);
+                                if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam + beamHeight / 2);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + beamHeight / 2);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 + beamHeight / 2);
+                                }
                             default:
-                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam);
+                                if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2);
+                                }
                         }
 
                     default:
                         switch (newBeamAlignment)
                         {
                             case Member.MemberAlignment.RightEdge:
-                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 - verticalMoveForNewBeam);
+                                if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 - beamHeight / 2);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2 - beamHeight / 2);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew - beamHeight / 2);
+                                }
                             case Member.MemberAlignment.LeftEdge:
-                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 + verticalMoveForNewBeam);
+                                if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 + beamHeight / 2);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2 + beamHeight / 2);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew + beamHeight / 2);
+                                }
                             default:
-                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2);
+                                if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew);
+                                }
                         }
                 }
-
             }
             else
             {
@@ -672,42 +798,426 @@ namespace RistekPluginSample
                         switch (newBeamAlignment)
                         {
                             case Member.MemberAlignment.RightEdge:
-                                return new Point3D(xNew, yNew, zNew - beamHeight / 2);
+                                if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - beamHeight / 2);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam - beamHeight / 2);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2 - beamHeight / 2);
+                                }
                             case Member.MemberAlignment.LeftEdge:
-                                return new Point3D(xNew, yNew, zNew + beamHeight / 2);
+                                if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + beamHeight / 2);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam + beamHeight / 2);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2 + beamHeight / 2);
+                                }
                             default:
-                                return new Point3D(xNew, yNew, zNew);
+                                if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2);
+                                }
                         }
 
                     case Member.MemberAlignment.LeftEdge:
                         switch (newBeamAlignment)
                         {
                             case Member.MemberAlignment.RightEdge:
-                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam - beamHeight / 2);
+                                if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam - beamHeight / 2);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - beamHeight / 2);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 - beamHeight / 2);
+                                }
                             case Member.MemberAlignment.LeftEdge:
-                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam + beamHeight / 2);
+                                if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam + beamHeight / 2);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + beamHeight / 2);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 + beamHeight / 2);
+                                }
                             default:
-                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam);
+                                if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2);
+                                }
                         }
 
                     default:
                         switch (newBeamAlignment)
                         {
                             case Member.MemberAlignment.RightEdge:
-                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 - beamHeight / 2);
+                                if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 - beamHeight / 2);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2 - beamHeight / 2);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew - beamHeight / 2);
+                                }
                             case Member.MemberAlignment.LeftEdge:
-                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 + beamHeight / 2);
+                                if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 + beamHeight / 2);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2 + beamHeight / 2);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew + beamHeight / 2);
+                                }
                             default:
-                                return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2);
+                                if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew);
+                                }
                         }
                 }
             }
+
+        }
+
+        private Point3D PrepareOriginForRotatedBeam(bool isLeftEdgeOnTop, double verticalMoveForNewBeam, double verticalMoveForExistBeam, Member.MemberAlignment newBeamAlignment, Member.MemberAlignment existBeamAlignment)
+        {
+            double xNew = newStartPoint3D.X;
+            double yNew = newStartPoint3D.Y;
+            double zNew = newStartPoint3D.Z;
+
+            if (isLeftEdgeOnTop)
+            {
+                switch (existBeamAlignment)
+                {
+                    case Member.MemberAlignment.RightEdge:
+                        switch (newBeamAlignment)
+                        {
+                            case Member.MemberAlignment.RightEdge:
+                                if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForNewBeam);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam - verticalMoveForNewBeam);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2 - verticalMoveForNewBeam);
+                                }
+                            case Member.MemberAlignment.LeftEdge:
+                                if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForNewBeam);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam + verticalMoveForNewBeam);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2 + verticalMoveForNewBeam);
+                                }
+                            default:
+                                if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2);
+                                }
+                        }
+
+                    case Member.MemberAlignment.LeftEdge:
+                        switch (newBeamAlignment)
+                        {
+                            case Member.MemberAlignment.RightEdge:
+                                if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam - verticalMoveForNewBeam);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForNewBeam);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 - verticalMoveForNewBeam);
+                                }
+                            case Member.MemberAlignment.LeftEdge:
+                                if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam + verticalMoveForNewBeam);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForNewBeam);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 + verticalMoveForNewBeam);
+                                }
+                            default:
+                                if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2);
+                                }
+                        }
+
+                    default:
+                        switch (newBeamAlignment)
+                        {
+                            case Member.MemberAlignment.RightEdge:
+                                if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 - verticalMoveForNewBeam);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2 - verticalMoveForNewBeam);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForNewBeam);
+                                }
+                            case Member.MemberAlignment.LeftEdge:
+                                if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 + verticalMoveForNewBeam);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2 + verticalMoveForNewBeam);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForNewBeam);
+                                }
+                            default:
+                                if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew);
+                                }
+                        }
+                }
+            }
+            else
+            {
+                switch (existBeamAlignment)
+                {
+                    case Member.MemberAlignment.RightEdge:
+                        switch (newBeamAlignment)
+                        {
+                            case Member.MemberAlignment.RightEdge:
+                                if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForNewBeam);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam - verticalMoveForNewBeam);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2 - verticalMoveForNewBeam);
+                                }
+                            case Member.MemberAlignment.LeftEdge:
+                                if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForNewBeam);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam + verticalMoveForNewBeam);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2 + verticalMoveForNewBeam);
+                                }
+                            default:
+                                if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2);
+                                }
+                        }
+
+                    case Member.MemberAlignment.LeftEdge:
+                        switch (newBeamAlignment)
+                        {
+                            case Member.MemberAlignment.RightEdge:
+                                if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam - verticalMoveForNewBeam);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForNewBeam);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 - verticalMoveForNewBeam);
+                                }
+                            case Member.MemberAlignment.LeftEdge:
+                                if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam + verticalMoveForNewBeam);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForNewBeam);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 + verticalMoveForNewBeam);
+                                }
+                            default:
+                                if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2);
+                                }
+                        }
+
+                    default:
+                        switch (newBeamAlignment)
+                        {
+                            case Member.MemberAlignment.RightEdge:
+                                if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 - verticalMoveForNewBeam);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2 - verticalMoveForNewBeam);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForNewBeam);
+                                }
+                            case Member.MemberAlignment.LeftEdge:
+                                if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2 + verticalMoveForNewBeam);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2 + verticalMoveForNewBeam);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForNewBeam);
+                                }
+                            default:
+                                if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew - verticalMoveForExistBeam / 2);
+                                }
+                                else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                                {
+                                    return new Point3D(xNew, yNew, zNew + verticalMoveForExistBeam / 2);
+                                }
+                                else
+                                {
+                                    return new Point3D(xNew, yNew, zNew);
+                                }
+                        }
+                }
+            }
+
         }
 
         private void SetBeamLocationWithExtensions(TimberBeam beam, double beamsStartExtension, double beamsEndExtension)
         {
             Point3D newStartPoint3DWithExtension;
             Point3D newEndPoint3DWithExtension;
+            var beamOriginY = beam.Origin.Y;
             Vector3D planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(startPoint3Dm0, endPoint3Dm0, endPoint3Dm1);
             planeNormalToFutureBeamTruss.Normalize();
 
@@ -717,13 +1227,13 @@ namespace RistekPluginSample
 
             if (isMinusDirection)
             {
-                newStartPoint3DWithExtension = new Point3D(beam.Origin.X, beam.Origin.Y - m0.Thickness / 2 + beamsStartExtension, beam.Origin.Z);
-                newEndPoint3DWithExtension = new Point3D(beam.Origin.X, beam.Origin.Y + m0.Thickness / 2 - distanceBeetweenExistBeams + beamsStartExtension, beam.Origin.Z);
+                newStartPoint3DWithExtension = new Point3D(beam.Origin.X, beamOriginY - m0.Thickness / 2 + beamsStartExtension, beam.Origin.Z);
+                newEndPoint3DWithExtension = new Point3D(beam.Origin.X, beamOriginY + m0.Thickness / 2 - distanceBeetweenExistBeams - beamsEndExtension, beam.Origin.Z);
             }
             else
             {
-                newStartPoint3DWithExtension = new Point3D(beam.Origin.X, beam.Origin.Y + m0.Thickness / 2 - beamsStartExtension, beam.Origin.Z);
-                newEndPoint3DWithExtension = new Point3D(beam.Origin.X, beam.Origin.Y - m0.Thickness / 2 + distanceBeetweenExistBeams + beamsStartExtension, beam.Origin.Z);
+                newStartPoint3DWithExtension = new Point3D(beam.Origin.X, beamOriginY + m0.Thickness / 2 - beamsStartExtension, beam.Origin.Z);
+                newEndPoint3DWithExtension = new Point3D(beam.Origin.X, beamOriginY - m0.Thickness / 2 + distanceBeetweenExistBeams + beamsEndExtension, beam.Origin.Z);
             }
 
             if (!IsRotatedToTheMainTruss)
@@ -761,10 +1271,10 @@ namespace RistekPluginSample
                 }
                 else
                 {
-                    startPoint3Dm0 = new Point3D(m0.RightEdgeLine.StartPoint.X, distYm0Center, m0.RightEdgeLine.StartPoint.Y);
-                    endPoint3Dm0 = new Point3D(m0.RightEdgeLine.EndPoint.X, distYm0Center, m0.RightEdgeLine.EndPoint.Y);
-                    startPoint3Dm1 = new Point3D(m1.RightEdgeLine.StartPoint.X, distYm1Center, m1.RightEdgeLine.StartPoint.Y);
-                    endPoint3Dm1 = new Point3D(m1.RightEdgeLine.EndPoint.X, distYm1Center, m1.RightEdgeLine.EndPoint.Y);
+                    startPoint3Dm0 = new Point3D(m0.MiddleCuttedLine.StartPoint.X, distYm0Center, m0.MiddleCuttedLine.StartPoint.Y);
+                    endPoint3Dm0 = new Point3D(m0.MiddleCuttedLine.EndPoint.X, distYm0Center, m0.MiddleCuttedLine.EndPoint.Y);
+                    startPoint3Dm1 = new Point3D(m1.MiddleCuttedLine.StartPoint.X, distYm1Center, m1.MiddleCuttedLine.StartPoint.Y);
+                    endPoint3Dm1 = new Point3D(m1.MiddleCuttedLine.EndPoint.X, distYm1Center, m1.MiddleCuttedLine.EndPoint.Y);
                 }
             }
             else
@@ -785,10 +1295,10 @@ namespace RistekPluginSample
                 }
                 else
                 {
-                    startPoint3Dm0 = new Point3D(m0.LeftEdgeLine.StartPoint.X, distYm0Center, m0.LeftEdgeLine.StartPoint.Y);
-                    endPoint3Dm0 = new Point3D(m0.LeftEdgeLine.EndPoint.X, distYm0Center, m0.LeftEdgeLine.EndPoint.Y);
-                    startPoint3Dm1 = new Point3D(m1.LeftEdgeLine.StartPoint.X, distYm1Center, m1.LeftEdgeLine.StartPoint.Y);
-                    endPoint3Dm1 = new Point3D(m1.LeftEdgeLine.EndPoint.X, distYm1Center, m1.LeftEdgeLine.EndPoint.Y);
+                    startPoint3Dm0 = new Point3D(m0.MiddleCuttedLine.StartPoint.X, distYm0Center, m0.MiddleCuttedLine.StartPoint.Y);
+                    endPoint3Dm0 = new Point3D(m0.MiddleCuttedLine.EndPoint.X, distYm0Center, m0.MiddleCuttedLine.EndPoint.Y);
+                    startPoint3Dm1 = new Point3D(m1.MiddleCuttedLine.StartPoint.X, distYm1Center, m1.MiddleCuttedLine.StartPoint.Y);
+                    endPoint3Dm1 = new Point3D(m1.MiddleCuttedLine.EndPoint.X, distYm1Center, m1.MiddleCuttedLine.EndPoint.Y);
                 }
             }
 
