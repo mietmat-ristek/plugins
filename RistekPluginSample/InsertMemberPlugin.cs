@@ -706,16 +706,29 @@ namespace RistekPluginSample
 
         private void SetBeamLocationWithExtensions(TimberBeam beam, double beamsStartExtension, double beamsEndExtension)
         {
+            Point3D newStartPoint3DWithExtension;
+            Point3D newEndPoint3DWithExtension;
             Vector3D planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(startPoint3Dm0, endPoint3Dm0, endPoint3Dm1);
             planeNormalToFutureBeamTruss.Normalize();
 
             double distanceBeetweenExistBeams = Math.Abs(m0.PartCSToGlobal.OffsetY - m1.PartCSToGlobal.OffsetY);
 
-            Point3D newStartPoint3DWithExtension = new Point3D(beam.Origin.X, beam.Origin.Y + beamsStartExtension, beam.Origin.Z);
-            Point3D newEndPoint3DWithExtension = new Point3D(beam.Origin.X, beam.Origin.Y - distanceBeetweenExistBeams + beamsStartExtension, beam.Origin.Z);
+            if (startPoint3Dm0.Y> startPoint3Dm1.Y)
+            {
+                newStartPoint3DWithExtension = new Point3D(beam.Origin.X, beam.Origin.Y-m0.Thickness/2 + beamsStartExtension, beam.Origin.Z);
+                newEndPoint3DWithExtension = new Point3D(beam.Origin.X, beam.Origin.Y+m0.Thickness/2 - distanceBeetweenExistBeams + beamsStartExtension, beam.Origin.Z);              
+            }
+            else
+            {
+                newStartPoint3DWithExtension = new Point3D(beam.Origin.X, beam.Origin.Y + m0.Thickness / 2 - beamsStartExtension, beam.Origin.Z);
+                newEndPoint3DWithExtension = new Point3D(beam.Origin.X, beam.Origin.Y - m0.Thickness / 2 + distanceBeetweenExistBeams + beamsStartExtension, beam.Origin.Z);
 
-            newStartPoint3DWithExtension.Y = newStartPoint3DWithExtension.Y - m0.Thickness / 2 + beamsStartExtension;
-            newEndPoint3DWithExtension.Y = newEndPoint3DWithExtension.Y + m0.Thickness / 2 - beamsEndExtension;
+           
+            }
+
+       
+
+           
 
             if (!IsRotatedToTheMainTruss)
             {
