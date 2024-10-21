@@ -713,22 +713,18 @@ namespace RistekPluginSample
 
             double distanceBeetweenExistBeams = Math.Abs(m0.PartCSToGlobal.OffsetY - m1.PartCSToGlobal.OffsetY);
 
-            if (startPoint3Dm0.Y> startPoint3Dm1.Y)
+            bool isMinusDirection = startPoint3Dm0.Y > startPoint3Dm1.Y;
+
+            if (isMinusDirection)
             {
-                newStartPoint3DWithExtension = new Point3D(beam.Origin.X, beam.Origin.Y-m0.Thickness/2 + beamsStartExtension, beam.Origin.Z);
-                newEndPoint3DWithExtension = new Point3D(beam.Origin.X, beam.Origin.Y+m0.Thickness/2 - distanceBeetweenExistBeams + beamsStartExtension, beam.Origin.Z);              
+                newStartPoint3DWithExtension = new Point3D(beam.Origin.X, beam.Origin.Y - m0.Thickness / 2 + beamsStartExtension, beam.Origin.Z);
+                newEndPoint3DWithExtension = new Point3D(beam.Origin.X, beam.Origin.Y + m0.Thickness / 2 - distanceBeetweenExistBeams + beamsStartExtension, beam.Origin.Z);
             }
             else
             {
                 newStartPoint3DWithExtension = new Point3D(beam.Origin.X, beam.Origin.Y + m0.Thickness / 2 - beamsStartExtension, beam.Origin.Z);
                 newEndPoint3DWithExtension = new Point3D(beam.Origin.X, beam.Origin.Y - m0.Thickness / 2 + distanceBeetweenExistBeams + beamsStartExtension, beam.Origin.Z);
-
-           
             }
-
-       
-
-           
 
             if (!IsRotatedToTheMainTruss)
             {
