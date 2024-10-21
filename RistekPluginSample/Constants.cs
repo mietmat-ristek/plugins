@@ -21,5 +21,6 @@
         public const string mm = "mm";
         public const string goToNewLine = "\n";
         public const string Warning = "Warning";
+        public const int degrees45 = 45;
     }
 }
