@@ -336,4 +336,14 @@
   <data name="_beamTrussKnagaNodeName" xml:space="preserve">
     <value>Heel blocking truss</value>
   </data>
+  <data name="timberBeam" xml:space="preserve">
+    <value>Timber Beam</value>
+  </data>
+  <data name="steelBeam" xml:space="preserve">
+    <value>Steel Beam</value>
+  </data>
+  <data name="selectionOfBeamType" xml:space="preserve">
+    <value>Selection of beam type</value>
+  </data>  
+
 </root>

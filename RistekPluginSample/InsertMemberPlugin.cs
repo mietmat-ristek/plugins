@@ -182,6 +182,7 @@ namespace RistekPluginSample
         private Member m0;
         private Member m1;
         private double horizontalCastLength;
+        private ComboBox _selectionOfBeamType;
 
         public bool DialogResult { get; set; }
         public IPluginEngine PluginEngine { get; set; }
@@ -218,6 +219,7 @@ namespace RistekPluginSample
             mainStack.Orientation = Orientation.Vertical;
 
             CreateChapterTitleRow(mainStack, Constants.TitleChapter1BeamSettings);
+            CreateSelectionOfBeamType(mainStack);
             CreateBeamDimensionsRow(mainStack);
             CreateNewBeamAlignementOptionRow(mainStack);
             CreateExistBeamAlignementOptionRow(mainStack);
@@ -242,6 +244,20 @@ namespace RistekPluginSample
 
             this.DialogResult = _dialog.ShowDialog().Value;
             return this.DialogResult;
+        }
+
+        private void CreateSelectionOfBeamType(StackPanel mainStack)
+        {
+            var comboBoxStack = new StackPanel() { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 8) };
+            var comboBoxText = new TextBlock() { Text = Strings.Strings.selectionOfBeamType, Margin = new Thickness(0, 0, 8, 0) };
+            comboBoxStack.Children.Add(comboBoxText);
+            _selectionOfBeamType = new ComboBox() { Width = Double.NaN, Margin = new Thickness(0, 0, 4, 0) };
+            _selectionOfBeamType.Items.Add(Strings.Strings.timberBeam);
+            _selectionOfBeamType.Items.Add(Strings.Strings.steelBeam);
+            _selectionOfBeamType.SelectedIndex = 0;
+            comboBoxStack.Children.Add(_selectionOfBeamType);
+
+            mainStack.Children.Add(comboBoxStack);
         }
 
         private void CreateBeamRotationRow(StackPanel mainStack)
@@ -563,34 +579,39 @@ namespace RistekPluginSample
 
         private void CreateSingleBeam()
         {
-            _timberBeam = new TimberBeam(Constants.TimberBeam);
-            _timberBeam.AssemblyName = this.AssemblyName;
-            _timberBeam.FullClassName = this.FullClassName;
+            if (_selectionOfBeamType.Text == Constants.TimberBeam)
+            {
+                _timberBeam = new TimberBeam(Constants.TimberBeam);
 
-            _timberBeam.Width = beamHeight;
-            _timberBeam.Thickness = beamThickness;
+                _timberBeam.AssemblyName = this.AssemblyName;
+                _timberBeam.FullClassName = this.FullClassName;
 
-            var distYm0Center = m0.PartCSToGlobal.OffsetY;
-            var distYm1Center = m1.PartCSToGlobal.OffsetY;
+                _timberBeam.Width = beamHeight;
+                _timberBeam.Thickness = beamThickness;
 
-            startPoint3Dm0 = new Point3D(m0.LeftEdgeLine.StartPoint.X, distYm0Center, m0.LeftEdgeLine.StartPoint.Y);
-            endPoint3Dm0 = new Point3D(m0.LeftEdgeLine.EndPoint.X, distYm0Center, m0.LeftEdgeLine.EndPoint.Y);
+                var distYm0Center = m0.PartCSToGlobal.OffsetY;
+                var distYm1Center = m1.PartCSToGlobal.OffsetY;
 
-            double cosOfRoofSlopeAngle = CalculateCosOfRoofSlopeAngle(startPoint3Dm0, endPoint3Dm0);
+                startPoint3Dm0 = new Point3D(m0.LeftEdgeLine.StartPoint.X, distYm0Center, m0.LeftEdgeLine.StartPoint.Y);
+                endPoint3Dm0 = new Point3D(m0.LeftEdgeLine.EndPoint.X, distYm0Center, m0.LeftEdgeLine.EndPoint.Y);
 
-            CalculateTrussPoints(out startPoint3Dm0, out endPoint3Dm0, out startPoint3Dm1, out endPoint3Dm1);
-            CalculateNewTrussPoints(startPoint3Dm0, endPoint3Dm0, beamHorizontalInsertionDistance, out newStartPoint3D, out newEndPoint3D);
+                double cosOfRoofSlopeAngle = CalculateCosOfRoofSlopeAngle(startPoint3Dm0, endPoint3Dm0);
 
-            double verticalMoveForNewBeam = beamHeight / 2 / cosOfRoofSlopeAngle;
-            double verticalMoveForExistBeam = m0.Width / cosOfRoofSlopeAngle;
-            bool isNotSquareCrossSection = beamThickness != beamHeight;
+                CalculateTrussPoints(out startPoint3Dm0, out endPoint3Dm0, out startPoint3Dm1, out endPoint3Dm1);
+                CalculateNewTrussPoints(startPoint3Dm0, endPoint3Dm0, beamHorizontalInsertionDistance, out newStartPoint3D, out newEndPoint3D);
 
-            Member.MemberAlignment newBeamAlignment = GetBeamAlignment(_comboBoxNewBeamAlignement.SelectedItem.ToString(), Strings.Strings.newBeamAlignement);
-            Member.MemberAlignment existBeamAlignment = GetBeamAlignment(_comboBoxExistBeamAlignement.SelectedItem.ToString(), Strings.Strings.existBeamAlignement);
+                double verticalMoveForNewBeam = beamHeight / 2 / cosOfRoofSlopeAngle;
+                double verticalMoveForExistBeam = m0.Width / cosOfRoofSlopeAngle;
+                bool isNotSquareCrossSection = beamThickness != beamHeight;
 
-            _timberBeam.Origin = DetermineTrussOrigin(verticalMoveForNewBeam, verticalMoveForExistBeam, newBeamAlignment, existBeamAlignment);
+                Member.MemberAlignment newBeamAlignment = GetBeamAlignment(_comboBoxNewBeamAlignement.SelectedItem.ToString(), Strings.Strings.newBeamAlignement);
+                Member.MemberAlignment existBeamAlignment = GetBeamAlignment(_comboBoxExistBeamAlignement.SelectedItem.ToString(), Strings.Strings.existBeamAlignement);
 
-            SetBeamLocationWithExtensions(_timberBeam, beamStartExtension, beamEndExtension);
+                _timberBeam.Origin = DetermineTrussOrigin(verticalMoveForNewBeam, verticalMoveForExistBeam, newBeamAlignment, existBeamAlignment);
+
+                SetBeamLocationWithExtensions(_timberBeam, beamStartExtension, beamEndExtension);
+            }
+
         }
 
         private double CalculateCosOfRoofSlopeAngle(Point3D startPoint3Dm0, Point3D endPoint3Dm0)
