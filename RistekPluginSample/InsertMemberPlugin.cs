@@ -105,10 +105,164 @@ namespace RistekPluginSample
                 objectInput1.Prompt = Strings.Strings.selectTheFirstBeam;
                 _preInputs.Add(objectInput1);
 
+
                 PluginObjectInput objectInput2 = new PluginObjectInput();
                 objectInput2.Index = 1;
                 objectInput2.Prompt = Strings.Strings.selectTheSecondBeam;
                 _preInputs.Add(objectInput2);
+            }
+            else if (_preInputs.Count > 1 && _preInputs[0].Valid && _preInputs[1].Valid)
+            {
+                m0 = GetTrussMemberFromPluginInput_(_preInputs[0]);
+                m1 = GetTrussMemberFromPluginInput_(_preInputs[1]);
+
+                double deltaX = Math.Abs(m0.AlignedEndPoint.X - m0.AlignedStartPoint.X);
+                double deltaZ = Math.Abs(m0.AlignedEndPoint.Y - m0.AlignedStartPoint.Y);
+                double angleInRadians = Math.Atan2(deltaZ, deltaX);
+                double angleInDegrees = angleInRadians * 180 / Math.PI;
+
+                double distYm0Center = m0.PartCSToGlobal.OffsetY;
+                double distYm1Center = m1.PartCSToGlobal.OffsetY;
+                startPoint3Dm0 = new Point3D(m0.AlignedStartPoint.X, distYm0Center, m0.AlignedStartPoint.Y);
+                endPoint3Dm0 = new Point3D(m0.AlignedEndPoint.X, distYm0Center, m0.AlignedEndPoint.Y);
+
+                changeExistBeamAlignement = ChangeExistBeamAlignement(angleInDegrees, startPoint3Dm0, endPoint3Dm0);
+
+                if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                {
+                    m0XStart = Math.Round(m0.LeftGeometryEdgeLine.StartPoint.X, 0).ToString();
+                    m0YStart = Math.Round(m0.LeftGeometryEdgeLine.StartPoint.Y, 0).ToString();
+                    m0XEnd = Math.Round(m0.LeftGeometryEdgeLine.EndPoint.X, 0).ToString();
+                    m0YEnd = Math.Round(m0.LeftGeometryEdgeLine.EndPoint.Y, 0).ToString();
+
+                    m1XStart = Math.Round(m1.LeftGeometryEdgeLine.StartPoint.X, 0).ToString();
+                    m1YStart = Math.Round(m1.LeftGeometryEdgeLine.StartPoint.Y, 0).ToString();
+                    m1XEnd = Math.Round(m1.LeftGeometryEdgeLine.EndPoint.X, 0).ToString();
+                    m1YEnd = Math.Round(m1.LeftGeometryEdgeLine.EndPoint.Y, 0).ToString();
+
+                    horizontalCastLength = Math.Abs(m0.LeftGeometryEdgeLine.EndPoint.X - m0.LeftGeometryEdgeLine.StartPoint.X);
+                }
+                else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                {
+                    m0XStart = Math.Round(m0.RightGeometryEdgeLine.StartPoint.X, 0).ToString();
+                    m0YStart = Math.Round(m0.RightGeometryEdgeLine.StartPoint.Y, 0).ToString();
+                    m0XEnd = Math.Round(m0.RightGeometryEdgeLine.EndPoint.X, 0).ToString();
+                    m0YEnd = Math.Round(m0.RightGeometryEdgeLine.EndPoint.Y, 0).ToString();
+
+                    m1XStart = Math.Round(m1.RightGeometryEdgeLine.StartPoint.X, 0).ToString();
+                    m1YStart = Math.Round(m1.RightGeometryEdgeLine.StartPoint.Y, 0).ToString();
+                    m1XEnd = Math.Round(m1.RightGeometryEdgeLine.EndPoint.X, 0).ToString();
+                    m1YEnd = Math.Round(m1.RightGeometryEdgeLine.EndPoint.Y, 0).ToString();
+
+                    horizontalCastLength = Math.Abs(m0.RightGeometryEdgeLine.EndPoint.X - m0.RightGeometryEdgeLine.StartPoint.X);
+                }
+                else
+                {
+                    m0XStart = Math.Round(m0.MiddleCuttedLine.StartPoint.X, 0).ToString();
+                    m0YStart = Math.Round(m0.MiddleCuttedLine.StartPoint.Y, 0).ToString();
+                    m0XEnd = Math.Round(m0.MiddleCuttedLine.EndPoint.X, 0).ToString();
+                    m0YEnd = Math.Round(m0.MiddleCuttedLine.EndPoint.Y, 0).ToString();
+
+                    m1XStart = Math.Round(m1.MiddleCuttedLine.StartPoint.X, 0).ToString();
+                    m1YStart = Math.Round(m1.MiddleCuttedLine.StartPoint.Y, 0).ToString();
+                    m1XEnd = Math.Round(m1.MiddleCuttedLine.EndPoint.X, 0).ToString();
+                    m1YEnd = Math.Round(m1.MiddleCuttedLine.EndPoint.Y, 0).ToString();
+
+                    horizontalCastLength = Math.Abs(m0.MiddleCuttedLine.EndPoint.X - m0.MiddleCuttedLine.StartPoint.X);
+                }
+
+                //if (!changeExistBeamAlignement)
+                //{
+                //    if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                //    {
+                //        m0XStart = Math.Round(m0.LeftGeometryEdgeLine.StartPoint.X, 0).ToString();
+                //        m0YStart = Math.Round(m0.LeftGeometryEdgeLine.StartPoint.Y, 0).ToString();
+                //        m0XEnd = Math.Round(m0.LeftGeometryEdgeLine.EndPoint.X, 0).ToString();
+                //        m0YEnd = Math.Round(m0.LeftGeometryEdgeLine.EndPoint.Y, 0).ToString();
+
+                //        m1XStart = Math.Round(m1.LeftGeometryEdgeLine.StartPoint.X, 0).ToString();
+                //        m1YStart = Math.Round(m1.LeftGeometryEdgeLine.StartPoint.Y, 0).ToString();
+                //        m1XEnd = Math.Round(m1.LeftGeometryEdgeLine.EndPoint.X, 0).ToString();
+                //        m1YEnd = Math.Round(m1.LeftGeometryEdgeLine.EndPoint.Y, 0).ToString();
+
+                //        horizontalCastLength = Math.Abs(m0.LeftGeometryEdgeLine.EndPoint.X - m0.LeftGeometryEdgeLine.StartPoint.X);
+                //    }
+                //    else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                //    {
+                //        m0XStart = Math.Round(m0.RightGeometryEdgeLine.StartPoint.X, 0).ToString();
+                //        m0YStart = Math.Round(m0.RightGeometryEdgeLine.StartPoint.Y, 0).ToString();
+                //        m0XEnd = Math.Round(m0.RightGeometryEdgeLine.EndPoint.X, 0).ToString();
+                //        m0YEnd = Math.Round(m0.RightGeometryEdgeLine.EndPoint.Y, 0).ToString();
+
+                //        m1XStart = Math.Round(m1.RightGeometryEdgeLine.StartPoint.X, 0).ToString();
+                //        m1YStart = Math.Round(m1.RightGeometryEdgeLine.StartPoint.Y, 0).ToString();
+                //        m1XEnd = Math.Round(m1.RightGeometryEdgeLine.EndPoint.X, 0).ToString();
+                //        m1YEnd = Math.Round(m1.RightGeometryEdgeLine.EndPoint.Y, 0).ToString();
+
+                //        horizontalCastLength = Math.Abs(m0.RightGeometryEdgeLine.EndPoint.X - m0.RightGeometryEdgeLine.StartPoint.X);
+                //    }
+                //    else
+                //    {
+                //        m0XStart = Math.Round(m0.MiddleCuttedLine.StartPoint.X, 0).ToString();
+                //        m0YStart = Math.Round(m0.MiddleCuttedLine.StartPoint.Y, 0).ToString();
+                //        m0XEnd = Math.Round(m0.MiddleCuttedLine.EndPoint.X, 0).ToString();
+                //        m0YEnd = Math.Round(m0.MiddleCuttedLine.EndPoint.Y, 0).ToString();
+
+                //        m1XStart = Math.Round(m1.MiddleCuttedLine.StartPoint.X, 0).ToString();
+                //        m1YStart = Math.Round(m1.MiddleCuttedLine.StartPoint.Y, 0).ToString();
+                //        m1XEnd = Math.Round(m1.MiddleCuttedLine.EndPoint.X, 0).ToString();
+                //        m1YEnd = Math.Round(m1.MiddleCuttedLine.EndPoint.Y, 0).ToString();
+
+                //        horizontalCastLength = Math.Abs(m0.MiddleCuttedLine.EndPoint.X - m0.MiddleCuttedLine.StartPoint.X);
+                //    }
+                //}
+                //else
+                //{
+                //    if (m0.Alignment == Member.MemberAlignment.RightEdge)
+                //    {
+                //        m0XStart = Math.Round(m0.LeftGeometryEdgeLine.StartPoint.X, 0).ToString();
+                //        m0YStart = Math.Round(m0.LeftGeometryEdgeLine.StartPoint.Y, 0).ToString();
+                //        m0XEnd = Math.Round(m0.LeftGeometryEdgeLine.EndPoint.X, 0).ToString();
+                //        m0YEnd = Math.Round(m0.LeftGeometryEdgeLine.EndPoint.Y, 0).ToString();
+
+                //        m1XStart = Math.Round(m1.LeftGeometryEdgeLine.StartPoint.X, 0).ToString();
+                //        m1YStart = Math.Round(m1.LeftGeometryEdgeLine.StartPoint.Y, 0).ToString();
+                //        m1XEnd = Math.Round(m1.LeftGeometryEdgeLine.EndPoint.X, 0).ToString();
+                //        m1YEnd = Math.Round(m1.LeftGeometryEdgeLine.EndPoint.Y, 0).ToString();
+
+                //        horizontalCastLength = Math.Abs(m0.LeftGeometryEdgeLine.EndPoint.X - m0.LeftGeometryEdgeLine.StartPoint.X);
+                //    }
+                //    else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+                //    {
+                //        m0XStart = Math.Round(m0.RightGeometryEdgeLine.StartPoint.X, 0).ToString();
+                //        m0YStart = Math.Round(m0.RightGeometryEdgeLine.StartPoint.Y, 0).ToString();
+                //        m0XEnd = Math.Round(m0.RightGeometryEdgeLine.EndPoint.X, 0).ToString();
+                //        m0YEnd = Math.Round(m0.RightGeometryEdgeLine.EndPoint.Y, 0).ToString();
+
+                //        m1XStart = Math.Round(m1.RightGeometryEdgeLine.StartPoint.X, 0).ToString();
+                //        m1YStart = Math.Round(m1.RightGeometryEdgeLine.StartPoint.Y, 0).ToString();
+                //        m1XEnd = Math.Round(m1.RightGeometryEdgeLine.EndPoint.X, 0).ToString();
+                //        m1YEnd = Math.Round(m1.RightGeometryEdgeLine.EndPoint.Y, 0).ToString();
+
+                //        horizontalCastLength = Math.Abs(m0.RightGeometryEdgeLine.EndPoint.X - m0.RightGeometryEdgeLine.StartPoint.X);
+                //    }
+                //    else
+                //    {
+                //        m0XStart = Math.Round(m0.MiddleCuttedLine.StartPoint.X, 0).ToString();
+                //        m0YStart = Math.Round(m0.MiddleCuttedLine.StartPoint.Y, 0).ToString();
+                //        m0XEnd = Math.Round(m0.MiddleCuttedLine.EndPoint.X, 0).ToString();
+                //        m0YEnd = Math.Round(m0.MiddleCuttedLine.EndPoint.Y, 0).ToString();
+
+                //        m1XStart = Math.Round(m1.MiddleCuttedLine.StartPoint.X, 0).ToString();
+                //        m1YStart = Math.Round(m1.MiddleCuttedLine.StartPoint.Y, 0).ToString();
+                //        m1XEnd = Math.Round(m1.MiddleCuttedLine.EndPoint.X, 0).ToString();
+                //        m1YEnd = Math.Round(m1.MiddleCuttedLine.EndPoint.Y, 0).ToString();
+
+                //        horizontalCastLength = Math.Abs(m0.MiddleCuttedLine.EndPoint.X - m0.MiddleCuttedLine.StartPoint.X);
+                //    }
+                //}
+
+                existBeamLength = m0.Length;
             }
 
             if (previousInput == null) return _preInputs != null ? _preInputs[0] : null;
@@ -167,6 +321,14 @@ namespace RistekPluginSample
         private double beamHeight;
         private TextBox _beamThickness;
         private double beamThickness;
+        private string m0XStart;
+        private string m0YStart;
+        private string m1XStart;
+        private string m1YStart;
+        private string m0XEnd;
+        private string m0YEnd;
+        private string m1XEnd;
+        private string m1YEnd;
         private TextBox _beamHorizontalInsertionDistance;
         private double beamHorizontalInsertionDistance;
         private TextBox _beamStartExtension;
@@ -219,6 +381,8 @@ namespace RistekPluginSample
             var mainStack = new StackPanel() { Name = Constants.MainStack, Margin = new Thickness(8) };
             mainStack.Orientation = Orientation.Vertical;
 
+            CreateChapterTitleRow(mainStack, Constants.TitleChapter0SelectedBeamInformation);
+            CreateSelectedBeamCoordinatesInfoRow(mainStack);
             CreateChapterTitleRow(mainStack, Constants.TitleChapter1BeamSettings);
             CreateSelectionOfBeamType(mainStack);
             CreateBeamDimensionsRow(mainStack);
@@ -303,6 +467,70 @@ namespace RistekPluginSample
             mainStack.Children.Add(buttonStack);
         }
 
+        private void CreateSelectedBeamCoordinatesInfoRow(StackPanel mainStack)
+        {
+            var selectedBeam0CoordinatesStack = new StackPanel() { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 8) };
+
+            var selectedBeamCoordinatesForFirstBeamStackText = new TextBlock() { Text = Strings.Strings.firstSelectedBeamCoordinates, Margin = new Thickness(0, 0, 8, 0) };
+            selectedBeam0CoordinatesStack.Children.Add(selectedBeamCoordinatesForFirstBeamStackText);
+
+            var startPoint0StackText = new TextBlock() { Text = Strings.Strings.startPoint, Margin = new Thickness(0, 0, 8, 0), FontWeight = FontWeights.Bold };
+            selectedBeam0CoordinatesStack.Children.Add(startPoint0StackText);
+
+            var beam0StartXStackText = new TextBlock() { Text = Constants.X, Margin = new Thickness(0, 0, 8, 0) };
+            selectedBeam0CoordinatesStack.Children.Add(beam0StartXStackText);
+            var beam0StartXValueStackText = new TextBlock() { Text = m0XStart, Margin = new Thickness(0, 0, 8, 0) };
+            selectedBeam0CoordinatesStack.Children.Add(beam0StartXValueStackText);
+            var beam0StartYStackText = new TextBlock() { Text = Constants.Y, Margin = new Thickness(0, 0, 8, 0) };
+            selectedBeam0CoordinatesStack.Children.Add(beam0StartYStackText);
+            var beam0StartYValueStackText = new TextBlock() { Text = m0YStart, Margin = new Thickness(0, 0, 8, 0) };
+            selectedBeam0CoordinatesStack.Children.Add(beam0StartYValueStackText);
+
+            var endPoint0StackText = new TextBlock() { Text = Strings.Strings.endPoint, Margin = new Thickness(0, 0, 8, 0), FontWeight = FontWeights.Bold };
+            selectedBeam0CoordinatesStack.Children.Add(endPoint0StackText);
+
+            var beam0SEndXStackText = new TextBlock() { Text = Constants.X, Margin = new Thickness(0, 0, 8, 0) };
+            selectedBeam0CoordinatesStack.Children.Add(beam0SEndXStackText);
+            var beam0EndXValueStackText = new TextBlock() { Text = m0XEnd, Margin = new Thickness(0, 0, 8, 0) };
+            selectedBeam0CoordinatesStack.Children.Add(beam0EndXValueStackText);
+            var beam0EndYStackText = new TextBlock() { Text = Constants.Y, Margin = new Thickness(0, 0, 8, 0) };
+            selectedBeam0CoordinatesStack.Children.Add(beam0EndYStackText);
+            var beam0EndYValueStackText = new TextBlock() { Text = m0YEnd, Margin = new Thickness(0, 0, 8, 0) };
+            selectedBeam0CoordinatesStack.Children.Add(beam0EndYValueStackText);
+            mainStack.Children.Add(selectedBeam0CoordinatesStack);
+
+            var selectedBeam1CoordinatesStack = new StackPanel() { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 8) };
+
+            var selectedBeamCoordinatesForSecondBeamStackText = new TextBlock() { Text = Strings.Strings.secondSelectedBeamCoordinates, Margin = new Thickness(0, 0, 8, 0) };
+            selectedBeam1CoordinatesStack.Children.Add(selectedBeamCoordinatesForSecondBeamStackText);
+
+            var startPoint1StackText = new TextBlock() { Text = Strings.Strings.startPoint, Margin = new Thickness(0, 0, 8, 0), FontWeight = FontWeights.Bold };
+            selectedBeam1CoordinatesStack.Children.Add(startPoint1StackText);
+
+            var beam1StartXStackText = new TextBlock() { Text = Constants.X, Margin = new Thickness(0, 0, 8, 0) };
+            selectedBeam1CoordinatesStack.Children.Add(beam1StartXStackText);
+            var beam1StartXValueStackText = new TextBlock() { Text = m1XStart, Margin = new Thickness(0, 0, 8, 0) };
+            selectedBeam1CoordinatesStack.Children.Add(beam1StartXValueStackText);
+            var beam1StartYStackText = new TextBlock() { Text = Constants.Y, Margin = new Thickness(0, 0, 8, 0) };
+            selectedBeam1CoordinatesStack.Children.Add(beam1StartYStackText);
+            var beam1StartYValueStackText = new TextBlock() { Text = m1YStart, Margin = new Thickness(0, 0, 8, 0) };
+            selectedBeam1CoordinatesStack.Children.Add(beam1StartYValueStackText);
+
+            var endPoint1StackText = new TextBlock() { Text = Strings.Strings.endPoint, Margin = new Thickness(0, 0, 8, 0), FontWeight = FontWeights.Bold };
+            selectedBeam1CoordinatesStack.Children.Add(endPoint1StackText);
+
+            var beam1SEndXStackText = new TextBlock() { Text = Constants.X, Margin = new Thickness(0, 0, 8, 0) };
+            selectedBeam1CoordinatesStack.Children.Add(beam1SEndXStackText);
+            var beam1EndXValueStackText = new TextBlock() { Text = m1XEnd, Margin = new Thickness(0, 0, 8, 0) };
+            selectedBeam1CoordinatesStack.Children.Add(beam1EndXValueStackText);
+            var beam1EndYStackText = new TextBlock() { Text = Constants.Y, Margin = new Thickness(0, 0, 8, 0) };
+            selectedBeam1CoordinatesStack.Children.Add(beam1EndYStackText);
+            var beam1EndYValueStackText = new TextBlock() { Text = m1YEnd, Margin = new Thickness(0, 0, 8, 0) };
+            selectedBeam1CoordinatesStack.Children.Add(beam1EndYValueStackText);
+
+            mainStack.Children.Add(selectedBeam1CoordinatesStack);
+        }
+
         private void CreateBeamDimensionsRow(StackPanel mainStack)
         {
             var thicknessHeightStack = new StackPanel() { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 8) };
@@ -374,10 +602,37 @@ namespace RistekPluginSample
             double textLength = text.Length * 7;
             _beamHorizontalInsertionDistance = CreateTextBox(Constants.InputBox, textLength, new Thickness(0, 0, 0, 0), text);
             _beamHorizontalInsertionDistance.VerticalAlignment = VerticalAlignment.Center;
+
+            _beamHorizontalInsertionDistance.PreviewTextInput += TextBox_PreviewTextInput;
+            _beamHorizontalInsertionDistance.TextChanged += BeamHorizontalInsertionDistance_TextChanged;
+
             HandleNumericTextBox(_beamHorizontalInsertionDistance);
             beamLocationStack.Children.Add(_beamHorizontalInsertionDistance);
 
             mainStack.Children.Add(beamLocationStack);
+        }
+
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !IsTextNumeric(e.Text);
+        }
+
+        private void BeamHorizontalInsertionDistance_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (double.TryParse(textBox.Text, out double value))
+            {
+                if (value > horizontalCastLength)
+                {
+                    textBox.Text = Math.Round(horizontalCastLength, 0).ToString();
+                }
+                else if (value < 0)
+                {
+                    textBox.Text = Constants.zeroString;
+                }
+
+                textBox.CaretIndex = textBox.Text.Length;
+            }
         }
 
 
@@ -531,10 +786,6 @@ namespace RistekPluginSample
             beamStartExtension = ParseDoubleFromText(_beamStartExtension.Text, Strings.Strings.beamStartExtension);
             beamEndExtension = ParseDoubleFromText(_beamEndExtension.Text, Strings.Strings.beamEndExtension);
 
-            m0 = GetTrussMemberFromPluginInput_(_preInputs[0]);
-            m1 = GetTrussMemberFromPluginInput_(_preInputs[1]);
-            existBeamLength = m0.Length;
-
             if (!IsNewBeamMultiplyed)
             {
                 CreateSingleBeam();
@@ -548,7 +799,6 @@ namespace RistekPluginSample
 
                 startPoint3Dm0 = new Point3D(m0.AlignedStartPoint.X, distYm0Center, m0.AlignedStartPoint.Y);
                 endPoint3Dm0 = new Point3D(m0.AlignedEndPoint.X, distYm0Center, m0.AlignedEndPoint.Y);
-                horizontalCastLength = endPoint3Dm0.X - startPoint3Dm0.X;
                 int multipleMemberCount = (int)Math.Ceiling((horizontalCastLength - beamHorizontalInsertionDistance) / beamMultiplySpacing);
                 for (int i = 0; i < multipleMemberCount; i++)
                 {
@@ -657,23 +907,22 @@ namespace RistekPluginSample
             double angleInRadians = Math.Atan2(deltaZ, deltaX);
             double angleInDegrees = angleInRadians * 180 / Math.PI;
 
-            changeExistBeamAlignement = ChangeExistBeamAlignement(angleInDegrees, startPoint3Dm0, endPoint3Dm0);
+            //changeExistBeamAlignement = ChangeExistBeamAlignement(angleInDegrees, startPoint3Dm0, endPoint3Dm0);
             return Math.Cos(angleInRadians);
         }
 
         private bool ChangeExistBeamAlignement(double angleInDegrees, Point3D startPoint3Dm0, Point3D endPoint3Dm0)
         {
             bool isStartPointXHigher = startPoint3Dm0.X > endPoint3Dm0.X;
-            if (!isStartPointXHigher && angleInDegrees > Constants.degrees45)
+
+            if (isStartPointXHigher || angleInDegrees > Constants.degrees45)
             {
                 return true;
             }
-            else if (isStartPointXHigher && angleInDegrees > Constants.degrees45)
+            else
             {
                 return false;
             }
-
-            return false;
         }
 
         private Member.MemberAlignment GetBeamAlignment(string alignmentOption, string alignmentName)
@@ -1345,57 +1594,59 @@ namespace RistekPluginSample
             double distYm0Center = m0.PartCSToGlobal.OffsetY;
             double distYm1Center = m1.PartCSToGlobal.OffsetY;
 
-            if (!changeExistBeamAlignement)
-            {
-                if (m0.Alignment == Member.MemberAlignment.LeftEdge)
-                {
-                    startPoint3Dm0 = new Point3D(m0.LeftEdgeLine.StartPoint.X, distYm0Center, m0.LeftEdgeLine.StartPoint.Y);
-                    endPoint3Dm0 = new Point3D(m0.LeftEdgeLine.EndPoint.X, distYm0Center, m0.LeftEdgeLine.EndPoint.Y);
-                    startPoint3Dm1 = new Point3D(m1.LeftEdgeLine.StartPoint.X, distYm1Center, m1.LeftEdgeLine.StartPoint.Y);
-                    endPoint3Dm1 = new Point3D(m1.LeftEdgeLine.EndPoint.X, distYm1Center, m1.LeftEdgeLine.EndPoint.Y);
-                }
-                else if (m0.Alignment == Member.MemberAlignment.RightEdge)
-                {
-                    startPoint3Dm0 = new Point3D(m0.RightEdgeLine.StartPoint.X, distYm0Center, m0.RightEdgeLine.StartPoint.Y);
-                    endPoint3Dm0 = new Point3D(m0.RightEdgeLine.EndPoint.X, distYm0Center, m0.RightEdgeLine.EndPoint.Y);
-                    startPoint3Dm1 = new Point3D(m1.RightEdgeLine.StartPoint.X, distYm1Center, m1.RightEdgeLine.StartPoint.Y);
-                    endPoint3Dm1 = new Point3D(m1.RightEdgeLine.EndPoint.X, distYm1Center, m1.RightEdgeLine.EndPoint.Y);
-                }
-                else
-                {
-                    startPoint3Dm0 = new Point3D(m0.MiddleCuttedLine.StartPoint.X, distYm0Center, m0.MiddleCuttedLine.StartPoint.Y);
-                    endPoint3Dm0 = new Point3D(m0.MiddleCuttedLine.EndPoint.X, distYm0Center, m0.MiddleCuttedLine.EndPoint.Y);
-                    startPoint3Dm1 = new Point3D(m1.MiddleCuttedLine.StartPoint.X, distYm1Center, m1.MiddleCuttedLine.StartPoint.Y);
-                    endPoint3Dm1 = new Point3D(m1.MiddleCuttedLine.EndPoint.X, distYm1Center, m1.MiddleCuttedLine.EndPoint.Y);
-                }
-            }
-            else
-            {
-                if (m0.Alignment == Member.MemberAlignment.RightEdge)
-                {
-                    startPoint3Dm0 = new Point3D(m0.LeftEdgeLine.StartPoint.X, distYm0Center, m0.LeftEdgeLine.StartPoint.Y);
-                    endPoint3Dm0 = new Point3D(m0.LeftEdgeLine.EndPoint.X, distYm0Center, m0.LeftEdgeLine.EndPoint.Y);
-                    startPoint3Dm1 = new Point3D(m1.LeftEdgeLine.StartPoint.X, distYm1Center, m1.LeftEdgeLine.StartPoint.Y);
-                    endPoint3Dm1 = new Point3D(m1.LeftEdgeLine.EndPoint.X, distYm1Center, m1.LeftEdgeLine.EndPoint.Y);
-                }
-                else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
-                {
-                    startPoint3Dm0 = new Point3D(m0.RightEdgeLine.StartPoint.X, distYm0Center, m0.RightEdgeLine.StartPoint.Y);
-                    endPoint3Dm0 = new Point3D(m0.RightEdgeLine.EndPoint.X, distYm0Center, m0.RightEdgeLine.EndPoint.Y);
-                    startPoint3Dm1 = new Point3D(m1.RightEdgeLine.StartPoint.X, distYm1Center, m1.RightEdgeLine.StartPoint.Y);
-                    endPoint3Dm1 = new Point3D(m1.RightEdgeLine.EndPoint.X, distYm1Center, m1.RightEdgeLine.EndPoint.Y);
-                }
-                else
-                {
-                    startPoint3Dm0 = new Point3D(m0.MiddleCuttedLine.StartPoint.X, distYm0Center, m0.MiddleCuttedLine.StartPoint.Y);
-                    endPoint3Dm0 = new Point3D(m0.MiddleCuttedLine.EndPoint.X, distYm0Center, m0.MiddleCuttedLine.EndPoint.Y);
-                    startPoint3Dm1 = new Point3D(m1.MiddleCuttedLine.StartPoint.X, distYm1Center, m1.MiddleCuttedLine.StartPoint.Y);
-                    endPoint3Dm1 = new Point3D(m1.MiddleCuttedLine.EndPoint.X, distYm1Center, m1.MiddleCuttedLine.EndPoint.Y);
-                }
-            }
+            startPoint3Dm0 = new Point3D(double.Parse(m0XStart), distYm0Center, double.Parse(m0YStart));
+            endPoint3Dm0 = new Point3D(double.Parse(m0XEnd), distYm0Center, double.Parse(m0YEnd));
+            startPoint3Dm1 = new Point3D(double.Parse(m1XStart), distYm1Center, double.Parse(m1YStart));
+            endPoint3Dm1 = new Point3D(double.Parse(m1XEnd), distYm1Center, double.Parse(m1YEnd));
 
-
-
+            //if (!changeExistBeamAlignement)
+            //{
+            //    if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+            //    {
+            //        startPoint3Dm0 = new Point3D(m0.LeftEdgeLine.StartPoint.X, distYm0Center, m0.LeftEdgeLine.StartPoint.Y);
+            //        endPoint3Dm0 = new Point3D(m0.LeftEdgeLine.EndPoint.X, distYm0Center, m0.LeftEdgeLine.EndPoint.Y);
+            //        startPoint3Dm1 = new Point3D(m1.LeftEdgeLine.StartPoint.X, distYm1Center, m1.LeftEdgeLine.StartPoint.Y);
+            //        endPoint3Dm1 = new Point3D(m1.LeftEdgeLine.EndPoint.X, distYm1Center, m1.LeftEdgeLine.EndPoint.Y);
+            //    }
+            //    else if (m0.Alignment == Member.MemberAlignment.RightEdge)
+            //    {
+            //        startPoint3Dm0 = new Point3D(m0.RightEdgeLine.StartPoint.X, distYm0Center, m0.RightEdgeLine.StartPoint.Y);
+            //        endPoint3Dm0 = new Point3D(m0.RightEdgeLine.EndPoint.X, distYm0Center, m0.RightEdgeLine.EndPoint.Y);
+            //        startPoint3Dm1 = new Point3D(m1.RightEdgeLine.StartPoint.X, distYm1Center, m1.RightEdgeLine.StartPoint.Y);
+            //        endPoint3Dm1 = new Point3D(m1.RightEdgeLine.EndPoint.X, distYm1Center, m1.RightEdgeLine.EndPoint.Y);
+            //    }
+            //    else
+            //    {
+            //        startPoint3Dm0 = new Point3D(m0.MiddleCuttedLine.StartPoint.X, distYm0Center, m0.MiddleCuttedLine.StartPoint.Y);
+            //        endPoint3Dm0 = new Point3D(m0.MiddleCuttedLine.EndPoint.X, distYm0Center, m0.MiddleCuttedLine.EndPoint.Y);
+            //        startPoint3Dm1 = new Point3D(m1.MiddleCuttedLine.StartPoint.X, distYm1Center, m1.MiddleCuttedLine.StartPoint.Y);
+            //        endPoint3Dm1 = new Point3D(m1.MiddleCuttedLine.EndPoint.X, distYm1Center, m1.MiddleCuttedLine.EndPoint.Y);
+            //    }
+            //}
+            //else
+            //{
+            //    if (m0.Alignment == Member.MemberAlignment.RightEdge)
+            //    {
+            //        startPoint3Dm0 = new Point3D(m0.LeftEdgeLine.StartPoint.X, distYm0Center, m0.LeftEdgeLine.StartPoint.Y);
+            //        endPoint3Dm0 = new Point3D(m0.LeftEdgeLine.EndPoint.X, distYm0Center, m0.LeftEdgeLine.EndPoint.Y);
+            //        startPoint3Dm1 = new Point3D(m1.LeftEdgeLine.StartPoint.X, distYm1Center, m1.LeftEdgeLine.StartPoint.Y);
+            //        endPoint3Dm1 = new Point3D(m1.LeftEdgeLine.EndPoint.X, distYm1Center, m1.LeftEdgeLine.EndPoint.Y);
+            //    }
+            //    else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
+            //    {
+            //        startPoint3Dm0 = new Point3D(m0.RightEdgeLine.StartPoint.X, distYm0Center, m0.RightEdgeLine.StartPoint.Y);
+            //        endPoint3Dm0 = new Point3D(m0.RightEdgeLine.EndPoint.X, distYm0Center, m0.RightEdgeLine.EndPoint.Y);
+            //        startPoint3Dm1 = new Point3D(m1.RightEdgeLine.StartPoint.X, distYm1Center, m1.RightEdgeLine.StartPoint.Y);
+            //        endPoint3Dm1 = new Point3D(m1.RightEdgeLine.EndPoint.X, distYm1Center, m1.RightEdgeLine.EndPoint.Y);
+            //    }
+            //    else
+            //    {
+            //        startPoint3Dm0 = new Point3D(m0.MiddleCuttedLine.StartPoint.X, distYm0Center, m0.MiddleCuttedLine.StartPoint.Y);
+            //        endPoint3Dm0 = new Point3D(m0.MiddleCuttedLine.EndPoint.X, distYm0Center, m0.MiddleCuttedLine.EndPoint.Y);
+            //        startPoint3Dm1 = new Point3D(m1.MiddleCuttedLine.StartPoint.X, distYm1Center, m1.MiddleCuttedLine.StartPoint.Y);
+            //        endPoint3Dm1 = new Point3D(m1.MiddleCuttedLine.EndPoint.X, distYm1Center, m1.MiddleCuttedLine.EndPoint.Y);
+            //    }
+            //}
         }
 
         private void CalculateNewTrussPoints(Point3D startPoint3Dm0, Point3D endPoint3Dm0, double dH, out Point3D newStartPoint3D, out Point3D newEndPoint3D)

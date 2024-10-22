@@ -2,6 +2,7 @@
 {
     public static class Constants
     {
+        public const string TitleChapter0SelectedBeamInformation = "Selected beam information";
         public const string TitleChapter1BeamSettings = "Beam settings";
         public const string TitleChapter2BeamLocation = "Beam location";
         public const string MainStack = "MainStack";
@@ -22,6 +23,9 @@
         public const string mm = "mm";
         public const string goToNewLine = "\n";
         public const string Warning = "Warning";
+        public const string X = "X: ";
+        public const string Y = "Y: ";
+        public const string zeroString = "0";
         public const int degrees45 = 45;
     }
 }

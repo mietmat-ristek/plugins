@@ -502,6 +502,15 @@ namespace RistekPluginSample.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to End point.
+        /// </summary>
+        internal static string endPoint {
+            get {
+                return ResourceManager.GetString("endPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to exist beam alignement.
         /// </summary>
         internal static string existBeamAlignement {
@@ -516,6 +525,15 @@ namespace RistekPluginSample.Strings {
         internal static string fillInRequiredFields {
             get {
                 return ResourceManager.GetString("fillInRequiredFields", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coordinates beam 1.
+        /// </summary>
+        internal static string firstSelectedBeamCoordinates {
+            get {
+                return ResourceManager.GetString("firstSelectedBeamCoordinates", resourceCulture);
             }
         }
         
@@ -579,6 +597,15 @@ namespace RistekPluginSample.Strings {
         internal static string rotateBeam {
             get {
                 return ResourceManager.GetString("rotateBeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coordinates beam 2.
+        /// </summary>
+        internal static string secondSelectedBeamCoordinates {
+            get {
+                return ResourceManager.GetString("secondSelectedBeamCoordinates", resourceCulture);
             }
         }
         
@@ -660,6 +687,15 @@ namespace RistekPluginSample.Strings {
         internal static string setRotationRelativeToTheRoofSlope {
             get {
                 return ResourceManager.GetString("setRotationRelativeToTheRoofSlope", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start point.
+        /// </summary>
+        internal static string startPoint {
+            get {
+                return ResourceManager.GetString("startPoint", resourceCulture);
             }
         }
         

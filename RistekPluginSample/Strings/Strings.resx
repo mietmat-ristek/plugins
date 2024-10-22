@@ -230,7 +230,7 @@
   </data>
   <data name="fillInRequiredFields" xml:space="preserve">
     <value>Please complete all required fields</value>
-  </data>  
+  </data>
   <data name="_PlaneAlignementEnum_toAxis" xml:space="preserve">
     <value>to axis</value>
   </data>
@@ -344,6 +344,19 @@
   </data>
   <data name="selectionOfBeamType" xml:space="preserve">
     <value>Selection of beam type</value>
+  </data>
+  <data name="firstSelectedBeamCoordinates" xml:space="preserve">
+    <value>Coordinates beam 1</value>
+  </data>
+  <data name="secondSelectedBeamCoordinates" xml:space="preserve">
+    <value>Coordinates beam 2</value>
   </data>  
+  <data name="startPoint" xml:space="preserve">
+    <value>Start point</value>
+  </data>
+  <data name="endPoint" xml:space="preserve">
+    <value>End point</value>
+  </data>
+
 
 </root>
