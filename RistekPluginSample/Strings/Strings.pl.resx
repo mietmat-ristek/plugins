@@ -360,4 +360,10 @@
   <data name="endPoint" xml:space="preserve">
     <value>Punkt końcowy</value>
   </data>
+  <data name="haveToBeLargerThanZero" xml:space="preserve">
+    <value>Musi być większe od 0</value>
+  </data>
+  <data name="validationIssue" xml:space="preserve">
+    <value>Błąd walidacji</value>
+  </data>
 </root>

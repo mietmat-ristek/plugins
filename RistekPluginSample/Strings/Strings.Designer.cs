@@ -538,7 +538,16 @@ namespace RistekPluginSample.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Horizontal dimension [mm].
+        ///   Looks up a localized string similar to Have to be larger than zero.
+        /// </summary>
+        internal static string haveToBeLargerThanZero {
+            get {
+                return ResourceManager.GetString("haveToBeLargerThanZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Horizontal dimension [mm] .
         /// </summary>
         internal static string horizontalDimension {
             get {
@@ -736,7 +745,16 @@ namespace RistekPluginSample.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Vertical dimension [mm].
+        ///   Looks up a localized string similar to Validation issue.
+        /// </summary>
+        internal static string validationIssue {
+            get {
+                return ResourceManager.GetString("validationIssue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vertical dimension [mm] .
         /// </summary>
         internal static string verticalDimension {
             get {
