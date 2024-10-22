@@ -339,4 +339,13 @@
   <data name="_beamTrussKnagaNodeName" xml:space="preserve">
     <value>Knaga</value>
   </data>
+  <data name="timberBeam" xml:space="preserve">
+    <value>Belka drewniana</value>
+  </data>
+  <data name="steelBeam" xml:space="preserve">
+    <value>Belka stalowa</value>
+  </data>
+  <data name="selectionOfBeamType" xml:space="preserve">
+    <value>Wybór rodzaju belki</value>
+  </data>
 </root>

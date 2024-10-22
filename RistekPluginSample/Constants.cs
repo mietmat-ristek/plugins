@@ -14,6 +14,7 @@
         public const string beamEndExtension = "beam end extension";
         public const string beamMultiplySpacing = "beam multiply spacing";
         public const string TimberBeam = "Timber Beam";
+        public const string SteelBeam = "Steel Beam";
         public const string NewBeamAlignement = "new beam alignment";
         public const string topEdge = "topEdge";
         public const string bottomEdge = "bottomEdge";

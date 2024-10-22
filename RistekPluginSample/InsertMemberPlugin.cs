@@ -1,5 +1,6 @@
 ﻿using Epx.BIM;
 using Epx.BIM.Models;
+using Epx.BIM.Models.Steel;
 using Epx.BIM.Models.Timber;
 using Epx.BIM.Plugins;
 using Epx.Ristek.Data.Models;
@@ -182,6 +183,7 @@ namespace RistekPluginSample
         private Member m0;
         private Member m1;
         private double horizontalCastLength;
+        private ComboBox _selectionOfBeamType;
 
         public bool DialogResult { get; set; }
         public IPluginEngine PluginEngine { get; set; }
@@ -218,6 +220,7 @@ namespace RistekPluginSample
             mainStack.Orientation = Orientation.Vertical;
 
             CreateChapterTitleRow(mainStack, Constants.TitleChapter1BeamSettings);
+            CreateSelectionOfBeamType(mainStack);
             CreateBeamDimensionsRow(mainStack);
             CreateNewBeamAlignementOptionRow(mainStack);
             CreateExistBeamAlignementOptionRow(mainStack);
@@ -242,6 +245,20 @@ namespace RistekPluginSample
 
             this.DialogResult = _dialog.ShowDialog().Value;
             return this.DialogResult;
+        }
+
+        private void CreateSelectionOfBeamType(StackPanel mainStack)
+        {
+            var comboBoxStack = new StackPanel() { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 8) };
+            var comboBoxText = new TextBlock() { Text = Strings.Strings.selectionOfBeamType, Margin = new Thickness(0, 0, 8, 0) };
+            comboBoxStack.Children.Add(comboBoxText);
+            _selectionOfBeamType = new ComboBox() { Width = Double.NaN, Margin = new Thickness(0, 0, 4, 0) };
+            _selectionOfBeamType.Items.Add(Strings.Strings.timberBeam);
+            //_selectionOfBeamType.Items.Add(Strings.Strings.steelBeam);
+            _selectionOfBeamType.SelectedIndex = 0;
+            comboBoxStack.Children.Add(_selectionOfBeamType);
+
+            mainStack.Children.Add(comboBoxStack);
         }
 
         private void CreateBeamRotationRow(StackPanel mainStack)
@@ -494,6 +511,8 @@ namespace RistekPluginSample
         }
 
         private TimberBeam _timberBeam;
+        private PlanarBeam _planarBeam;
+        private SteelBeam _steelBeam;
         private ModelFolderNode _supportFolder;
         Point3D startPoint3Dm0, endPoint3Dm0, startPoint3Dm1, endPoint3Dm1;
         Point3D newStartPoint3D, newEndPoint3D;
@@ -563,34 +582,72 @@ namespace RistekPluginSample
 
         private void CreateSingleBeam()
         {
-            _timberBeam = new TimberBeam(Constants.TimberBeam);
-            _timberBeam.AssemblyName = this.AssemblyName;
-            _timberBeam.FullClassName = this.FullClassName;
+            if (_selectionOfBeamType.Text == Constants.TimberBeam)
+            {
+                _timberBeam = new TimberBeam(Constants.TimberBeam);
 
-            _timberBeam.Width = beamHeight;
-            _timberBeam.Thickness = beamThickness;
+                _timberBeam.AssemblyName = this.AssemblyName;
+                _timberBeam.FullClassName = this.FullClassName;
 
-            var distYm0Center = m0.PartCSToGlobal.OffsetY;
-            var distYm1Center = m1.PartCSToGlobal.OffsetY;
+                _timberBeam.Width = beamHeight;
+                _timberBeam.Thickness = beamThickness;
 
-            startPoint3Dm0 = new Point3D(m0.LeftEdgeLine.StartPoint.X, distYm0Center, m0.LeftEdgeLine.StartPoint.Y);
-            endPoint3Dm0 = new Point3D(m0.LeftEdgeLine.EndPoint.X, distYm0Center, m0.LeftEdgeLine.EndPoint.Y);
+                var distYm0Center = m0.PartCSToGlobal.OffsetY;
+                var distYm1Center = m1.PartCSToGlobal.OffsetY;
 
-            double cosOfRoofSlopeAngle = CalculateCosOfRoofSlopeAngle(startPoint3Dm0, endPoint3Dm0);
+                startPoint3Dm0 = new Point3D(m0.LeftEdgeLine.StartPoint.X, distYm0Center, m0.LeftEdgeLine.StartPoint.Y);
+                endPoint3Dm0 = new Point3D(m0.LeftEdgeLine.EndPoint.X, distYm0Center, m0.LeftEdgeLine.EndPoint.Y);
 
-            CalculateTrussPoints(out startPoint3Dm0, out endPoint3Dm0, out startPoint3Dm1, out endPoint3Dm1);
-            CalculateNewTrussPoints(startPoint3Dm0, endPoint3Dm0, beamHorizontalInsertionDistance, out newStartPoint3D, out newEndPoint3D);
+                double cosOfRoofSlopeAngle = CalculateCosOfRoofSlopeAngle(startPoint3Dm0, endPoint3Dm0);
 
-            double verticalMoveForNewBeam = beamHeight / 2 / cosOfRoofSlopeAngle;
-            double verticalMoveForExistBeam = m0.Width / cosOfRoofSlopeAngle;
-            bool isNotSquareCrossSection = beamThickness != beamHeight;
+                CalculateTrussPoints(out startPoint3Dm0, out endPoint3Dm0, out startPoint3Dm1, out endPoint3Dm1);
+                CalculateNewTrussPoints(startPoint3Dm0, endPoint3Dm0, beamHorizontalInsertionDistance, out newStartPoint3D, out newEndPoint3D);
 
-            Member.MemberAlignment newBeamAlignment = GetBeamAlignment(_comboBoxNewBeamAlignement.SelectedItem.ToString(), Strings.Strings.newBeamAlignement);
-            Member.MemberAlignment existBeamAlignment = GetBeamAlignment(_comboBoxExistBeamAlignement.SelectedItem.ToString(), Strings.Strings.existBeamAlignement);
+                double verticalMoveForNewBeam = beamHeight / 2 / cosOfRoofSlopeAngle;
+                double verticalMoveForExistBeam = m0.Width / cosOfRoofSlopeAngle;
+                bool isNotSquareCrossSection = beamThickness != beamHeight;
 
-            _timberBeam.Origin = DetermineTrussOrigin(verticalMoveForNewBeam, verticalMoveForExistBeam, newBeamAlignment, existBeamAlignment);
+                Member.MemberAlignment newBeamAlignment = GetBeamAlignment(_comboBoxNewBeamAlignement.SelectedItem.ToString(), Strings.Strings.newBeamAlignement);
+                Member.MemberAlignment existBeamAlignment = GetBeamAlignment(_comboBoxExistBeamAlignement.SelectedItem.ToString(), Strings.Strings.existBeamAlignement);
 
-            SetBeamLocationWithExtensions(_timberBeam, beamStartExtension, beamEndExtension);
+                _timberBeam.Origin = DetermineTrussOrigin(verticalMoveForNewBeam, verticalMoveForExistBeam, newBeamAlignment, existBeamAlignment);
+
+                SetBeamLocationWithExtensions(_timberBeam, beamStartExtension, beamEndExtension);
+            }
+            else if (_selectionOfBeamType.Text == Constants.SteelBeam)
+            {
+                _steelBeam = new SteelBeam(Constants.SteelBeam);
+
+                _steelBeam.AssemblyName = this.AssemblyName;
+                _steelBeam.FullClassName = this.FullClassName;
+
+                _steelBeam.Width = beamThickness;
+                _steelBeam.Height = beamHeight;
+
+                var distYm0Center = m0.PartCSToGlobal.OffsetY;
+                var distYm1Center = m1.PartCSToGlobal.OffsetY;
+
+                startPoint3Dm0 = new Point3D(m0.LeftEdgeLine.StartPoint.X, distYm0Center, m0.LeftEdgeLine.StartPoint.Y);
+                endPoint3Dm0 = new Point3D(m0.LeftEdgeLine.EndPoint.X, distYm0Center, m0.LeftEdgeLine.EndPoint.Y);
+
+                double cosOfRoofSlopeAngle = CalculateCosOfRoofSlopeAngle(startPoint3Dm0, endPoint3Dm0);
+
+                CalculateTrussPoints(out startPoint3Dm0, out endPoint3Dm0, out startPoint3Dm1, out endPoint3Dm1);
+                CalculateNewTrussPoints(startPoint3Dm0, endPoint3Dm0, beamHorizontalInsertionDistance, out newStartPoint3D, out newEndPoint3D);
+
+                double verticalMoveForNewBeam = beamHeight / 2 / cosOfRoofSlopeAngle;
+                double verticalMoveForExistBeam = m0.Width / cosOfRoofSlopeAngle;
+                bool isNotSquareCrossSection = beamThickness != beamHeight;
+
+                Member.MemberAlignment newBeamAlignment = GetBeamAlignment(_comboBoxNewBeamAlignement.SelectedItem.ToString(), Strings.Strings.newBeamAlignement);
+                Member.MemberAlignment existBeamAlignment = GetBeamAlignment(_comboBoxExistBeamAlignement.SelectedItem.ToString(), Strings.Strings.existBeamAlignement);
+
+                _steelBeam.Origin = DetermineTrussOrigin(verticalMoveForNewBeam, verticalMoveForExistBeam, newBeamAlignment, existBeamAlignment);
+                SetBeamLocationWithExtensions(_steelBeam, beamStartExtension, beamEndExtension);
+                _steelBeam.SectionGroupCode = "HEA";
+                _steelBeam.SectionName = "HEA 400";
+            }
+
         }
 
         private double CalculateCosOfRoofSlopeAngle(Point3D startPoint3Dm0, Point3D endPoint3Dm0)
@@ -1248,6 +1305,41 @@ namespace RistekPluginSample
             }
         }
 
+        private void SetBeamLocationWithExtensions(SteelBeam beam, double beamsStartExtension, double beamsEndExtension)
+        {
+            Point3D newStartPoint3DWithExtension;
+            Point3D newEndPoint3DWithExtension;
+            var beamOriginY = beam.Origin.Y;
+            Vector3D planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(startPoint3Dm0, endPoint3Dm0, endPoint3Dm1);
+            planeNormalToFutureBeamTruss.Normalize();
+
+            double distanceBeetweenExistBeams = Math.Abs(m0.PartCSToGlobal.OffsetY - m1.PartCSToGlobal.OffsetY);
+
+            bool isMinusDirection = startPoint3Dm0.Y > startPoint3Dm1.Y;
+
+            if (isMinusDirection)
+            {
+                newStartPoint3DWithExtension = new Point3D(beam.Origin.X, beamOriginY - m0.Thickness / 2 + beamsStartExtension, beam.Origin.Z);
+                newEndPoint3DWithExtension = new Point3D(beam.Origin.X, beamOriginY + m0.Thickness / 2 - distanceBeetweenExistBeams - beamsEndExtension, beam.Origin.Z);
+            }
+            else
+            {
+                newStartPoint3DWithExtension = new Point3D(beam.Origin.X, beamOriginY + m0.Thickness / 2 - beamsStartExtension, beam.Origin.Z);
+                newEndPoint3DWithExtension = new Point3D(beam.Origin.X, beamOriginY - m0.Thickness / 2 + distanceBeetweenExistBeams + beamsEndExtension, beam.Origin.Z);
+            }
+
+            if (!IsRotatedToTheMainTruss)
+            {
+                beam.SetAlignedStartPoint(newStartPoint3DWithExtension, new Vector3D(0, 0, 1));
+                beam.SetAlignedEndPoint(newEndPoint3DWithExtension, new Vector3D(0, 0, 1));
+            }
+            else
+            {
+                beam.SetAlignedStartPoint(newStartPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                beam.SetAlignedEndPoint(newEndPoint3DWithExtension, planeNormalToFutureBeamTruss);
+            }
+        }
+
         private void CalculateTrussPoints(out Point3D startPoint3Dm0, out Point3D endPoint3Dm0, out Point3D startPoint3Dm1, out Point3D endPoint3Dm1)
         {
             double distYm0Center = m0.PartCSToGlobal.OffsetY;
@@ -1382,23 +1474,46 @@ namespace RistekPluginSample
             update3DNodes = new List<Epx.BIM.BaseDataNode>(0); // no need to update any model nodes
 
             List<BaseDataNode> addedNodes = new List<BaseDataNode>();
-            addedNodes.Add(_timberBeam);
-            //addedNodes.Add(_supportFolder);
-            if (_supportFolder != null)
+            if (_timberBeam != null)
             {
-                addedNodes.Add(_supportFolder);
+                addedNodes.Add(_timberBeam);
+                //addedNodes.Add(_supportFolder);
+                if (_supportFolder != null)
+                {
+                    addedNodes.Add(_supportFolder);
+                }
+
+                ResetModelViewNodes();
+
+                doDelegate = delegate
+                {
+                    this.Target.AddChild(_timberBeam);
+                };
+                undoDelegate = delegate
+                {
+                    this.Target.RemoveChild(_timberBeam);
+                };
+            }
+            else
+            {
+                addedNodes.Add(_steelBeam);
+                if (_supportFolder != null)
+                {
+                    addedNodes.Add(_supportFolder);
+                }
+
+                ResetModelViewNodes();
+
+                doDelegate = delegate
+                {
+                    this.Target.AddChild(_steelBeam);
+                };
+                undoDelegate = delegate
+                {
+                    this.Target.RemoveChild(_steelBeam);
+                };
             }
 
-            ResetModelViewNodes();
-
-            doDelegate = delegate
-            {
-                this.Target.AddChild(_timberBeam);
-            };
-            undoDelegate = delegate
-            {
-                this.Target.RemoveChild(_timberBeam);
-            };
 
             return addedNodes;
         }

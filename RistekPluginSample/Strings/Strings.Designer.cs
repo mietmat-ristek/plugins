@@ -583,6 +583,15 @@ namespace RistekPluginSample.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Selection of beam type.
+        /// </summary>
+        internal static string selectionOfBeamType {
+            get {
+                return ResourceManager.GetString("selectionOfBeamType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select the first beam.
         /// </summary>
         internal static string selectTheFirstBeam {
@@ -651,6 +660,24 @@ namespace RistekPluginSample.Strings {
         internal static string setRotationRelativeToTheRoofSlope {
             get {
                 return ResourceManager.GetString("setRotationRelativeToTheRoofSlope", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Steel Beam.
+        /// </summary>
+        internal static string steelBeam {
+            get {
+                return ResourceManager.GetString("steelBeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Timber Beam.
+        /// </summary>
+        internal static string timberBeam {
+            get {
+                return ResourceManager.GetString("timberBeam", resourceCulture);
             }
         }
         
