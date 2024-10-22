@@ -502,6 +502,15 @@ namespace RistekPluginSample.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to End point.
+        /// </summary>
+        internal static string endPoint {
+            get {
+                return ResourceManager.GetString("endPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to exist beam alignement.
         /// </summary>
         internal static string existBeamAlignement {
@@ -520,7 +529,25 @@ namespace RistekPluginSample.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Horizontal dimension [mm].
+        ///   Looks up a localized string similar to Coordinates beam 1.
+        /// </summary>
+        internal static string firstSelectedBeamCoordinates {
+            get {
+                return ResourceManager.GetString("firstSelectedBeamCoordinates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Have to be larger than zero.
+        /// </summary>
+        internal static string haveToBeLargerThanZero {
+            get {
+                return ResourceManager.GetString("haveToBeLargerThanZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Horizontal dimension [mm] .
         /// </summary>
         internal static string horizontalDimension {
             get {
@@ -579,6 +606,15 @@ namespace RistekPluginSample.Strings {
         internal static string rotateBeam {
             get {
                 return ResourceManager.GetString("rotateBeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coordinates beam 2.
+        /// </summary>
+        internal static string secondSelectedBeamCoordinates {
+            get {
+                return ResourceManager.GetString("secondSelectedBeamCoordinates", resourceCulture);
             }
         }
         
@@ -664,6 +700,15 @@ namespace RistekPluginSample.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Start point.
+        /// </summary>
+        internal static string startPoint {
+            get {
+                return ResourceManager.GetString("startPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Steel Beam.
         /// </summary>
         internal static string steelBeam {
@@ -700,7 +745,16 @@ namespace RistekPluginSample.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Vertical dimension [mm].
+        ///   Looks up a localized string similar to Validation issue.
+        /// </summary>
+        internal static string validationIssue {
+            get {
+                return ResourceManager.GetString("validationIssue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vertical dimension [mm] .
         /// </summary>
         internal static string verticalDimension {
             get {

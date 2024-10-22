@@ -348,4 +348,22 @@
   <data name="selectionOfBeamType" xml:space="preserve">
     <value>Wybór rodzaju belki</value>
   </data>
+  <data name="firstSelectedBeamCoordinates" xml:space="preserve">
+    <value>Współrzędne belki 1</value>
+  </data>
+  <data name="secondSelectedBeamCoordinates" xml:space="preserve">
+    <value>Współrzędne belki 2</value>
+  </data>
+  <data name="startPoint" xml:space="preserve">
+    <value>Punkt początkowy</value>
+  </data>
+  <data name="endPoint" xml:space="preserve">
+    <value>Punkt końcowy</value>
+  </data>
+  <data name="haveToBeLargerThanZero" xml:space="preserve">
+    <value>Musi być większe od 0</value>
+  </data>
+  <data name="validationIssue" xml:space="preserve">
+    <value>Błąd walidacji</value>
+  </data>
 </root>

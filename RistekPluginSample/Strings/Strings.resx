@@ -151,10 +151,10 @@
     <value>Set beam dimensions</value>
   </data>
   <data name="horizontalDimension" xml:space="preserve">
-    <value>Horizontal dimension [mm]</value>
+    <value>Horizontal dimension [mm] </value>
   </data>
   <data name="verticalDimension" xml:space="preserve">
-    <value>Vertical dimension [mm]</value>
+    <value>Vertical dimension [mm] </value>
   </data>
   <data name="setHorizontalInsertionFromReferencePart1" xml:space="preserve">
     <value>Set the beam horizontal insertion distance from reference</value>
@@ -230,7 +230,7 @@
   </data>
   <data name="fillInRequiredFields" xml:space="preserve">
     <value>Please complete all required fields</value>
-  </data>  
+  </data>
   <data name="_PlaneAlignementEnum_toAxis" xml:space="preserve">
     <value>to axis</value>
   </data>
@@ -344,6 +344,23 @@
   </data>
   <data name="selectionOfBeamType" xml:space="preserve">
     <value>Selection of beam type</value>
-  </data>  
-
+  </data>
+  <data name="firstSelectedBeamCoordinates" xml:space="preserve">
+    <value>Coordinates beam 1</value>
+  </data>
+  <data name="secondSelectedBeamCoordinates" xml:space="preserve">
+    <value>Coordinates beam 2</value>
+  </data>
+  <data name="startPoint" xml:space="preserve">
+    <value>Start point</value>
+  </data>
+  <data name="endPoint" xml:space="preserve">
+    <value>End point</value>
+  </data>
+  <data name="haveToBeLargerThanZero" xml:space="preserve">
+    <value>Have to be larger than zero</value>
+  </data>
+  <data name="validationIssue" xml:space="preserve">
+    <value>Validation issue</value>
+  </data>
 </root>
