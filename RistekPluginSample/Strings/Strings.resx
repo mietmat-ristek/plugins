@@ -157,10 +157,10 @@
     <value>Vertical dimension [mm] </value>
   </data>
   <data name="setHorizontalInsertionFromReferencePart1" xml:space="preserve">
-    <value>Set the beam horizontal insertion distance from reference</value>
+    <value>Set the beam horizontal insertion distance from</value>
   </data>
   <data name="setHorizontalInsertionFromReferencePart2" xml:space="preserve">
-    <value>beam start point (to the new beam axis)</value>
+    <value>reference beam start point (to the new beam axis)</value>
   </data>
   <data name="distance" xml:space="preserve">
     <value>Distance [mm]</value>
@@ -365,5 +365,11 @@
   </data>
   <data name="beamsCannotBeCollinear" xml:space="preserve">
     <value>Beams cannot be collinear. Please choose parallel beam.</value>
+  </data>
+  <data name="horizontalCast" xml:space="preserve">
+    <value>Horizontal cast</value>
+  </data>
+  <data name="alongBeam" xml:space="preserve">
+    <value>Along beam</value>
   </data>  
 </root>

@@ -265,6 +265,7 @@ namespace RistekPluginSample
         private Member m1;
         private double horizontalCastLength;
         private ComboBox _selectionOfBeamType;
+        private ComboBox _selectionOfBeamDistanceType;
 
         public bool DialogResult { get; set; }
         public IPluginEngine PluginEngine { get; set; }
@@ -517,8 +518,26 @@ namespace RistekPluginSample
                 VerticalAlignment = VerticalAlignment.Center
             };
             beamLocationStack.Children.Add(beamLocationStackStackText);
+            _selectionOfBeamDistanceType = new ComboBox() { Margin = new Thickness(0, 0, 4, 0) };
+            _selectionOfBeamDistanceType.Items.Add(Strings.Strings.horizontalCast);
+            _selectionOfBeamDistanceType.Items.Add(Strings.Strings.alongBeam);
+            _selectionOfBeamDistanceType.SelectedIndex = 0;
+
+            int distanceTypeLength = 0;
+            foreach (var item in _selectionOfBeamDistanceType.Items)
+            {
+                int currentItemLength = item.ToString().Length;
+                if (distanceTypeLength < currentItemLength)
+                {
+                    distanceTypeLength = currentItemLength;
+                }
+            }
+            _selectionOfBeamDistanceType.Width = distanceTypeLength * Constants.multiplyerForLettersWidth8;
+            _selectionOfBeamDistanceType.VerticalAlignment = VerticalAlignment.Center;
+            beamLocationStack.Children.Add(_selectionOfBeamDistanceType);
+
             string text = Strings.Strings.distance;
-            double textLength = text.Length * 7;
+            double textLength = text.Length * Constants.multiplyerForLettersWidth8;
             _beamHorizontalInsertionDistance = CreateTextBox(Constants.InputBox, textLength, new Thickness(0, 0, 0, 0), text);
             _beamHorizontalInsertionDistance.VerticalAlignment = VerticalAlignment.Center;
 
@@ -770,7 +789,14 @@ namespace RistekPluginSample
                 double cosOfRoofSlopeAngle = CalculateCosOfRoofSlopeAngle(startPoint3Dm0, endPoint3Dm0);
 
                 CalculateTrussPoints(out startPoint3Dm0, out endPoint3Dm0, out startPoint3Dm1, out endPoint3Dm1);
-                CalculateNewTrussPoints(startPoint3Dm0, endPoint3Dm0, beamHorizontalInsertionDistance, out newStartPoint3D, out newEndPoint3D);
+                if (_selectionOfBeamDistanceType.Text == Constants.horizontalCast)
+                {
+                    CalculateNewBeamPointsForCastDistance(startPoint3Dm0, endPoint3Dm0, beamHorizontalInsertionDistance, out newStartPoint3D, out newEndPoint3D);
+                }
+                else
+                {
+                    CalculateNewBeamPointsForDistanceAlongTheBeam(startPoint3Dm0, endPoint3Dm0, beamHorizontalInsertionDistance, out newStartPoint3D, out newEndPoint3D);
+                }
 
                 double verticalMoveForNewBeam = beamHeight / 2 / cosOfRoofSlopeAngle;
                 double verticalMoveForExistBeam = m0.Width / cosOfRoofSlopeAngle;
@@ -802,8 +828,14 @@ namespace RistekPluginSample
                 double cosOfRoofSlopeAngle = CalculateCosOfRoofSlopeAngle(startPoint3Dm0, endPoint3Dm0);
 
                 CalculateTrussPoints(out startPoint3Dm0, out endPoint3Dm0, out startPoint3Dm1, out endPoint3Dm1);
-                CalculateNewTrussPoints(startPoint3Dm0, endPoint3Dm0, beamHorizontalInsertionDistance, out newStartPoint3D, out newEndPoint3D);
-
+                if (_selectionOfBeamDistanceType.Text == Constants.horizontalCast)
+                {
+                    CalculateNewBeamPointsForCastDistance(startPoint3Dm0, endPoint3Dm0, beamHorizontalInsertionDistance, out newStartPoint3D, out newEndPoint3D);
+                }
+                else
+                {
+                    CalculateNewBeamPointsForDistanceAlongTheBeam(startPoint3Dm0, endPoint3Dm0, beamHorizontalInsertionDistance, out newStartPoint3D, out newEndPoint3D);
+                }
                 double verticalMoveForNewBeam = beamHeight / 2 / cosOfRoofSlopeAngle;
                 double verticalMoveForExistBeam = m0.Width / cosOfRoofSlopeAngle;
                 bool isNotSquareCrossSection = beamThickness != beamHeight;
@@ -1518,7 +1550,7 @@ namespace RistekPluginSample
             endPoint3Dm1 = new Point3D(double.Parse(m1XEnd), distYm1Center, double.Parse(m1YEnd));
         }
 
-        private void CalculateNewTrussPoints(Point3D startPoint3Dm0, Point3D endPoint3Dm0, double dH, out Point3D newStartPoint3D, out Point3D newEndPoint3D)
+        private void CalculateNewBeamPointsForCastDistance(Point3D startPoint3Dm0, Point3D endPoint3Dm0, double dH, out Point3D newStartPoint3D, out Point3D newEndPoint3D)
         {
             double deltaX = endPoint3Dm0.X - startPoint3Dm0.X;
             double deltaY = endPoint3Dm0.Y - startPoint3Dm0.Y;
@@ -1532,6 +1564,26 @@ namespace RistekPluginSample
             double xNew = startPoint3Dm0.X + ux * dH;
             double yNew = startPoint3Dm0.Y + uy * dH;
             double zNew = startPoint3Dm0.Z + dH / deltaTotal * deltaZ;
+
+            newStartPoint3D = new Point3D(xNew, yNew, zNew);
+            newEndPoint3D = new Point3D(xNew, m1.PartCSToGlobal.OffsetY, zNew);
+        }
+
+        private void CalculateNewBeamPointsForDistanceAlongTheBeam (Point3D startPoint3Dm0, Point3D endPoint3Dm0, double dH, out Point3D newStartPoint3D, out Point3D newEndPoint3D)
+        {
+            double deltaX = endPoint3Dm0.X - startPoint3Dm0.X;
+            double deltaY = endPoint3Dm0.Y - startPoint3Dm0.Y;
+            double deltaZ = endPoint3Dm0.Z - startPoint3Dm0.Z;
+
+            double deltaTotal = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2) + Math.Pow(deltaZ, 2));
+
+            double ux = deltaX / deltaTotal;
+            double uy = deltaY / deltaTotal;
+            double uz = deltaZ / deltaTotal;
+
+            double xNew = startPoint3Dm0.X + ux * dH;
+            double yNew = startPoint3Dm0.Y + uy * dH;
+            double zNew = startPoint3Dm0.Z + uz * dH;
 
             newStartPoint3D = new Point3D(xNew, yNew, zNew);
             newEndPoint3D = new Point3D(xNew, m1.PartCSToGlobal.OffsetY, zNew);
