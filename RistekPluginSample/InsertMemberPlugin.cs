@@ -202,10 +202,22 @@ namespace RistekPluginSample
                 }
                 else
                 {
+                    m0 = GetTrussMemberFromPluginInput_(_preInputs[0]);
+                    m1 = GetTrussMemberFromPluginInput_(_preInputs[1]);
+
+                    double distYm0Center = m0.PartCSToGlobal.OffsetY;
+                    double distYm1Center = m1.PartCSToGlobal.OffsetY;
+                    bool areCollinear = distYm0Center - distYm1Center == 0;
                     if ((pluginObjectInput2.Point - (_preInputs[0] as PluginObjectInput).Point).Length < 1)
                     {
                         pluginInput.Valid = false;
                         pluginInput.ErrorMessage = Strings.Strings.pointsCannotBeTheSame;
+                        return false;
+                    }
+                    else if (areCollinear)
+                    {
+                        pluginInput.Valid = false;
+                        pluginInput.ErrorMessage = Strings.Strings.beamsCannotBeCollinear;
                         return false;
                     }
                     else
@@ -325,7 +337,7 @@ namespace RistekPluginSample
             comboBoxStack.Children.Add(comboBoxText);
             _selectionOfBeamType = new ComboBox() { Width = Double.NaN, Margin = new Thickness(0, 0, 4, 0) };
             _selectionOfBeamType.Items.Add(Strings.Strings.timberBeam);
-            //_selectionOfBeamType.Items.Add(Strings.Strings.steelBeam);
+            _selectionOfBeamType.Items.Add(Strings.Strings.steelBeam);
             _selectionOfBeamType.SelectedIndex = 0;
             comboBoxStack.Children.Add(_selectionOfBeamType);
 

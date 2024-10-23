@@ -439,6 +439,15 @@ namespace RistekPluginSample.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Beams cannot be collinear. Please choose parallel beam..
+        /// </summary>
+        internal static string beamsCannotBeCollinear {
+            get {
+                return ResourceManager.GetString("beamsCannotBeCollinear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Beam start extension [mm].
         /// </summary>
         internal static string beamStartExtension {

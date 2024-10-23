@@ -366,4 +366,7 @@
   <data name="validationIssue" xml:space="preserve">
     <value>Błąd walidacji</value>
   </data>
+  <data name="beamsCannotBeCollinear" xml:space="preserve">
+    <value>Belki nie mogą być współliniowe. Wybierz równoległą belkę.</value>
+  </data>
 </root>

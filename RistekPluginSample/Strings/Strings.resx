@@ -363,4 +363,7 @@
   <data name="validationIssue" xml:space="preserve">
     <value>Validation issue</value>
   </data>
+  <data name="beamsCannotBeCollinear" xml:space="preserve">
+    <value>Beams cannot be collinear. Please choose parallel beam.</value>
+  </data>  
 </root>
