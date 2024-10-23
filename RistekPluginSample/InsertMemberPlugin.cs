@@ -158,7 +158,7 @@ namespace RistekPluginSample
 
                     horizontalCastLength = Math.Abs(m0.MiddleCuttedLine.EndPoint.X - m0.MiddleCuttedLine.StartPoint.X);
                 }
-             
+
                 startPoint3Dm0 = new Point3D(m0XStart, distYm0Center, m0YStart);
                 endPoint3Dm0 = new Point3D(m0XEnd, distYm0Center, m0YEnd);
                 double deltaX = endPoint3Dm0.X - startPoint3Dm0.X;
@@ -791,12 +791,9 @@ namespace RistekPluginSample
                 _timberBeam.Width = beamHeight;
                 _timberBeam.Thickness = beamThickness;
 
-                startPoint3Dm0 = new Point3D(m0.LeftEdgeLine.StartPoint.X, distYm0Center, m0.LeftEdgeLine.StartPoint.Y);
-                endPoint3Dm0 = new Point3D(m0.LeftEdgeLine.EndPoint.X, distYm0Center, m0.LeftEdgeLine.EndPoint.Y);
-
+                CalculateTrussPoints(out startPoint3Dm0, out endPoint3Dm0, out startPoint3Dm1, out endPoint3Dm1);
                 double cosOfRoofSlopeAngle = CalculateCosOfRoofSlopeAngle(startPoint3Dm0, endPoint3Dm0);
 
-                CalculateTrussPoints(out startPoint3Dm0, out endPoint3Dm0, out startPoint3Dm1, out endPoint3Dm1);
                 if (_selectionOfBeamDistanceType.Text == Constants.horizontalCast)
                 {
                     CalculateNewBeamPointsForCastDistance(startPoint3Dm0, endPoint3Dm0, beamHorizontalInsertionDistance, out newStartPoint3D, out newEndPoint3D);
@@ -827,12 +824,9 @@ namespace RistekPluginSample
                 _steelBeam.Width = beamThickness;
                 _steelBeam.Height = beamHeight;
 
-                startPoint3Dm0 = new Point3D(m0.LeftEdgeLine.StartPoint.X, distYm0Center, m0.LeftEdgeLine.StartPoint.Y);
-                endPoint3Dm0 = new Point3D(m0.LeftEdgeLine.EndPoint.X, distYm0Center, m0.LeftEdgeLine.EndPoint.Y);
-
+                CalculateTrussPoints(out startPoint3Dm0, out endPoint3Dm0, out startPoint3Dm1, out endPoint3Dm1);
                 double cosOfRoofSlopeAngle = CalculateCosOfRoofSlopeAngle(startPoint3Dm0, endPoint3Dm0);
 
-                CalculateTrussPoints(out startPoint3Dm0, out endPoint3Dm0, out startPoint3Dm1, out endPoint3Dm1);
                 if (_selectionOfBeamDistanceType.Text == Constants.horizontalCast)
                 {
                     CalculateNewBeamPointsForCastDistance(startPoint3Dm0, endPoint3Dm0, beamHorizontalInsertionDistance, out newStartPoint3D, out newEndPoint3D);
