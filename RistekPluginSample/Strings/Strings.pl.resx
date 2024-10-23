@@ -163,10 +163,10 @@
     <value>Wymiar pionowy [mm]</value>
   </data>
   <data name="setHorizontalInsertionFromReferencePart1" xml:space="preserve">
-    <value>Ustaw poziomą odległość wstawienia od początku belki</value>
+    <value>Ustaw poziomą odległość wstawienia od początku</value>
   </data>
   <data name="setHorizontalInsertionFromReferencePart2" xml:space="preserve">
-    <value>referencyjnej (do osi wstawianej belki)</value>
+    <value>belki referencyjnej (do osi wstawianej belki)</value>
   </data>
   <data name="distance" xml:space="preserve">
     <value>Odległość [mm]</value>
@@ -365,5 +365,14 @@
   </data>
   <data name="validationIssue" xml:space="preserve">
     <value>Błąd walidacji</value>
+  </data>
+  <data name="beamsCannotBeCollinear" xml:space="preserve">
+    <value>Belki nie mogą być współliniowe. Wybierz równoległą belkę.</value>
+  </data>
+  <data name="horizontalCast" xml:space="preserve">
+    <value>Horizontal cast</value>
+  </data>
+  <data name="alongBeam" xml:space="preserve">
+    <value>Along beam</value>
   </data>
 </root>

@@ -403,6 +403,15 @@ namespace RistekPluginSample.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Along beam.
+        /// </summary>
+        internal static string alongBeam {
+            get {
+                return ResourceManager.GetString("alongBeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Beam end extension [mm].
         /// </summary>
         internal static string beamEndExtension {
@@ -435,6 +444,15 @@ namespace RistekPluginSample.Strings {
         internal static string beamMultiplySpacing {
             get {
                 return ResourceManager.GetString("beamMultiplySpacing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Beams cannot be collinear. Please choose parallel beam..
+        /// </summary>
+        internal static string beamsCannotBeCollinear {
+            get {
+                return ResourceManager.GetString("beamsCannotBeCollinear", resourceCulture);
             }
         }
         
@@ -543,6 +561,15 @@ namespace RistekPluginSample.Strings {
         internal static string haveToBeLargerThanZero {
             get {
                 return ResourceManager.GetString("haveToBeLargerThanZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Horizontal cast.
+        /// </summary>
+        internal static string horizontalCast {
+            get {
+                return ResourceManager.GetString("horizontalCast", resourceCulture);
             }
         }
         
@@ -673,7 +700,7 @@ namespace RistekPluginSample.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Set the beam horizontal insertion distance from reference.
+        ///   Looks up a localized string similar to Set the beam horizontal insertion distance from.
         /// </summary>
         internal static string setHorizontalInsertionFromReferencePart1 {
             get {
@@ -682,7 +709,7 @@ namespace RistekPluginSample.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to beam start point (to the new beam axis).
+        ///   Looks up a localized string similar to reference beam start point (to the new beam axis).
         /// </summary>
         internal static string setHorizontalInsertionFromReferencePart2 {
             get {

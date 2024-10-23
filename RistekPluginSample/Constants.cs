@@ -26,6 +26,10 @@
         public const string X = "X: ";
         public const string Y = "Y: ";
         public const string zeroString = "0";
+        public const string horizontalCast = "Horizontal cast";
+        public const string alongBeam = "Along beam";
         public const int degrees45 = 45;
+        public const int multiplyerForLettersWidth7 = 7;
+        public const int multiplyerForLettersWidth8 = 8;
     }
 }
