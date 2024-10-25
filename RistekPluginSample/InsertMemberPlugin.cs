@@ -323,14 +323,14 @@ namespace RistekPluginSample
             _dialog.Content = mainStack;
 
 #if DEBUG
-            _beamHeight.Text = 60.ToString();
+            _beamHeight.Text = 100.ToString();
             _beamThickness.Text = 40.ToString();
             _beamStartExtension.Text = 42.ToString();
             _beamEndExtension.Text = 42.ToString();
             _comboBoxNewBeamAlignement.Text = "Upper plane";
-            beamRotationCheckBox.IsChecked = true;
+            beamRotationCheckBox.IsChecked = false;
             _selectionOfBeamDistanceType.Text = "Along beam";
-            _beamHorizontalInsertionDistance.Text = 500.ToString();
+            _beamHorizontalInsertionDistance.Text = 0.ToString();
 
 #endif
 
@@ -1282,7 +1282,7 @@ namespace RistekPluginSample
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
 
                                     }
                                 }
@@ -1863,7 +1863,6 @@ namespace RistekPluginSample
                                 {
 
                                     return new Point3D(xNew, yNew, zNew);
-
                                 }
                         }
                 }
