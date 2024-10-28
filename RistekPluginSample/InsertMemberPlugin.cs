@@ -1694,114 +1694,72 @@ namespace RistekPluginSample
                             case Member.MemberAlignment.RightEdge:
                                 if (m0.Alignment == Member.MemberAlignment.LeftEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                    }
+                                    return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
                                 }
                                 else if (m0.Alignment == Member.MemberAlignment.RightEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove - verticalMoveForNewBeam);
+                                        return new Point3D(xNew - horizontalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove - zMoveForNewBeam);
                                     }
                                     else
                                     {
-                                        if (isHorizontalEaves)
-                                        {
-                                            return new Point3D(xNew - horizontalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                        }
-                                        else if (isVerticalEaves)
-                                        {
-                                            return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove - zMoveForNewBeam);
-                                        }
-                                        else
-                                        {
-                                            return new Point3D(xNew - normalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew + normalEavesZMove * 2 - zMoveForNewBeam);
-                                        }
+                                        return new Point3D(xNew - normalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew + normalEavesZMove * 2 - zMoveForNewBeam);
                                     }
                                 }
                                 else
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 - verticalMoveForNewBeam);
+                                        return new Point3D(xNew - horizontalEavesXMove + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 - zMoveForNewBeam);
                                     }
                                     else
                                     {
-                                        if (isHorizontalEaves)
-                                        {
-                                            return new Point3D(xNew - horizontalEavesXMove + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                        }
-                                        else if (isVerticalEaves)
-                                        {
-                                            return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 - zMoveForNewBeam);
-                                        }
-                                        else
-                                        {
-                                            return new Point3D(xNew - normalEavesXMove + xMoveForNewBeam, yNew, zNew + normalEavesZMove - zMoveForNewBeam);
-                                        }
+                                        return new Point3D(xNew - normalEavesXMove + xMoveForNewBeam, yNew, zNew + normalEavesZMove - zMoveForNewBeam);
                                     }
                                 }
                             case Member.MemberAlignment.LeftEdge:
                                 if (m0.Alignment == Member.MemberAlignment.LeftEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
 
-                                    }
+                                    return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
                                 }
                                 else if (m0.Alignment == Member.MemberAlignment.RightEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove + verticalMoveForNewBeam);
+                                        return new Point3D(xNew - horizontalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove + zMoveForNewBeam);
                                     }
                                     else
                                     {
-                                        if (isHorizontalEaves)
-                                        {
-                                            return new Point3D(xNew - horizontalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                        }
-                                        else if (isVerticalEaves)
-                                        {
-                                            return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove + zMoveForNewBeam);
-                                        }
-                                        else
-                                        {
-                                            return new Point3D(xNew - normalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew + normalEavesZMove * 2 + zMoveForNewBeam);
-                                        }
+                                        return new Point3D(xNew - normalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew + normalEavesZMove * 2 + zMoveForNewBeam);
                                     }
                                 }
                                 else
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 + verticalMoveForNewBeam);
+                                        return new Point3D(xNew - horizontalEavesXMove - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 + zMoveForNewBeam);
                                     }
                                     else
                                     {
-                                        if (isHorizontalEaves)
-                                        {
-                                            return new Point3D(xNew - horizontalEavesXMove - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                        }
-                                        else if (isVerticalEaves)
-                                        {
-                                            return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 + zMoveForNewBeam);
-                                        }
-                                        else
-                                        {
-                                            return new Point3D(xNew - normalEavesXMove - xMoveForNewBeam, yNew, zNew + normalEavesZMove + zMoveForNewBeam);
-                                        }
+                                        return new Point3D(xNew - normalEavesXMove - xMoveForNewBeam, yNew, zNew + normalEavesZMove + zMoveForNewBeam);
                                     }
                                 }
                             default:
@@ -1811,46 +1769,32 @@ namespace RistekPluginSample
                                 }
                                 else if (m0.Alignment == Member.MemberAlignment.RightEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
+                                    {
+                                        return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew);
+                                    }
+                                    else if (isVerticalEaves)
                                     {
                                         return new Point3D(xNew, yNew, zNew + verticalEavesZMove);
                                     }
                                     else
                                     {
-                                        if (isHorizontalEaves)
-                                        {
-                                            return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew);
-                                        }
-                                        else if (isVerticalEaves)
-                                        {
-                                            return new Point3D(xNew, yNew, zNew + verticalEavesZMove);
-                                        }
-                                        else
-                                        {
-                                            return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2);
-                                        }
+                                        return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2);
                                     }
                                 }
                                 else
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
+                                    {
+                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
+                                    }
+                                    else if (isVerticalEaves)
                                     {
                                         return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
                                     }
                                     else
                                     {
-                                        if (isHorizontalEaves)
-                                        {
-                                            return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
-                                        }
-                                        else if (isVerticalEaves)
-                                        {
-                                            return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
-                                        }
-                                        else
-                                        {
-                                            return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove);
-                                        }
+                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove);
                                     }
                                 }
                         }
@@ -1861,169 +1805,107 @@ namespace RistekPluginSample
                             case Member.MemberAlignment.RightEdge:
                                 if (m0.Alignment == Member.MemberAlignment.LeftEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove - verticalMoveForNewBeam);
+                                        return new Point3D(xNew + horizontalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - verticalEavesZMove - zMoveForNewBeam);
                                     }
                                     else
                                     {
-                                        if (isHorizontalEaves)
-                                        {
-                                            return new Point3D(xNew + horizontalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                        }
-                                        else if (isVerticalEaves)
-                                        {
-                                            return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - verticalEavesZMove - zMoveForNewBeam);
-                                        }
-                                        else
-                                        {
-                                            return new Point3D(xNew + normalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew - normalEavesZMove * 2 - zMoveForNewBeam);
-                                        }
+                                        return new Point3D(xNew + normalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew - normalEavesZMove * 2 - zMoveForNewBeam);
                                     }
                                 }
                                 else if (m0.Alignment == Member.MemberAlignment.RightEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                    }
+
+                                    return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
                                 }
                                 else
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 - verticalMoveForNewBeam);
+                                        return new Point3D(xNew + horizontalEavesXMove + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 - zMoveForNewBeam);
                                     }
                                     else
                                     {
-                                        if (isHorizontalEaves)
-                                        {
-                                            return new Point3D(xNew + horizontalEavesXMove + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                        }
-                                        else if (isVerticalEaves)
-                                        {
-                                            return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 - zMoveForNewBeam);
-                                        }
-                                        else
-                                        {
-                                            return new Point3D(xNew + normalEavesXMove + xMoveForNewBeam, yNew, zNew - normalEavesZMove - zMoveForNewBeam);
-                                        }
+                                        return new Point3D(xNew + normalEavesXMove + xMoveForNewBeam, yNew, zNew - normalEavesZMove - zMoveForNewBeam);
                                     }
                                 }
                             case Member.MemberAlignment.LeftEdge:
                                 if (m0.Alignment == Member.MemberAlignment.LeftEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove + verticalMoveForNewBeam);
+                                        return new Point3D(xNew + horizontalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - verticalEavesZMove + zMoveForNewBeam);
                                     }
                                     else
                                     {
-                                        if (isHorizontalEaves)
-                                        {
-                                            return new Point3D(xNew + horizontalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                        }
-                                        else if (isVerticalEaves)
-                                        {
-                                            return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - verticalEavesZMove + zMoveForNewBeam);
-                                        }
-                                        else
-                                        {
-                                            return new Point3D(xNew + normalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew - normalEavesZMove * 2 + zMoveForNewBeam);
-                                        }
+                                        return new Point3D(xNew + normalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew - normalEavesZMove * 2 + zMoveForNewBeam);
                                     }
                                 }
                                 else if (m0.Alignment == Member.MemberAlignment.RightEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                    }
+                                    return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
                                 }
                                 else
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 + verticalMoveForNewBeam);
+                                        return new Point3D(xNew + horizontalEavesXMove - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 + zMoveForNewBeam);
                                     }
                                     else
                                     {
-                                        if (isHorizontalEaves)
-                                        {
-                                            return new Point3D(xNew + horizontalEavesXMove - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                        }
-                                        else if (isVerticalEaves)
-                                        {
-                                            return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 + zMoveForNewBeam);
-                                        }
-                                        else
-                                        {
-                                            return new Point3D(xNew + normalEavesXMove - xMoveForNewBeam, yNew, zNew - normalEavesZMove + zMoveForNewBeam);
-                                        }
+                                        return new Point3D(xNew + normalEavesXMove - xMoveForNewBeam, yNew, zNew - normalEavesZMove + zMoveForNewBeam);
                                     }
                                 }
                             default:
                                 if (m0.Alignment == Member.MemberAlignment.LeftEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
+                                    {
+                                        return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew);
+                                    }
+                                    else if (isVerticalEaves)
                                     {
                                         return new Point3D(xNew, yNew, zNew - verticalEavesZMove);
                                     }
                                     else
                                     {
-                                        if (isHorizontalEaves)
-                                        {
-                                            return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew);
-                                        }
-                                        else if (isVerticalEaves)
-                                        {
-                                            return new Point3D(xNew, yNew, zNew - verticalEavesZMove);
-                                        }
-                                        else
-                                        {
-                                            return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2);
-                                        }
+                                        return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2);
                                     }
                                 }
                                 else if (m0.Alignment == Member.MemberAlignment.RightEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew, yNew, zNew);
-                                    }
+                                    return new Point3D(xNew, yNew, zNew);
                                 }
                                 else
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
+                                    {
+                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew);
+                                    }
+                                    else if (isVerticalEaves)
                                     {
                                         return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2);
                                     }
                                     else
                                     {
-                                        if (isHorizontalEaves)
-                                        {
-                                            return new Point3D(xNew + horizontalEavesXMove, yNew, zNew);
-                                        }
-                                        else if (isVerticalEaves)
-                                        {
-                                            return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2);
-                                        }
-                                        else
-                                        {
-                                            return new Point3D(xNew + normalEavesXMove, yNew, zNew - normalEavesZMove);
-                                        }
+                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew - normalEavesZMove);
                                     }
                                 }
                         }
@@ -2034,158 +1916,102 @@ namespace RistekPluginSample
                             case Member.MemberAlignment.RightEdge:
                                 if (m0.Alignment == Member.MemberAlignment.LeftEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 - verticalMoveForNewBeam);
+                                        return new Point3D(xNew + horizontalEavesXMove + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 - zMoveForNewBeam);
                                     }
                                     else
                                     {
-                                        if (isHorizontalEaves)
-                                        {
-                                            return new Point3D(xNew + horizontalEavesXMove + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                        }
-                                        else if (isVerticalEaves)
-                                        {
-                                            return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 - zMoveForNewBeam);
-                                        }
-                                        else
-                                        {
-                                            return new Point3D(xNew + normalEavesXMove + xMoveForNewBeam, yNew, zNew - normalEavesZMove - zMoveForNewBeam);
-                                        }
+                                        return new Point3D(xNew + normalEavesXMove + xMoveForNewBeam, yNew, zNew - normalEavesZMove - zMoveForNewBeam);
                                     }
                                 }
                                 else if (m0.Alignment == Member.MemberAlignment.RightEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 - verticalMoveForNewBeam);
+                                        return new Point3D(xNew - horizontalEavesXMove + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 - zMoveForNewBeam);
                                     }
                                     else
                                     {
-                                        if (isHorizontalEaves)
-                                        {
-                                            return new Point3D(xNew - horizontalEavesXMove + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                        }
-                                        else if (isVerticalEaves)
-                                        {
-                                            return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 - zMoveForNewBeam);
-                                        }
-                                        else
-                                        {
-                                            return new Point3D(xNew - normalEavesXMove + xMoveForNewBeam, yNew, zNew + normalEavesZMove - zMoveForNewBeam);
-                                        }
+                                        return new Point3D(xNew - normalEavesXMove + xMoveForNewBeam, yNew, zNew + normalEavesZMove - zMoveForNewBeam);
                                     }
                                 }
                                 else
                                 {
-                                    if (castToTheHorizontalDistance)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                    }
+                                    return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
                                 }
                             case Member.MemberAlignment.LeftEdge:
                                 if (m0.Alignment == Member.MemberAlignment.LeftEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 + verticalMoveForNewBeam);
+                                        return new Point3D(xNew + horizontalEavesXMove - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 + zMoveForNewBeam);
                                     }
                                     else
                                     {
-                                        if (isHorizontalEaves)
-                                        {
-                                            return new Point3D(xNew + horizontalEavesXMove - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                        }
-                                        else if (isVerticalEaves)
-                                        {
-                                            return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 + zMoveForNewBeam);
-                                        }
-                                        else
-                                        {
-                                            return new Point3D(xNew + normalEavesXMove - xMoveForNewBeam, yNew, zNew - normalEavesZMove + zMoveForNewBeam);
-                                        }
+                                        return new Point3D(xNew + normalEavesXMove - xMoveForNewBeam, yNew, zNew - normalEavesZMove + zMoveForNewBeam);
                                     }
                                 }
                                 else if (m0.Alignment == Member.MemberAlignment.RightEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 + verticalMoveForNewBeam);
+                                        return new Point3D(xNew - horizontalEavesXMove - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 + zMoveForNewBeam);
                                     }
                                     else
                                     {
-                                        if (isHorizontalEaves)
-                                        {
-                                            return new Point3D(xNew - horizontalEavesXMove - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                        }
-                                        else if (isVerticalEaves)
-                                        {
-                                            return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 + zMoveForNewBeam);
-                                        }
-                                        else
-                                        {
-                                            return new Point3D(xNew - xMoveForNewBeam - normalEavesXMove, yNew, zNew + zMoveForNewBeam + normalEavesZMove);
-                                        }
+                                        return new Point3D(xNew - xMoveForNewBeam - normalEavesXMove, yNew, zNew + zMoveForNewBeam + normalEavesZMove);
                                     }
                                 }
                                 else
                                 {
-                                    if (castToTheHorizontalDistance)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                    }
+                                    return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
                                 }
                             default:
                                 if (m0.Alignment == Member.MemberAlignment.LeftEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
+                                    {
+                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew);
+                                    }
+                                    else if (isVerticalEaves)
                                     {
                                         return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2);
                                     }
                                     else
                                     {
-                                        if (isHorizontalEaves)
-                                        {
-                                            return new Point3D(xNew + horizontalEavesXMove, yNew, zNew);
-                                        }
-                                        else if (isVerticalEaves)
-                                        {
-                                            return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2);
-                                        }
-                                        else
-                                        {
-                                            return new Point3D(xNew + normalEavesXMove, yNew, zNew - normalEavesZMove);
-                                        }
+                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew - normalEavesZMove);
                                     }
                                 }
                                 else if (m0.Alignment == Member.MemberAlignment.RightEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
+                                    {
+                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
+                                    }
+                                    else if (isVerticalEaves)
                                     {
                                         return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
                                     }
                                     else
                                     {
-                                        if (isHorizontalEaves)
-                                        {
-                                            return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
-                                        }
-                                        else if (isVerticalEaves)
-                                        {
-                                            return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
-                                        }
-                                        else
-                                        {
-                                            return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove);
-                                        }
+                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove);
                                     }
                                 }
                                 else
