@@ -359,9 +359,9 @@ namespace RistekPluginSample
             _beamThickness.Text = 40.ToString();
             _beamStartExtension.Text = 42.ToString();
             _beamEndExtension.Text = 42.ToString();
-            _comboBoxNewBeamAlignement.Text = "Upper plane";
-            _comboBoxExistBeamAlignement.Text = "Upper plane";
-            beamRotationCheckBox.IsChecked = false;
+            _comboBoxNewBeamAlignement.Text = "Bottom plane";
+            _comboBoxExistBeamAlignement.Text = "Center";
+            beamRotationCheckBox.IsChecked = true;
             _selectionOfBeamDistanceType.Text = "Along beam";
             _beamHorizontalInsertionDistance.Text = 0.ToString();
 
@@ -1413,7 +1413,7 @@ namespace RistekPluginSample
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew + normalEavesXMove*2, yNew, zNew + normalEavesZMove*2);
+                                        return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2);
                                     }
                                 }
                                 else
@@ -1711,7 +1711,18 @@ namespace RistekPluginSample
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew - normalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew + normalEavesZMove * 2 - zMoveForNewBeam);
+                                        if (isHorizontalEaves)
+                                        {
+                                            return new Point3D(xNew - horizontalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+                                        }
+                                        else if (isVerticalEaves)
+                                        {
+                                            return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove - zMoveForNewBeam);
+                                        }
+                                        else
+                                        {
+                                            return new Point3D(xNew - normalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew + normalEavesZMove * 2 - zMoveForNewBeam);
+                                        }
                                     }
                                 }
                                 else
@@ -1746,8 +1757,18 @@ namespace RistekPluginSample
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew - normalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew + normalEavesZMove * 2 + zMoveForNewBeam);
-
+                                        if (isHorizontalEaves)
+                                        {
+                                            return new Point3D(xNew - horizontalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+                                        }
+                                        else if (isVerticalEaves)
+                                        {
+                                            return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove + zMoveForNewBeam);
+                                        }
+                                        else
+                                        {
+                                            return new Point3D(xNew - normalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew + normalEavesZMove * 2 + zMoveForNewBeam);
+                                        }
                                     }
                                 }
                                 else
@@ -1775,7 +1796,18 @@ namespace RistekPluginSample
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2);
+                                        if (isHorizontalEaves)
+                                        {
+                                            return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew);
+                                        }
+                                        else if (isVerticalEaves)
+                                        {
+                                            return new Point3D(xNew, yNew, zNew + verticalEavesZMove);
+                                        }
+                                        else
+                                        {
+                                            return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2);
+                                        }
                                     }
                                 }
                                 else
@@ -1922,7 +1954,18 @@ namespace RistekPluginSample
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew - normalEavesXMove + xMoveForNewBeam, yNew, zNew + normalEavesZMove - zMoveForNewBeam);
+                                        if (isHorizontalEaves)
+                                        {
+                                            return new Point3D(xNew - horizontalEavesXMove + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+                                        }
+                                        else if (isVerticalEaves)
+                                        {
+                                            return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 - zMoveForNewBeam);
+                                        }
+                                        else
+                                        {
+                                            return new Point3D(xNew - normalEavesXMove + xMoveForNewBeam, yNew, zNew + normalEavesZMove - zMoveForNewBeam);
+                                        }
                                     }
                                 }
                                 else
@@ -1956,7 +1999,18 @@ namespace RistekPluginSample
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew - xMoveForNewBeam - normalEavesXMove, yNew, zNew + zMoveForNewBeam + normalEavesZMove);
+                                        if (isHorizontalEaves)
+                                        {
+                                            return new Point3D(xNew - horizontalEavesXMove - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+                                        }
+                                        else if (isVerticalEaves)
+                                        {
+                                            return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 + zMoveForNewBeam);
+                                        }
+                                        else
+                                        {
+                                            return new Point3D(xNew - xMoveForNewBeam - normalEavesXMove, yNew, zNew + zMoveForNewBeam + normalEavesZMove);
+                                        }
                                     }
                                 }
                                 else
@@ -2313,7 +2367,6 @@ namespace RistekPluginSample
                                 }
                                 else
                                 {
-
                                     return new Point3D(xNew, yNew, zNew);
                                 }
                         }
