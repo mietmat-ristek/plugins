@@ -362,7 +362,7 @@ namespace RistekPluginSample
             _comboBoxNewBeamAlignement.Text = "Upper plane";
             _comboBoxExistBeamAlignement.Text = "Upper plane";
             beamRotationCheckBox.IsChecked = true;
-            _selectionOfBeamDistanceType.Text = "Horizontal cast";
+            _selectionOfBeamDistanceType.Text = "Along beam";
             _beamHorizontalInsertionDistance.Text = 0.ToString();
 
 #endif
@@ -876,7 +876,7 @@ namespace RistekPluginSample
                 Member.MemberAlignment newBeamAlignment = GetBeamAlignment(_comboBoxNewBeamAlignement.SelectedItem.ToString(), Strings.Strings.newBeamAlignement);
                 Member.MemberAlignment existBeamAlignment = GetBeamAlignment(_comboBoxExistBeamAlignement.SelectedItem.ToString(), Strings.Strings.existBeamAlignement);
 
-                _timberBeam.Origin = DetermineTrussOrigin(newBeamAlignment, existBeamAlignment);
+                _timberBeam.Origin = DetermineBeamOrigin(newBeamAlignment, existBeamAlignment);
 
                 SetBeamLocationWithExtensions(_timberBeam, beamStartExtension, beamEndExtension);
             }
@@ -920,7 +920,6 @@ namespace RistekPluginSample
                 double verticalMoveForNewBeam = beamHeight / 2 / cosOfRoofSlope;
                 double verticalEavesZMove = m0.Width / cosOfRoofSlope;
                 double horizontalEavesXMove = m0.Width / 2 / sinOfRoofSlope;
-                //horizontalMoveFromBottomToTopForNormalEaves = m0.Width * cosOfRoofSlopeAngleNotCasted;
 
                 double normalEavesXMove = m0.Width / 2 * cosOfRoofSlopeAngleNotCasted;
                 double normalEavesZMove = m0.Width / 2 * sinOfRoofSlopeAngleNotCasted;
@@ -933,7 +932,7 @@ namespace RistekPluginSample
                 Member.MemberAlignment newBeamAlignment = GetBeamAlignment(_comboBoxNewBeamAlignement.SelectedItem.ToString(), Strings.Strings.newBeamAlignement);
                 Member.MemberAlignment existBeamAlignment = GetBeamAlignment(_comboBoxExistBeamAlignement.SelectedItem.ToString(), Strings.Strings.existBeamAlignement);
 
-                _steelBeam.Origin = DetermineTrussOrigin(newBeamAlignment, existBeamAlignment);
+                _steelBeam.Origin = DetermineBeamOrigin(newBeamAlignment, existBeamAlignment);
                 SetBeamLocationWithExtensions(_steelBeam, beamStartExtension, beamEndExtension);
                 _steelBeam.SectionGroupCode = "HEA";
                 _steelBeam.SectionName = "HEA 400";
@@ -975,7 +974,7 @@ namespace RistekPluginSample
             }
         }
 
-        private Point3D DetermineTrussOrigin(Member.MemberAlignment newBeamAlignment, Member.MemberAlignment existBeamAlignment)
+        private Point3D DetermineBeamOrigin(Member.MemberAlignment newBeamAlignment, Member.MemberAlignment existBeamAlignment)
         {
             bool isLeftEdgeOnTop = m0.StartPoint.X < m0.EndPoint.X;
 
@@ -2031,20 +2030,17 @@ namespace RistekPluginSample
                             case Member.MemberAlignment.RightEdge:
                                 if (m0.Alignment == Member.MemberAlignment.RightEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                    }
+                                    return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
                                 }
                                 else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove - verticalMoveForNewBeam);
+                                        return new Point3D(xNew + horizontalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove - zMoveForNewBeam);
                                     }
                                     else
                                     {
@@ -2053,9 +2049,13 @@ namespace RistekPluginSample
                                 }
                                 else
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 - verticalMoveForNewBeam);
+                                        return new Point3D(xNew + horizontalEavesXMove - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 - zMoveForNewBeam);
                                     }
                                     else
                                     {
@@ -2065,38 +2065,36 @@ namespace RistekPluginSample
                             case Member.MemberAlignment.LeftEdge:
                                 if (m0.Alignment == Member.MemberAlignment.RightEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-
-                                    }
+                                    return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
                                 }
                                 else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove + verticalMoveForNewBeam);
+                                        return new Point3D(xNew + horizontalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove + zMoveForNewBeam);
                                     }
                                     else
                                     {
                                         return new Point3D(xNew + normalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew + normalEavesZMove * 2 + zMoveForNewBeam);
-
                                     }
                                 }
                                 else
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 + verticalMoveForNewBeam);
+                                        return new Point3D(xNew + horizontalEavesXMove + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 + zMoveForNewBeam);
                                     }
                                     else
                                     {
                                         return new Point3D(xNew + normalEavesXMove + xMoveForNewBeam, yNew, zNew + normalEavesZMove + zMoveForNewBeam);
-
                                     }
                                 }
                             default:
@@ -2106,7 +2104,11 @@ namespace RistekPluginSample
                                 }
                                 else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
+                                    {
+                                        return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew);
+                                    }
+                                    else if (isVerticalEaves)
                                     {
                                         return new Point3D(xNew, yNew, zNew + verticalEavesZMove);
                                     }
@@ -2117,7 +2119,11 @@ namespace RistekPluginSample
                                 }
                                 else
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
+                                    {
+                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew);
+                                    }
+                                    else if (isVerticalEaves)
                                     {
                                         return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
                                     }
@@ -2134,32 +2140,32 @@ namespace RistekPluginSample
                             case Member.MemberAlignment.RightEdge:
                                 if (m0.Alignment == Member.MemberAlignment.RightEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove - verticalMoveForNewBeam);
+                                        return new Point3D(xNew - horizontalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - verticalEavesZMove - zMoveForNewBeam);
                                     }
                                     else
                                     {
                                         return new Point3D(xNew - normalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew - normalEavesZMove * 2 - zMoveForNewBeam);
-
                                     }
                                 }
                                 else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                    }
+                                    return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
                                 }
                                 else
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 - verticalMoveForNewBeam);
+                                        return new Point3D(xNew - horizontalEavesXMove - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 - zMoveForNewBeam);
                                     }
                                     else
                                     {
@@ -2169,9 +2175,13 @@ namespace RistekPluginSample
                             case Member.MemberAlignment.LeftEdge:
                                 if (m0.Alignment == Member.MemberAlignment.RightEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove + verticalMoveForNewBeam);
+                                        return new Point3D(xNew - horizontalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - verticalEavesZMove + zMoveForNewBeam);
                                     }
                                     else
                                     {
@@ -2180,20 +2190,17 @@ namespace RistekPluginSample
                                 }
                                 else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                    }
+                                    return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
                                 }
                                 else
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 + verticalMoveForNewBeam);
+                                        return new Point3D(xNew - horizontalEavesXMove + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 + zMoveForNewBeam);
                                     }
                                     else
                                     {
@@ -2203,7 +2210,11 @@ namespace RistekPluginSample
                             default:
                                 if (m0.Alignment == Member.MemberAlignment.RightEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
+                                    {
+                                        return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew);
+                                    }
+                                    else if (isVerticalEaves)
                                     {
                                         return new Point3D(xNew, yNew, zNew - verticalEavesZMove);
                                     }
@@ -2214,18 +2225,15 @@ namespace RistekPluginSample
                                 }
                                 else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew, yNew, zNew);
-                                    }
+                                    return new Point3D(xNew, yNew, zNew);
                                 }
                                 else
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
+                                    {
+                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
+                                    }
+                                    else if (isVerticalEaves)
                                     {
                                         return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2);
                                     }
@@ -2242,9 +2250,13 @@ namespace RistekPluginSample
                             case Member.MemberAlignment.RightEdge:
                                 if (m0.Alignment == Member.MemberAlignment.RightEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 - verticalMoveForNewBeam);
+                                        return new Point3D(xNew - horizontalEavesXMove - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 - zMoveForNewBeam);
                                     }
                                     else
                                     {
@@ -2253,9 +2265,13 @@ namespace RistekPluginSample
                                 }
                                 else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 - verticalMoveForNewBeam);
+                                        return new Point3D(xNew + horizontalEavesXMove - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 - zMoveForNewBeam);
                                     }
                                     else
                                     {
@@ -2264,21 +2280,18 @@ namespace RistekPluginSample
                                 }
                                 else
                                 {
-                                    if (castToTheHorizontalDistance)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                    }
+                                    return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
                                 }
                             case Member.MemberAlignment.LeftEdge:
                                 if (m0.Alignment == Member.MemberAlignment.RightEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 + verticalMoveForNewBeam);
+                                        return new Point3D(xNew - horizontalEavesXMove + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 + zMoveForNewBeam);
                                     }
                                     else
                                     {
@@ -2287,9 +2300,13 @@ namespace RistekPluginSample
                                 }
                                 else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 + verticalMoveForNewBeam);
+                                        return new Point3D(xNew + horizontalEavesXMove + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+                                    }
+                                    else if (isVerticalEaves)
+                                    {
+                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 + zMoveForNewBeam);
                                     }
                                     else
                                     {
@@ -2298,19 +2315,16 @@ namespace RistekPluginSample
                                 }
                                 else
                                 {
-                                    if (castToTheHorizontalDistance)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                    }
+                                    return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
                                 }
                             default:
                                 if (m0.Alignment == Member.MemberAlignment.RightEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
+                                    {
+                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
+                                    }
+                                    else if (isVerticalEaves)
                                     {
                                         return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2);
                                     }
@@ -2321,7 +2335,11 @@ namespace RistekPluginSample
                                 }
                                 else if (m0.Alignment == Member.MemberAlignment.LeftEdge)
                                 {
-                                    if (castToTheHorizontalDistance)
+                                    if (isHorizontalEaves)
+                                    {
+                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew);
+                                    }
+                                    else if (isVerticalEaves)
                                     {
                                         return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
                                     }
@@ -2337,7 +2355,6 @@ namespace RistekPluginSample
                         }
                 }
             }
-
         }
 
         private void SetBeamLocationWithExtensions(Member3D beam, double beamsStartExtension, double beamsEndExtension)
