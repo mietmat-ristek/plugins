@@ -28,6 +28,12 @@
         public const string zeroString = "0";
         public const string horizontalCast = "Horizontal cast";
         public const string alongBeam = "Along beam";
+        public const string upperPlane = "Upper plane";
+        public const string RightEdge = "RightEdge";
+        public const string LeftEdge = "LeftEdge";
+        public const string Center = "Center";
+        public const string bottomPlane = "Bottom plane";
+        public const string centerPlane = "Center";
         public const int degrees45 = 45;
         public const int degrees90 = 90;
         public const int multiplyerForLettersWidth7 = 7;

@@ -172,14 +172,26 @@ namespace RistekPluginSample
                     horizontalCastLength = Math.Abs(m0.MiddleCuttedLine.EndPoint.X - m0.MiddleCuttedLine.StartPoint.X);
                 }
 
-                startPoint3Dm0 = new Point3D(m0XStart, distYm0Center, m0YStart);
-                endPoint3Dm0 = new Point3D(m0XEnd, distYm0Center, m0YEnd);
+                isLeftEdgeOnTop = m0.StartPoint.X < m0.EndPoint.X;
+
+                if (isLeftEdgeOnTop)
+                {
+                    startPoint3Dm0 = new Point3D(m0.RightGeometryEdgeLine.StartPoint.X, distYm0Center, m0.RightGeometryEdgeLine.StartPoint.Y);
+                    endPoint3Dm0 = new Point3D(m0.RightGeometryEdgeLine.EndPoint.X, distYm0Center, m0.RightGeometryEdgeLine.EndPoint.Y);
+                }
+                else
+                {
+                    startPoint3Dm0 = new Point3D(m0.LeftGeometryEdgeLine.StartPoint.X, distYm0Center, m0.LeftGeometryEdgeLine.StartPoint.Y);
+                    endPoint3Dm0 = new Point3D(m0.LeftGeometryEdgeLine.EndPoint.X, distYm0Center, m0.LeftGeometryEdgeLine.EndPoint.Y);
+                }
+
                 double deltaX = endPoint3Dm0.X - startPoint3Dm0.X;
                 double deltaY = endPoint3Dm0.Y - startPoint3Dm0.Y;
                 double deltaZ = endPoint3Dm0.Z - startPoint3Dm0.Z;
 
                 double deltaTotal = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2) + Math.Pow(deltaZ, 2));
                 alongBeamLength = deltaTotal;
+
                 existBeamLength = m0.Length;
             }
 
@@ -259,7 +271,7 @@ namespace RistekPluginSample
         private double m0YEnd;
         private double m1XEnd;
         private double m1YEnd;
-        private TextBox _beamHorizontalInsertionDistance;
+        private TextBox _beamHorizontalInsertionDistance = new TextBox();
         private double beamHorizontalInsertionDistance;
         private TextBox _beamStartExtension;
         private double beamStartExtension;
@@ -285,6 +297,7 @@ namespace RistekPluginSample
         private bool isNormalEaves;
         private double distYm0Center;
         private double distYm1Center;
+        private bool isLeftEdgeOnTop;
 
 
         double verticalEavesZMove;
@@ -565,7 +578,7 @@ namespace RistekPluginSample
             _selectionOfBeamDistanceType.Items.Add(Strings.Strings.alongBeam);
             _selectionOfBeamDistanceType.Items.Add(Strings.Strings.horizontalCast);
             _selectionOfBeamDistanceType.SelectedIndex = 0;
-            _selectionOfBeamDistanceType.SelectionChanged += SelectionChangedHandler;
+            _selectionOfBeamDistanceType.SelectionChanged += SelectionChangedBeamDistanceTypeHandler;
             int distanceTypeLength = 0;
             foreach (var item in _selectionOfBeamDistanceType.Items)
             {
@@ -594,13 +607,63 @@ namespace RistekPluginSample
             mainStack.Children.Add(beamLocationStack);
         }
 
-        private void SelectionChangedHandler(object sender, SelectionChangedEventArgs e)
+        private void SelectionChangedBeamDistanceTypeHandler(object sender, SelectionChangedEventArgs e)
         {
             string selectedText = (sender as ComboBox).SelectedItem.ToString();
 
             castToTheHorizontalDistance = selectedText == Constants.horizontalCast;
 
             BeamHorizontalInsertionDistance_TextChanged(_beamHorizontalInsertionDistance, null);
+        }
+
+        private void SelectionChangedExistBeamAlignementHandler(object sender, SelectionChangedEventArgs e)
+        {
+            string selectedText = (sender as ComboBox).SelectedItem.ToString();
+
+
+            Member.MemberAlignment existBeamAlignment = GetBeamAlignment(selectedText, Strings.Strings.newBeamAlignement);
+
+            SetMaxBeamLengthForExpectedAlignement(existBeamAlignment);
+        }
+
+        private void SetMaxBeamLengthForExpectedAlignement(Member.MemberAlignment existBeamAlignment)
+        {
+            double m0XStart;
+            double m0YStart;
+            double m0XEnd;
+            double m0YEnd;
+
+            if (existBeamAlignment.ToString() == Constants.RightEdge)
+            {
+                m0XStart = Math.Round(m0.RightGeometryEdgeLine.StartPoint.X, 0);
+                m0YStart = Math.Round(m0.RightGeometryEdgeLine.StartPoint.Y, 0);
+                m0XEnd = Math.Round(m0.RightGeometryEdgeLine.EndPoint.X, 0);
+                m0YEnd = Math.Round(m0.RightGeometryEdgeLine.EndPoint.Y, 0);
+            }
+            else if (existBeamAlignment.ToString() == Constants.LeftEdge)
+            {
+                m0XStart = Math.Round(m0.LeftGeometryEdgeLine.StartPoint.X, 0);
+                m0YStart = Math.Round(m0.LeftGeometryEdgeLine.StartPoint.Y, 0);
+                m0XEnd = Math.Round(m0.LeftGeometryEdgeLine.EndPoint.X, 0);
+                m0YEnd = Math.Round(m0.LeftGeometryEdgeLine.EndPoint.Y, 0);
+            }
+            else
+            {
+                m0XStart = Math.Round(m0.MiddleCuttedLineWithBooleanCuts.StartPoint.X, 0);
+                m0YStart = Math.Round(m0.MiddleCuttedLineWithBooleanCuts.StartPoint.Y, 0);
+                m0XEnd = Math.Round(m0.MiddleCuttedLineWithBooleanCuts.EndPoint.X, 0);
+                m0YEnd = Math.Round(m0.MiddleCuttedLineWithBooleanCuts.EndPoint.Y, 0);
+            }
+
+
+            startPoint3Dm0 = new Point3D(m0XStart, distYm0Center, m0YStart);
+            endPoint3Dm0 = new Point3D(m0XEnd, distYm0Center, m0YEnd);
+            double deltaX = endPoint3Dm0.X - startPoint3Dm0.X;
+            double deltaY = endPoint3Dm0.Y - startPoint3Dm0.Y;
+            double deltaZ = endPoint3Dm0.Z - startPoint3Dm0.Z;
+
+            double deltaTotal = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2) + Math.Pow(deltaZ, 2));
+            alongBeamLength = deltaTotal;
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -689,6 +752,9 @@ namespace RistekPluginSample
             _comboBoxExistBeamAlignement.Items.Add(Strings.Strings.bottomEdge);
             _comboBoxExistBeamAlignement.Items.Add(Strings.Strings.center);
             _comboBoxExistBeamAlignement.SelectedIndex = 0;
+            _comboBoxExistBeamAlignement.SelectionChanged += SelectionChangedExistBeamAlignementHandler;
+            _beamHorizontalInsertionDistance.TextChanged += BeamHorizontalInsertionDistance_TextChanged;//?????????????????????????????????????????????
+
             comboBoxStack.Children.Add(_comboBoxExistBeamAlignement);
 
             mainStack.Children.Add(comboBoxStack);
@@ -861,7 +927,7 @@ namespace RistekPluginSample
 
                 verticalMoveForNewBeam = beamHeight / 2 / cosOfRoofSlope;
                 verticalEavesZMove = m0.Width / cosOfRoofSlope;
-                horizontalEavesXMove = m0.Width / 2 / sinOfRoofSlope;             
+                horizontalEavesXMove = m0.Width / 2 / sinOfRoofSlope;
 
                 normalEavesXMove = m0.Width / 2 * cosOfRoofSlopeAngleNotCasted;
                 normalEavesZMove = m0.Width / 2 * sinOfRoofSlopeAngleNotCasted;
@@ -974,8 +1040,6 @@ namespace RistekPluginSample
 
         private Point3D DetermineBeamOrigin(Member.MemberAlignment newBeamAlignment, Member.MemberAlignment existBeamAlignment)
         {
-            bool isLeftEdgeOnTop = m0.StartPoint.X < m0.EndPoint.X;
-
             if (IsRotatedToTheMainTruss)
             {
                 return PrepareOriginForRotatedBeam(isLeftEdgeOnTop, newBeamAlignment, existBeamAlignment);
