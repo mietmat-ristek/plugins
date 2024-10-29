@@ -861,9 +861,7 @@ namespace RistekPluginSample
 
                 verticalMoveForNewBeam = beamHeight / 2 / cosOfRoofSlope;
                 verticalEavesZMove = m0.Width / cosOfRoofSlope;
-                horizontalEavesXMove = m0.Width / 2 / sinOfRoofSlope;
-                //horizontalMoveFromBottomToTopForNormalEaves = m0.Width * cosOfRoofSlopeAngleNotCasted;
-                //verticalMoveFromBottomToTopForNormalEaves = m0.Width * sinOfRoofSlopeAngleNotCasted;
+                horizontalEavesXMove = m0.Width / 2 / sinOfRoofSlope;             
 
                 normalEavesXMove = m0.Width / 2 * cosOfRoofSlopeAngleNotCasted;
                 normalEavesZMove = m0.Width / 2 * sinOfRoofSlopeAngleNotCasted;
