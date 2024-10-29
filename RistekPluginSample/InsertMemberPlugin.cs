@@ -351,6 +351,7 @@ namespace RistekPluginSample
 
             CreateChapterTitleRow(mainStack, Constants.TitleChapter0SelectedBeamInformation);
             CreateSelectedBeamCoordinatesInfoRow(mainStack);
+            CreateSelectedBeamLengthInfoRow(mainStack);
             CreateChapterTitleRow(mainStack, Constants.TitleChapter1BeamSettings);
             CreateSelectionOfBeamType(mainStack);
             CreateBeamDimensionsRow(mainStack);
@@ -382,6 +383,18 @@ namespace RistekPluginSample
 
             this.DialogResult = _dialog.ShowDialog().Value;
             return this.DialogResult;
+        }
+
+        private void CreateSelectedBeamLengthInfoRow(StackPanel mainStack)
+        {
+            var selectedBeamLengthStack = new StackPanel() { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 8) };
+
+            var selectedBeamLengthStackText = new TextBlock() { Text = Strings.Strings.beamLength, Margin = new Thickness(0, 0, 8, 0) };
+            var selectedBeamLengthStackValue = new TextBlock() { Text = Math.Round(existBeamLength, 0).ToString() + Constants.mm, Margin = new Thickness(0, 0, 8, 0) };
+            selectedBeamLengthStack.Children.Add(selectedBeamLengthStackText);
+            selectedBeamLengthStack.Children.Add(selectedBeamLengthStackValue);
+
+            mainStack.Children.Add(selectedBeamLengthStack);
         }
 
         private void CreateSelectionOfBeamType(StackPanel mainStack)
