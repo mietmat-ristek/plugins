@@ -29,6 +29,7 @@
         public const string horizontalCast = "Horizontal cast";
         public const string alongBeam = "Along beam";
         public const int degrees45 = 45;
+        public const int degrees90 = 90;
         public const int multiplyerForLettersWidth7 = 7;
         public const int multiplyerForLettersWidth8 = 8;
     }
