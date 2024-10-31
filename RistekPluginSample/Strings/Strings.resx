@@ -345,6 +345,9 @@
   <data name="selectionOfBeamType" xml:space="preserve">
     <value>Selection of beam type</value>
   </data>
+  <data name="beamLength" xml:space="preserve">
+    <value>Selected beam length</value>
+  </data>
   <data name="firstSelectedBeamCoordinates" xml:space="preserve">
     <value>Coordinates beam 1</value>
   </data>

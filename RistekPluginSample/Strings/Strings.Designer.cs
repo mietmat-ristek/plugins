@@ -439,6 +439,15 @@ namespace RistekPluginSample.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Selected beam length.
+        /// </summary>
+        internal static string beamLength {
+            get {
+                return ResourceManager.GetString("beamLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to beam multiply spacing.
         /// </summary>
         internal static string beamMultiplySpacing {

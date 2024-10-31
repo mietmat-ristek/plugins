@@ -375,4 +375,7 @@
   <data name="alongBeam" xml:space="preserve">
     <value>Along beam</value>
   </data>
+  <data name="beamLength" xml:space="preserve">
+    <value>Selected beam length</value>
+  </data>
 </root>
