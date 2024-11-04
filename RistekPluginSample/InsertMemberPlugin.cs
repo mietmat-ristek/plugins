@@ -704,11 +704,7 @@ namespace RistekPluginSample
 
         private void SelectionChangedExistBeamAlignementHandler(object sender, SelectionChangedEventArgs e)
         {
-            string selectedText = (sender as ComboBox).SelectedItem.ToString();
-
-            Member.MemberAlignment existBeamAlignment = GetBeamAlignment(selectedText, Strings.Strings.newBeamAlignement);
-
-            SetMaxBeamLengthForExpectedAlignement(existBeamAlignment);
+            BeamHorizontalInsertionDistance_TextChanged(_beamHorizontalInsertionDistance, null);
         }
 
         private void SetMaxBeamLengthForExpectedAlignement(Member.MemberAlignment existBeamAlignment)
@@ -872,7 +868,7 @@ namespace RistekPluginSample
             _comboBoxExistBeamAlignement.Items.Add(Strings.Strings.center);
             _comboBoxExistBeamAlignement.SelectedIndex = 0;
             _comboBoxExistBeamAlignement.SelectionChanged += SelectionChangedExistBeamAlignementHandler;
-            _beamHorizontalInsertionDistance.TextChanged += BeamHorizontalInsertionDistance_TextChanged;//??
+            _beamHorizontalInsertionDistance.TextChanged += BeamHorizontalInsertionDistance_TextChanged;
 
             comboBoxStack.Children.Add(_comboBoxExistBeamAlignement);
 
@@ -1026,7 +1022,6 @@ namespace RistekPluginSample
 
                 if (isCombinedEaves && m0.Alignment == Member.MemberAlignment.Center)
                 {
-
                     deltaX = Math.Abs(m0.LeftGeometryEdgeLine.EndPoint.X - m0.LeftGeometryEdgeLine.StartPoint.X);
                     deltaZ = Math.Abs(m0.LeftGeometryEdgeLine.EndPoint.Y - m0.LeftGeometryEdgeLine.StartPoint.Y);
                 }
