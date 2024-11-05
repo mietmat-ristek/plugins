@@ -112,8 +112,8 @@ namespace RistekPluginSample
             }
             else if (_preInputs.Count > 1 && _preInputs[0].Valid && _preInputs[1].Valid)
             {
-                m0 = GetTrussMemberFromPluginInput_(_preInputs[0]);
-                m1 = GetTrussMemberFromPluginInput_(_preInputs[1]);
+                //m0 = GetTrussMemberFromPluginInput_(_preInputs[0]);
+                //m1 = GetTrussMemberFromPluginInput_(_preInputs[1]);
 
                 _model3D = new Model3D(m0, m1);
             }
@@ -345,9 +345,11 @@ namespace RistekPluginSample
                     _model3DResult.CalculateNewBeamPointsForDistanceAlongTheBeam();
                 }
 
-                _timberBeam.Origin = _model3DResult.DetermineBeamOrigin();
+                _steelBeam.Origin = _model3DResult.DetermineBeamOrigin();
 
-                _model3DResult.SetBeamLocationWithExtensions(_timberBeam);
+                _model3DResult.SetBeamLocationWithExtensions(_steelBeam);
+                _steelBeam.SectionGroupCode = "HEA";
+                _steelBeam.SectionName = "HEA 400";
             }
 
         }            
