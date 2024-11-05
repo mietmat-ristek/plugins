@@ -44,7 +44,7 @@ namespace RistekPluginSample
 
         private Model3D _model3D { get; set; }
 
-        double horizontalCastLength;
+        public double horizontalCastLength;
         double alongBeamLength;
 
         public UiData(Model3D model3D)
@@ -560,6 +560,7 @@ namespace RistekPluginSample
             BeamInsertionDistanceValue = ParseDoubleFromText(BeamInsertionDistanceTextBox.Text, Strings.Strings.beamHorizontalInsertionDistance);
             BeamStartExtensionValue = ParseDoubleFromText(BeamStartExtensionTextBox.Text, Strings.Strings.beamStartExtension);
             BeamEndExtensionValue = ParseDoubleFromText(BeamEndExtensionTextBox.Text, Strings.Strings.beamEndExtension);
+            BeamMultiplySpacingValue = ParseDoubleFromText(BeamMultiplySpacingTextBox.Text, Strings.Strings.beamMultiplySpacing);
         }
 
         private double ParseDoubleFromText(string text, string fieldName)
