@@ -11,7 +11,6 @@ namespace RistekPluginSample
 {
     public class UiData
     {
-
         public StackPanel MainStack { get; set; }
         public ComboBox BeamType { get; set; }
         public ComboBox BeamDistanceType { get; set; }

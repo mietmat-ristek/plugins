@@ -9,7 +9,7 @@ namespace RistekPluginSample
     public class Model3DResult
     {
         public Beam3D NewBeam { get; set; }
-        public UiData _uiData { get; set; }
+        public UiData UiData { get; set; }
         private Model3D _model3D { get; set; }
 
         private double verticalMoveForNewBeam;
@@ -21,7 +21,6 @@ namespace RistekPluginSample
         private double zMoveForNewBeam;
         private Member.MemberAlignment newBeamAlignment;
         private Member.MemberAlignment existBeamAlignment;
-        private double newBeamStartPoint3D;
         private double xNew;
         private double yNew;
         private double zNew;
@@ -29,7 +28,7 @@ namespace RistekPluginSample
         public Model3DResult(Model3D model3D, UiData uiData)
         {
             _model3D = model3D;
-            _uiData = uiData;
+            UiData = uiData;
             NewBeam = new Beam3D(new Member());
             ConvertUIAlignement();
             CalculateNewBeamMovesForAlignement();
@@ -52,9 +51,9 @@ namespace RistekPluginSample
             double ux = deltaX / deltaTotal;
             double uy = deltaY / deltaTotal;
 
-            yNew = _model3D.Beam3DNo1.StartPoint3D.Y + uy * _uiData.BeamInsertionDistanceValue;
-            xNew = _model3D.Beam3DNo1.StartPoint3D.X + ux * _uiData.BeamInsertionDistanceValue;
-            zNew = _model3D.Beam3DNo1.StartPoint3D.Z + _uiData.BeamInsertionDistanceValue / deltaTotal * deltaZ;
+            yNew = _model3D.Beam3DNo1.StartPoint3D.Y + uy * UiData.BeamInsertionDistanceValue;
+            xNew = _model3D.Beam3DNo1.StartPoint3D.X + ux * UiData.BeamInsertionDistanceValue;
+            zNew = _model3D.Beam3DNo1.StartPoint3D.Z + UiData.BeamInsertionDistanceValue / deltaTotal * deltaZ;
 
             NewBeam.StartPoint3D = new Point3D(xNew, yNew, zNew);
             NewBeam.EndPoint3D = new Point3D(xNew, _model3D.Member2.PartCSToGlobal.OffsetY, zNew);
@@ -78,9 +77,9 @@ namespace RistekPluginSample
             double uy = deltaY / deltaTotal;
             double uz = deltaZ / deltaTotal;
 
-            xNew = _model3D.Beam3DNo1.StartPoint3D.X + ux * _uiData.BeamInsertionDistanceValue;
-            yNew = _model3D.Beam3DNo1.StartPoint3D.Y + uy * _uiData.BeamInsertionDistanceValue;
-            zNew = _model3D.Beam3DNo1.StartPoint3D.Z + uz * _uiData.BeamInsertionDistanceValue;
+            xNew = _model3D.Beam3DNo1.StartPoint3D.X + ux * UiData.BeamInsertionDistanceValue;
+            yNew = _model3D.Beam3DNo1.StartPoint3D.Y + uy * UiData.BeamInsertionDistanceValue;
+            zNew = _model3D.Beam3DNo1.StartPoint3D.Z + uz * UiData.BeamInsertionDistanceValue;
 
             NewBeam.StartPoint3D = new Point3D(xNew, yNew, zNew);
             NewBeam.EndPoint3D = new Point3D(xNew, _model3D.Member2.PartCSToGlobal.OffsetY, zNew);
@@ -88,21 +87,21 @@ namespace RistekPluginSample
 
         private void CalculateNewBeamMovesForAlignement()
         {
-            verticalMoveForNewBeam = _uiData.BeamHeightValue / 2 / _model3D.Beam3DNo1.CosOfBeamSlope;
+            verticalMoveForNewBeam = UiData.BeamHeightValue / 2 / _model3D.Beam3DNo1.CosOfBeamSlope;
             verticalEavesZMove = _model3D.Beam3DNo1.Width / _model3D.Beam3DNo1.CosOfBeamSlope;
             horizontalEavesXMove = _model3D.Beam3DNo1.Width / 2 / _model3D.Beam3DNo1.SinOfBeamSlope;
 
             normalEavesXMove = _model3D.Beam3DNo1.Width / 2 * _model3D.Beam3DNo1.CosOfBeamSlopeAngleNotCasted;
             normalEavesZMove = _model3D.Beam3DNo1.Width / 2 * _model3D.Beam3DNo1.SinOfBeamSlopeAngleNotCasted;
 
-            xMoveForNewBeam = _uiData.BeamHeightValue / 2 * _model3D.Beam3DNo1.CosOfBeamSlopeAngleNotCasted;
-            zMoveForNewBeam = _uiData.BeamHeightValue / 2 * _model3D.Beam3DNo1.SinOfBeamSlopeAngleNotCasted;
+            xMoveForNewBeam = UiData.BeamHeightValue / 2 * _model3D.Beam3DNo1.CosOfBeamSlopeAngleNotCasted;
+            zMoveForNewBeam = UiData.BeamHeightValue / 2 * _model3D.Beam3DNo1.SinOfBeamSlopeAngleNotCasted;
         }
 
         public Point3D DetermineBeamOrigin()
         {
 
-            if (_uiData.IsRotatedToTheMainTruss)
+            if (UiData.IsRotatedToTheMainTruss)
             {
                 return PrepareOriginForRotatedBeam(_model3D.Beam3DNo1.IsSelectedMemberLeftEdgeOnTop, newBeamAlignment, existBeamAlignment);
             }
@@ -142,16 +141,16 @@ namespace RistekPluginSample
 
             if (isMinusDirection)
             {
-                newStartPoint3DWithExtension = new Point3D(beam.Origin.X, beamOriginY - _model3D.Beam3DNo1.Thickness / 2 + _uiData.BeamStartExtensionValue, beam.Origin.Z);
-                newEndPoint3DWithExtension = new Point3D(beam.Origin.X, beamOriginY + _model3D.Beam3DNo1.Thickness / 2 - distanceBeetweenExistBeams - _uiData.BeamEndExtensionValue, beam.Origin.Z);
+                newStartPoint3DWithExtension = new Point3D(beam.Origin.X, beamOriginY - _model3D.Beam3DNo1.Thickness / 2 + UiData.BeamStartExtensionValue, beam.Origin.Z);
+                newEndPoint3DWithExtension = new Point3D(beam.Origin.X, beamOriginY + _model3D.Beam3DNo1.Thickness / 2 - distanceBeetweenExistBeams - UiData.BeamEndExtensionValue, beam.Origin.Z);
             }
             else
             {
-                newStartPoint3DWithExtension = new Point3D(beam.Origin.X, beamOriginY + _model3D.Beam3DNo1.Thickness / 2 - _uiData.BeamStartExtensionValue, beam.Origin.Z);
-                newEndPoint3DWithExtension = new Point3D(beam.Origin.X, beamOriginY - _model3D.Beam3DNo1.Thickness / 2 + distanceBeetweenExistBeams + _uiData.BeamEndExtensionValue, beam.Origin.Z);
+                newStartPoint3DWithExtension = new Point3D(beam.Origin.X, beamOriginY + _model3D.Beam3DNo1.Thickness / 2 - UiData.BeamStartExtensionValue, beam.Origin.Z);
+                newEndPoint3DWithExtension = new Point3D(beam.Origin.X, beamOriginY - _model3D.Beam3DNo1.Thickness / 2 + distanceBeetweenExistBeams + UiData.BeamEndExtensionValue, beam.Origin.Z);
             }
 
-            if (_uiData.IsRotatedToTheMainTruss)
+            if (UiData.IsRotatedToTheMainTruss)
             {
                 beam.SetAlignedStartPoint(newStartPoint3DWithExtension, planeNormalToFutureBeamTruss);
                 beam.SetAlignedEndPoint(newEndPoint3DWithExtension, planeNormalToFutureBeamTruss);
@@ -165,8 +164,8 @@ namespace RistekPluginSample
 
         private void ConvertUIAlignement()
         {
-            newBeamAlignment = GetBeamAlignment(_uiData.NewBeamAlignement.SelectedItem.ToString(), Strings.Strings.newBeamAlignement);
-            existBeamAlignment = GetBeamAlignment(_uiData.ExistBeamAlignement.SelectedItem.ToString(), Strings.Strings.existBeamAlignement);
+            newBeamAlignment = GetBeamAlignment(UiData.NewBeamAlignement.SelectedItem.ToString(), Strings.Strings.newBeamAlignement);
+            existBeamAlignment = GetBeamAlignment(UiData.ExistBeamAlignement.SelectedItem.ToString(), Strings.Strings.existBeamAlignement);
         }
 
         private Member.MemberAlignment GetBeamAlignment(string alignmentOption, string alignmentName)
@@ -213,87 +212,87 @@ namespace RistekPluginSample
                             case Member.MemberAlignment.RightEdge:
                                 if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
                                 {
-                                    return new Point3D(xNew, yNew, zNew - _uiData.BeamHeightValue / 2);
+                                    return new Point3D(xNew, yNew, zNew - UiData.BeamHeightValue / 2);
                                 }
                                 else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew - UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove - UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2 - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2 - UiData.BeamHeightValue / 2);
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
                                     }
                                 }
                                 else
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew - UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 - UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove - UiData.BeamHeightValue / 2);
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
                                     }
                                 }
                             case Member.MemberAlignment.LeftEdge:
                                 if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
                                 {
-                                    return new Point3D(xNew, yNew, zNew + _uiData.BeamHeightValue / 2);
+                                    return new Point3D(xNew, yNew, zNew + UiData.BeamHeightValue / 2);
                                 }
                                 else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew + UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove + UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2 + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2 + UiData.BeamHeightValue / 2);
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
                                     }
                                 }
                                 else
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew + UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 + UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove + UiData.BeamHeightValue / 2);
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
                                     }
                                 }
                             default:
@@ -349,42 +348,42 @@ namespace RistekPluginSample
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew - UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove - UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2 - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2 - UiData.BeamHeightValue / 2);
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _model3D.Beam3DNo1.VerticalMove2LowestPoint - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
                                     }
                                 }
                                 else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
                                 {
-                                    return new Point3D(xNew, yNew, zNew - _uiData.BeamHeightValue / 2);
+                                    return new Point3D(xNew, yNew, zNew - UiData.BeamHeightValue / 2);
                                 }
                                 else
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew - UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 - UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew - normalEavesZMove - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew - normalEavesZMove - UiData.BeamHeightValue / 2);
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - UiData.BeamHeightValue / 2);
                                     }
                                 }
                             case Member.MemberAlignment.LeftEdge:
@@ -392,43 +391,43 @@ namespace RistekPluginSample
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew + UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove + UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2 + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2 + UiData.BeamHeightValue / 2);
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _model3D.Beam3DNo1.VerticalMove2LowestPoint + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
                                     }
 
                                 }
                                 else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
                                 {
-                                    return new Point3D(xNew, yNew, zNew + _uiData.BeamHeightValue / 2);
+                                    return new Point3D(xNew, yNew, zNew + UiData.BeamHeightValue / 2);
                                 }
                                 else
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew + UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 + UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew - normalEavesZMove + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew - normalEavesZMove + UiData.BeamHeightValue / 2);
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint + UiData.BeamHeightValue / 2);
                                     }
                                 }
                             default:
@@ -467,62 +466,62 @@ namespace RistekPluginSample
                             case Member.MemberAlignment.RightEdge:
                                 if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
                                 {
-                                    return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint - _uiData.BeamHeightValue / 2);
+                                    return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
                                 }
                                 else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew - UiData.BeamHeightValue / 2);
 
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 - UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove - UiData.BeamHeightValue / 2);
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint - UiData.BeamHeightValue / 2);
                                     }
                                 }
                                 else
                                 {
-                                    return new Point3D(xNew, yNew, zNew - _uiData.BeamHeightValue / 2);
+                                    return new Point3D(xNew, yNew, zNew - UiData.BeamHeightValue / 2);
                                 }
                             case Member.MemberAlignment.LeftEdge:
                                 if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
                                 {
-                                    return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + _uiData.BeamHeightValue / 2);
+                                    return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
                                 }
                                 else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew + UiData.BeamHeightValue / 2);
 
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 + UiData.BeamHeightValue / 2);
 
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove + UiData.BeamHeightValue / 2);
 
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + UiData.BeamHeightValue / 2);
                                     }
                                 }
                                 else
                                 {
-                                    return new Point3D(xNew, yNew, zNew + _uiData.BeamHeightValue / 2);
+                                    return new Point3D(xNew, yNew, zNew + UiData.BeamHeightValue / 2);
                                 }
                             default:
                                 if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
@@ -568,87 +567,87 @@ namespace RistekPluginSample
                             case Member.MemberAlignment.RightEdge:
                                 if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
                                 {
-                                    return new Point3D(xNew, yNew, zNew - _uiData.BeamHeightValue / 2);
+                                    return new Point3D(xNew, yNew, zNew - UiData.BeamHeightValue / 2);
                                 }
                                 else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew - UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove - UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2 - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2 - UiData.BeamHeightValue / 2);
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
                                     }
                                 }
                                 else
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew - UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 - UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove - UiData.BeamHeightValue / 2);
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
                                     }
                                 }
                             case Member.MemberAlignment.LeftEdge:
                                 if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
                                 {
-                                    return new Point3D(xNew, yNew, zNew + _uiData.BeamHeightValue / 2);
+                                    return new Point3D(xNew, yNew, zNew + UiData.BeamHeightValue / 2);
                                 }
                                 else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew + UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove + UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2 + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2 + UiData.BeamHeightValue / 2);
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
                                     }
                                 }
                                 else
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew + UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 + UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove + UiData.BeamHeightValue / 2);
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
                                     }
                                 }
                             default:
@@ -704,42 +703,42 @@ namespace RistekPluginSample
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew - UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove - UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2 - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2 - UiData.BeamHeightValue / 2);
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _model3D.Beam3DNo1.VerticalMove2LowestPoint - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
                                     }
                                 }
                                 else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
                                 {
-                                    return new Point3D(xNew, yNew, zNew - _uiData.BeamHeightValue / 2);
+                                    return new Point3D(xNew, yNew, zNew - UiData.BeamHeightValue / 2);
                                 }
                                 else
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew - UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 - UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove - UiData.BeamHeightValue / 2);
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - UiData.BeamHeightValue / 2);
                                     }
                                 }
                             case Member.MemberAlignment.LeftEdge:
@@ -747,42 +746,42 @@ namespace RistekPluginSample
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew + UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove + UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2 + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2 + UiData.BeamHeightValue / 2);
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _model3D.Beam3DNo1.VerticalMove2LowestPoint + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
                                     }
                                 }
                                 else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
                                 {
-                                    return new Point3D(xNew, yNew, zNew + _uiData.BeamHeightValue / 2);
+                                    return new Point3D(xNew, yNew, zNew + UiData.BeamHeightValue / 2);
                                 }
                                 else
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew + UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 + UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove + UiData.BeamHeightValue / 2);
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint + UiData.BeamHeightValue / 2);
                                     }
                                 }
                             default:
@@ -838,88 +837,88 @@ namespace RistekPluginSample
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew - UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 - UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove - UiData.BeamHeightValue / 2);
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
                                     }
                                 }
                                 else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew - UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 - UiData.BeamHeightValue / 2);
 
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove - UiData.BeamHeightValue / 2);
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint - _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint - UiData.BeamHeightValue / 2);
                                     }
                                 }
                                 else
                                 {
-                                    return new Point3D(xNew, yNew, zNew - _uiData.BeamHeightValue / 2);
+                                    return new Point3D(xNew, yNew, zNew - UiData.BeamHeightValue / 2);
                                 }
                             case Member.MemberAlignment.LeftEdge:
                                 if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew + UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 + UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove + UiData.BeamHeightValue / 2);
 
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
                                     }
                                 }
                                 else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
                                 {
                                     if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
                                     {
-                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew + UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
                                     {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 + UiData.BeamHeightValue / 2);
                                     }
                                     else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
                                     {
-                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove + UiData.BeamHeightValue / 2);
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _uiData.BeamHeightValue / 2);
+                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + UiData.BeamHeightValue / 2);
                                     }
                                 }
                                 else
                                 {
-                                    return new Point3D(xNew, yNew, zNew + _uiData.BeamHeightValue / 2);
+                                    return new Point3D(xNew, yNew, zNew + UiData.BeamHeightValue / 2);
                                 }
                             default:
                                 if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
@@ -1787,6 +1786,5 @@ namespace RistekPluginSample
                 }
             }
         }
-
     }
 }

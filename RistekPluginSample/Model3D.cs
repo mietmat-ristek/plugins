@@ -1,7 +1,5 @@
 ﻿using Epx.Ristek.Data.Models;
-using System;
 using System.Collections.Generic;
-using System.Windows.Media.Media3D;
 
 namespace RistekPluginSample
 {
@@ -13,7 +11,6 @@ namespace RistekPluginSample
 
         public Member Member1 { get; set; }
         public Member Member2 { get; set; }
-
 
         public double Member1StartPointXEdgeLeft { get; set; }
         public double Member1StartPointZEdgeLeft { get; set; }
@@ -58,8 +55,5 @@ namespace RistekPluginSample
             Member2EndPointXEdgeLeft = Beam3DNo2.LeftEdgeEndPointX;
             Member2EndPointZEdgeLeft = Beam3DNo2.LeftEdgeEndPointY;
         }
-
-
-
     }
 }

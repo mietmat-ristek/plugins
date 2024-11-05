@@ -1,6 +1,5 @@
 ﻿using Epx.Ristek.Data.Models;
 using System;
-using System.Collections.Generic;
 using System.Windows.Media.Media3D;
 
 namespace RistekPluginSample
@@ -13,8 +12,6 @@ namespace RistekPluginSample
 
         public double Width { get; set; }
         public double Thickness { get; set; }
-
-
 
         public Beam3D(Member member) : base(member)
         {
@@ -45,8 +42,6 @@ namespace RistekPluginSample
         {
             Angle90MinusBeamSlopeRadians = Angle90MinusBeamSlopeDegrees * Math.PI / 180;
         }
-
-
 
         private double CalculateCosAngle(double angleInRadians)
         {
@@ -89,6 +84,5 @@ namespace RistekPluginSample
 
             BeamSlopeRadians = Math.Atan2(deltaZ, deltaX);
         }
-
     }
 }

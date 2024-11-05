@@ -75,10 +75,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="InsertMemberPluginNEW.cs" />
+    <Compile Include="InsertMemberPlugin.cs" />
     <Compile Include="Model3D.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="InsertMemberPlugin.cs" />
     <Compile Include="Beam3D.cs" />
     <Compile Include="Beam2D.cs" />
     <Compile Include="Model3DResult.cs" />

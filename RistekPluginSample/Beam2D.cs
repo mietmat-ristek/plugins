@@ -74,9 +74,7 @@ namespace RistekPluginSample
             if (IsMemberEndCombinedCut)
             {
                 SetMovesForCombinedCutMiddlePoint();
-            }
-
-          
+            }          
         }
                
         protected void SetMemberLength(Member member)
@@ -167,7 +165,6 @@ namespace RistekPluginSample
 
         protected void SetMovesForCombinedCutMiddlePoint()
         {
-
             if (IsSelectedMemberLeftEdgeOnTop)
             {
                 HorizontalMove1LowestPoint = Math.Abs(RightEdgeStartPointX - TheLowestStartPointForCombinedCuttedBeam.X);
@@ -192,7 +189,6 @@ namespace RistekPluginSample
                 HorizontalMove2HighestPoint = Math.Abs(TheHighestStartPointForCombinedCuttedBeam.X - LeftEdgeEndPointX);
                 VerticalMove2HighestPoint = Math.Abs(TheHighestStartPointForCombinedCuttedBeam.Y - LeftEdgeEndPointY);
             }
-
         }
 
         protected void SetBorderPoints()
@@ -228,7 +224,6 @@ namespace RistekPluginSample
                     MemberEndY = Math.Round(MiddleEdgeEndPointY, 0);
                 }
             }
-
         }
     }
 }
