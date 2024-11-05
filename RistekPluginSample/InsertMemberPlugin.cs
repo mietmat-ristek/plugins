@@ -112,8 +112,8 @@ namespace RistekPluginSample
             }
             else if (_preInputs.Count > 1 && _preInputs[0].Valid && _preInputs[1].Valid)
             {
-                m0 = GetTrussMemberFromPluginInput_(_preInputs[0]);
-                m1 = GetTrussMemberFromPluginInput_(_preInputs[1]);
+                //m0 = GetTrussMemberFromPluginInput_(_preInputs[0]);
+                //m1 = GetTrussMemberFromPluginInput_(_preInputs[1]);
 
                 _model3D = new Model3D(m0, m1);
             }
@@ -265,6 +265,15 @@ namespace RistekPluginSample
             {
                 CreateSingleBeam();
             }
+            else
+            {              
+                int multipleMemberCount = (int)Math.Ceiling((_uIData.horizontalCastLength - _uIData.BeamInsertionDistanceValue) / _uIData.BeamMultiplySpacingValue);
+                for (int i = 0; i < multipleMemberCount; i++)
+                {
+                    _uIData.BeamInsertionDistanceValue += _uIData.BeamMultiplySpacingValue;
+                    CreateSingleBeam();
+                }
+            }
 
             _dialog.DialogResult = true;
         }
@@ -316,34 +325,35 @@ namespace RistekPluginSample
 
                 _model3DResult.SetBeamLocationWithExtensions(_timberBeam);
             }
+            else if (_uIData.BeamType.Text == Constants.SteelBeam)
+            {
+                _steelBeam = new SteelBeam(Constants.SteelBeam);
 
-        }
+                _steelBeam.AssemblyName = this.AssemblyName;
+                _steelBeam.FullClassName = this.FullClassName;
 
-        private double CalculateCosAngle(double angleInRadians)
-        {
-            return Math.Cos(angleInRadians);
-        }
+                _steelBeam.Width = _uIData.BeamThicknessValue;
+                _steelBeam.Height = _uIData.BeamHeightValue;
 
-        private double CalculateSinAngle(double angleInRadians)
-        {
-            return Math.Sin(angleInRadians);
-        }
 
-        private double CalculateTgAngle(double angleInRadians)
-        {
-            double angleInDegrees = angleInRadians * 180 / Math.PI;
-            return Math.Tan(angleInRadians);
-        }
+                if (_uIData.BeamDistanceType.Text == Constants.horizontalCast)
+                {
+                    _model3DResult.CalculateNewBeamPointsForCastDistance();
+                }
+                else
+                {
+                    _model3DResult.CalculateNewBeamPointsForDistanceAlongTheBeam();
+                }
 
-        private bool ChangeExistBeamAlignement(double angleInDegrees, Point3D startPoint3Dm0, Point3D endPoint3Dm0)
-        {
-            return angleInDegrees > Constants.degrees45 ? true : false;
-        }
+                _steelBeam.Origin = _model3DResult.DetermineBeamOrigin();
 
-        private Vector3D? getReferenceEnforcementDirectionVector()
-        {
-            return new Vector3D(0, 0, 1);
-        }
+                _model3DResult.SetBeamLocationWithExtensions(_steelBeam);
+                _steelBeam.SectionGroupCode = "HEA";
+                _steelBeam.SectionName = "HEA 400";
+            }
+
+        }            
+              
 
         /// <summary>
         /// Set the <see cref="PluginDataNode"/> for an editable plugin. If <see cref="PluginDataNode"/> is specified all other created nodes should be inserted

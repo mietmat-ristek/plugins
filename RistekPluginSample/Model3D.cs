@@ -5,7 +5,6 @@ namespace RistekPluginSample
 {
     public class Model3D
     {
-        public List<Beam3D> Beams3D { get; set; }
         public Beam3D Beam3DNo1 { get; set; }
         public Beam3D Beam3DNo2 { get; set; }
 
@@ -17,12 +16,7 @@ namespace RistekPluginSample
         public double Member1EndPointXEdgeLeft { get; set; }
         public double Member1EndPointZEdgeLeft { get; set; }
         public double Member2EndPointXEdgeLeft { get; set; }
-        public double Member2EndPointZEdgeLeft { get; set; }
-
-        public double Member2StartPointX { get; set; }
-        public double Member2StartPointY { get; set; }
-        public double Member2EndPointX { get; set; }
-        public double Member2EndPointY { get; set; }
+        public double Member2EndPointZEdgeLeft { get; set; }       
 
         public double SelectedBeamLength { get; set; }
 
@@ -35,16 +29,7 @@ namespace RistekPluginSample
             Beam3DNo2 = new Beam3D(member2);
             SelectedBeamLength = member1.Length;
             SetPointsForLeftEdge();
-
-            AddSelectedBeamsToThe3DModel(Beam3DNo1, Beam3DNo2);
-        }
-
-        private void AddSelectedBeamsToThe3DModel(Beam3D beam1, Beam3D beam2)
-        {
-            Beams3D = new List<Beam3D>();
-            Beams3D.Add(beam1);
-            Beams3D.Add(beam2);
-        }
+        }     
 
         public void SetPointsForLeftEdge()
         {
