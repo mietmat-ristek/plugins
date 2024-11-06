@@ -1129,7 +1129,7 @@ namespace RistekPluginSample
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint + _model3D.Beam3DNo1.HorizontalMove1LowestPoint + xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + _model3D.Beam3DNo1.VerticalMove1LowestPoint - zMoveForNewBeam);
+                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint + _model3D.Beam3DNo1.HorizontalMove1LowestPoint + xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + _model3D.Beam3DNo1.VerticalMove1LowestPoint - zMoveForNewBeam);
                                     }
                                 }
                                 else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
