@@ -412,6 +412,15 @@ namespace RistekPluginSample.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Batten.
+        /// </summary>
+        internal static string batten {
+            get {
+                return ResourceManager.GetString("batten", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Beam end extension [mm].
         /// </summary>
         internal static string beamEndExtension {
@@ -489,6 +498,15 @@ namespace RistekPluginSample.Strings {
         internal static string bottomEdge {
             get {
                 return ResourceManager.GetString("bottomEdge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Buckling Support.
+        /// </summary>
+        internal static string bucklingSupport {
+            get {
+                return ResourceManager.GetString("bucklingSupport", resourceCulture);
             }
         }
         
@@ -610,6 +628,15 @@ namespace RistekPluginSample.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Metal Web Structure.
+        /// </summary>
+        internal static string metalWebStructure {
+            get {
+                return ResourceManager.GetString("metalWebStructure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Multiply beam with spacing.
         /// </summary>
         internal static string multiplyBeamWithSpacing {
@@ -628,11 +655,29 @@ namespace RistekPluginSample.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Planar Beam.
+        /// </summary>
+        internal static string planarBeam {
+            get {
+                return ResourceManager.GetString("planarBeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to First and second point cannot be the same.
         /// </summary>
         internal static string pointsCannotBeTheSame {
             get {
                 return ResourceManager.GetString("pointsCannotBeTheSame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Purlin.
+        /// </summary>
+        internal static string purlin {
+            get {
+                return ResourceManager.GetString("purlin", resourceCulture);
             }
         }
         
@@ -754,11 +799,47 @@ namespace RistekPluginSample.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Steel Beam 3D.
+        /// </summary>
+        internal static string steelBeam3D {
+            get {
+                return ResourceManager.GetString("steelBeam3D", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Strong Back.
+        /// </summary>
+        internal static string strongBack {
+            get {
+                return ResourceManager.GetString("strongBack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Support.
+        /// </summary>
+        internal static string support {
+            get {
+                return ResourceManager.GetString("support", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Timber Beam.
         /// </summary>
         internal static string timberBeam {
             get {
                 return ResourceManager.GetString("timberBeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Timber Member.
+        /// </summary>
+        internal static string timberMember {
+            get {
+                return ResourceManager.GetString("timberMember", resourceCulture);
             }
         }
         

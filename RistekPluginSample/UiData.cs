@@ -101,7 +101,16 @@ namespace RistekPluginSample
             comboBoxStack.Children.Add(comboBoxText);
             BeamType = new ComboBox() { Width = Double.NaN, Margin = new Thickness(0, 0, 4, 0) };
             BeamType.Items.Add(Strings.Strings.timberBeam);
+            BeamType.Items.Add(Strings.Strings.support);
+            BeamType.Items.Add(Strings.Strings.bucklingSupport);
             BeamType.Items.Add(Strings.Strings.steelBeam);
+            BeamType.Items.Add(Strings.Strings.steelBeam3D);
+            BeamType.Items.Add(Strings.Strings.timberMember);
+            BeamType.Items.Add(Strings.Strings.purlin);
+            BeamType.Items.Add(Strings.Strings.batten);
+            BeamType.Items.Add(Strings.Strings.strongBack);
+            BeamType.Items.Add(Strings.Strings.metalWebStructure);
+            BeamType.Items.Add(Strings.Strings.planarBeam);
             BeamType.SelectedIndex = 0;
             comboBoxStack.Children.Add(BeamType);
 

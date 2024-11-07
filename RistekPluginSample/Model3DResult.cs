@@ -220,6 +220,130 @@ namespace RistekPluginSample
             }
         }
 
+        public void SetBeamLocationWithExtensions(MetalWebStructure beam, Member member)
+        {
+            Point3D newStartPoint3DWithExtension;
+            Point3D newEndPoint3DWithExtension;
+
+            NewBeamOriginY = beam.Origin.Y;
+            NewBeamOriginX = beam.Origin.X;
+
+
+            Vector3D planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(_model3D.Beam3DNo1.StartPoint3D, _model3D.Beam3DNo1.EndPoint3D, _model3D.Beam3DNo2.EndPoint3D);
+            Point3D startPoint3Dm0 = _model3D.Beam3DNo1.StartPoint3D;
+            Point3D startPoint3Dm1 = _model3D.Beam3DNo2.StartPoint3D;
+            Point3D endPoint3Dm0 = _model3D.Beam3DNo1.EndPoint3D;
+            Point3D endPoint3Dm1 = _model3D.Beam3DNo2.EndPoint3D;
+
+            if (_model3D.Beam3DNo1.IsMemberEndCombinedCut && _model3D.Beam3DNo1.Alignement == Member.MemberAlignment.Center)
+            {
+                startPoint3Dm0.X = _model3D.Member1StartPointXEdgeLeft;
+                startPoint3Dm0.Z = _model3D.Member1StartPointZEdgeLeft;
+                endPoint3Dm0.X = _model3D.Member1EndPointXEdgeLeft;
+                endPoint3Dm0.Z = _model3D.Member1EndPointZEdgeLeft;
+                endPoint3Dm1.X = _model3D.Member2EndPointXEdgeLeft;
+                endPoint3Dm1.Z = _model3D.Member2EndPointZEdgeLeft;
+
+                planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(startPoint3Dm0, endPoint3Dm0, endPoint3Dm1);
+            }
+            planeNormalToFutureBeamTruss.Normalize(); ;
+
+            bool isMinusDirection = _model3D.IsRoofYDirection ?
+                startPoint3Dm0.Y > startPoint3Dm1.Y :
+                startPoint3Dm0.X > startPoint3Dm1.X;
+
+            if (isMinusDirection)
+            {
+                newStartPoint3DWithExtension = new Point3D(NewBeamOriginX + BeamStartExtensionX - Beam3DNo1ThicknessX / 2, NewBeamOriginY - Beam3DNo1ThicknessY / 2 + BeamStartExtensionY, beam.Origin.Z);
+                newEndPoint3DWithExtension = new Point3D(NewBeamOriginX - BeamEndExtensionX - DistanceBeetweenSelectedBeamsX + Beam3DNo1ThicknessX / 2, NewBeamOriginY + Beam3DNo1ThicknessY / 2 - DistanceBeetweenSelectedBeamsY - BeamEndExtensionY, beam.Origin.Z);
+            }
+            else
+            {
+                newStartPoint3DWithExtension = new Point3D(NewBeamOriginX - BeamStartExtensionX + Beam3DNo1ThicknessX / 2, NewBeamOriginY + Beam3DNo1ThicknessY / 2 - BeamStartExtensionY, beam.Origin.Z);
+                newEndPoint3DWithExtension = new Point3D(NewBeamOriginX + BeamEndExtensionX + DistanceBeetweenSelectedBeamsX - Beam3DNo1ThicknessX / 2, NewBeamOriginY - Beam3DNo1ThicknessY / 2 + DistanceBeetweenSelectedBeamsY + BeamEndExtensionY, beam.Origin.Z);
+            }
+
+            if (UiData.IsRotatedToTheMainTruss)
+            {
+                beam.SetAlignedStartPoint(newStartPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                beam.SetAlignedEndPoint(newEndPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                member.AlignedStartPoint = new Point(newStartPoint3DWithExtension.Y, 0);
+                member.AlignedEndPoint = new Point(newEndPoint3DWithExtension.Y, 0);
+            }
+            else
+            {
+                beam.SetAlignedStartPoint(newStartPoint3DWithExtension, new Vector3D(0, 0, 1));
+                beam.SetAlignedEndPoint(newEndPoint3DWithExtension, new Vector3D(0, 0, 1));
+                member.AlignedStartPoint = new Point(newStartPoint3DWithExtension.Y, 0);
+                member.AlignedEndPoint = new Point(newEndPoint3DWithExtension.Y, 0);
+            }
+
+            beam.AddMember(member, true);
+            beam.UpdateMemberCuts(member, true);
+        }
+
+        public void SetBeamLocationWithExtensions(PlanarBeam planarBeam, Member member)
+        {
+            Point3D newStartPoint3DWithExtension;
+            Point3D newEndPoint3DWithExtension;
+
+            NewBeamOriginY = planarBeam.Origin.Y;
+            NewBeamOriginX = planarBeam.Origin.X;
+
+
+            Vector3D planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(_model3D.Beam3DNo1.StartPoint3D, _model3D.Beam3DNo1.EndPoint3D, _model3D.Beam3DNo2.EndPoint3D);
+            Point3D startPoint3Dm0 = _model3D.Beam3DNo1.StartPoint3D;
+            Point3D startPoint3Dm1 = _model3D.Beam3DNo2.StartPoint3D;
+            Point3D endPoint3Dm0 = _model3D.Beam3DNo1.EndPoint3D;
+            Point3D endPoint3Dm1 = _model3D.Beam3DNo2.EndPoint3D;
+
+            if (_model3D.Beam3DNo1.IsMemberEndCombinedCut && _model3D.Beam3DNo1.Alignement == Member.MemberAlignment.Center)
+            {
+                startPoint3Dm0.X = _model3D.Member1StartPointXEdgeLeft;
+                startPoint3Dm0.Z = _model3D.Member1StartPointZEdgeLeft;
+                endPoint3Dm0.X = _model3D.Member1EndPointXEdgeLeft;
+                endPoint3Dm0.Z = _model3D.Member1EndPointZEdgeLeft;
+                endPoint3Dm1.X = _model3D.Member2EndPointXEdgeLeft;
+                endPoint3Dm1.Z = _model3D.Member2EndPointZEdgeLeft;
+
+                planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(startPoint3Dm0, endPoint3Dm0, endPoint3Dm1);
+            }
+            planeNormalToFutureBeamTruss.Normalize(); ;
+
+            bool isMinusDirection = _model3D.IsRoofYDirection ?
+                startPoint3Dm0.Y > startPoint3Dm1.Y :
+                startPoint3Dm0.X > startPoint3Dm1.X;
+
+            if (isMinusDirection)
+            {
+                newStartPoint3DWithExtension = new Point3D(NewBeamOriginX + BeamStartExtensionX - Beam3DNo1ThicknessX / 2, NewBeamOriginY - Beam3DNo1ThicknessY / 2 + BeamStartExtensionY, planarBeam.Origin.Z);
+                newEndPoint3DWithExtension = new Point3D(NewBeamOriginX - BeamEndExtensionX - DistanceBeetweenSelectedBeamsX + Beam3DNo1ThicknessX / 2, NewBeamOriginY + Beam3DNo1ThicknessY / 2 - DistanceBeetweenSelectedBeamsY - BeamEndExtensionY, planarBeam.Origin.Z);
+            }
+            else
+            {
+                newStartPoint3DWithExtension = new Point3D(NewBeamOriginX - BeamStartExtensionX + Beam3DNo1ThicknessX / 2, NewBeamOriginY + Beam3DNo1ThicknessY / 2 - BeamStartExtensionY, planarBeam.Origin.Z);
+                newEndPoint3DWithExtension = new Point3D(NewBeamOriginX + BeamEndExtensionX + DistanceBeetweenSelectedBeamsX - Beam3DNo1ThicknessX / 2, NewBeamOriginY - Beam3DNo1ThicknessY / 2 + DistanceBeetweenSelectedBeamsY + BeamEndExtensionY, planarBeam.Origin.Z);
+            }
+
+            if (UiData.IsRotatedToTheMainTruss)
+            {
+                planarBeam.SetAlignedStartPoint(newStartPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                planarBeam.SetAlignedEndPoint(newEndPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                member.AlignedStartPoint = new Point(newStartPoint3DWithExtension.Y, 0);
+                member.AlignedEndPoint = new Point(newEndPoint3DWithExtension.Y, 0);
+            }
+            else
+            {
+                planarBeam.SetAlignedStartPoint(newStartPoint3DWithExtension, new Vector3D(0, 0, 1));
+                planarBeam.SetAlignedEndPoint(newEndPoint3DWithExtension, new Vector3D(0, 0, 1));
+                member.AlignedStartPoint = new Point(newStartPoint3DWithExtension.Y, 0);
+                member.AlignedEndPoint = new Point(newEndPoint3DWithExtension.Y, 0);
+            }
+
+            planarBeam.AddMember(member,true);
+            planarBeam.UpdateMemberCuts(member,true);
+        }
+
         private void ConvertUIAlignement()
         {
             newBeamAlignment = GetBeamAlignment(UiData.NewBeamAlignement.SelectedItem.ToString(), Strings.Strings.newBeamAlignement);
