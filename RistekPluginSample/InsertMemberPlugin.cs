@@ -115,7 +115,7 @@ namespace RistekPluginSample
                 //m0 = GetTrussMemberFromPluginInput_(_preInputs[0]);
                 //m1 = GetTrussMemberFromPluginInput_(_preInputs[1]);
 
-                _model3D = new Model3D(m0, m1);
+                _model3D = new Model3D(m0, m1,isRoofYDirection);
             }
 
             if (previousInput == null) return _preInputs != null ? _preInputs[0] : null;
@@ -151,9 +151,18 @@ namespace RistekPluginSample
                     m0 = GetTrussMemberFromPluginInput_(_preInputs[0]);
                     m1 = GetTrussMemberFromPluginInput_(_preInputs[1]);
 
-                    distYm0Center = m0.PartCSToGlobal.OffsetY;
-                    distYm1Center = m1.PartCSToGlobal.OffsetY;
-                    bool areCollinear = distYm0Center - distYm1Center == 0;
+                    isRoofYDirection = IsRoofYDirection(m0, m1);
+                    isRoofXDirection = IsRoofXDirection(m0, m1);
+
+                    if (isRoofYDirection)
+                    {
+                        areCollinear = AreCollinearAxisY(m0, m1);
+                    }
+                    else if (isRoofXDirection)
+                    {
+                        areCollinear = AreCollinearAxisX(m0, m1);
+                    }
+
                     if ((pluginObjectInput2.Point - (_preInputs[0] as PluginObjectInput).Point).Length < 1)
                     {
                         pluginInput.Valid = false;
@@ -181,6 +190,46 @@ namespace RistekPluginSample
             }
         }
 
+        private bool IsRoofYDirection(Member m0, Member m1)
+        {
+            double distYm0Center = m0.PartCSToGlobal.OffsetY;
+            double distYm1Center = m1.PartCSToGlobal.OffsetY;
+
+            isRoofYDirection = distYm0Center != distYm1Center;
+
+            return isRoofYDirection;
+        }
+
+        private bool IsRoofXDirection(Member m0, Member m1)
+        {
+            double distXm0Center = m0.PartCSToGlobal.OffsetX;
+            double distXm1Center = m1.PartCSToGlobal.OffsetX;
+
+            isRoofXDirection = distXm0Center != distXm1Center;
+
+            return isRoofXDirection;
+        }
+
+        private bool AreCollinearAxisX(Member m0, Member m1)
+        {
+            double distXm0Center = m0.PartCSToGlobal.OffsetX;
+            double distXm1Center = m1.PartCSToGlobal.OffsetX;
+
+            areCollinear = distXm0Center - distXm1Center == 0;
+
+            return areCollinear;
+        }
+
+        private bool AreCollinearAxisY(Member m0, Member m1)
+        {
+            double distYm0Center = m0.PartCSToGlobal.OffsetY;
+            double distYm1Center = m1.PartCSToGlobal.OffsetY;
+
+            areCollinear = distYm0Center - distYm1Center == 0;
+
+            return areCollinear;
+        }
+
         private System.Windows.Window _dialog;
         private Member m0;
         private Member m1;
@@ -189,8 +238,10 @@ namespace RistekPluginSample
         private Model3DResult _model3DResult;
         private UiData _uIData;
 
-        private double distYm0Center;
-        private double distYm1Center;
+
+        private bool isRoofYDirection;
+        private bool isRoofXDirection;
+        private bool areCollinear;
 
 
         public bool DialogResult { get; set; }
@@ -250,7 +301,7 @@ namespace RistekPluginSample
         private PlanarBeam _planarBeam;
         private SteelBeam _steelBeam;
         private ModelFolderNode _supportFolder;
-     
+
         bool hasError = true;
         public void OnCreateButtonClicked(object sender, RoutedEventArgs args)
         {
@@ -266,7 +317,7 @@ namespace RistekPluginSample
                 CreateSingleBeam();
             }
             else
-            {              
+            {
                 int multipleMemberCount = (int)Math.Ceiling((_uIData.horizontalCastLength - _uIData.BeamInsertionDistanceValue) / _uIData.BeamMultiplySpacingValue);
                 for (int i = 0; i < multipleMemberCount; i++)
                 {
@@ -352,8 +403,8 @@ namespace RistekPluginSample
                 _steelBeam.SectionName = "HEA 400";
             }
 
-        }            
-              
+        }
+
 
         /// <summary>
         /// Set the <see cref="PluginDataNode"/> for an editable plugin. If <see cref="PluginDataNode"/> is specified all other created nodes should be inserted

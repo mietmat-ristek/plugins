@@ -409,8 +409,8 @@ namespace RistekPluginSample
             }
 
 
-            var startPoint3Dm0 = new Point3D(m0XStart, _model3D.Beam3DNo1.DistanceY, m0YStart);
-            var endPoint3Dm0 = new Point3D(m0XEnd, _model3D.Beam3DNo1.DistanceY, m0YEnd);
+            var startPoint3Dm0 = new Point3D(m0XStart, _model3D.Beam3DNo1.DistanceFromRoofStart, m0YStart);
+            var endPoint3Dm0 = new Point3D(m0XEnd, _model3D.Beam3DNo1.DistanceFromRoofStart, m0YEnd);
             double deltaX = endPoint3Dm0.X - startPoint3Dm0.X;
             double deltaY = endPoint3Dm0.Y - startPoint3Dm0.Y;
             double deltaZ = endPoint3Dm0.Z - startPoint3Dm0.Z;
@@ -560,7 +560,10 @@ namespace RistekPluginSample
             BeamInsertionDistanceValue = ParseDoubleFromText(BeamInsertionDistanceTextBox.Text, Strings.Strings.beamHorizontalInsertionDistance);
             BeamStartExtensionValue = ParseDoubleFromText(BeamStartExtensionTextBox.Text, Strings.Strings.beamStartExtension);
             BeamEndExtensionValue = ParseDoubleFromText(BeamEndExtensionTextBox.Text, Strings.Strings.beamEndExtension);
-            BeamMultiplySpacingValue = ParseDoubleFromText(BeamMultiplySpacingTextBox.Text, Strings.Strings.beamMultiplySpacing);
+            if (IsNewBeamMultiplyed)
+            {
+                BeamMultiplySpacingValue = ParseDoubleFromText(BeamMultiplySpacingTextBox.Text, Strings.Strings.beamMultiplySpacing);
+            }
         }
 
         private double ParseDoubleFromText(string text, string fieldName)

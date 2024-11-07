@@ -12,23 +12,30 @@ namespace RistekPluginSample
         public bool IsMemberEndHorizontalCut { get; set; }
         public bool IsMemberEndNormalCut { get; set; }
         public bool IsMemberEndCombinedCut { get; set; }
+        public bool IsRoofYDirection { get; set; }
         public Point TheLowestStartPointForCombinedCuttedBeam { get; set; }
         public Point TheHighestStartPointForCombinedCuttedBeam { get; set; }
 
         public double LeftEdgeStartPointX { get; set; }
         public double LeftEdgeStartPointY { get; set; }
+        public double LeftEdgeStartPointZ { get; set; }
         public double LeftEdgeEndPointX { get; set; }
         public double LeftEdgeEndPointY { get; set; }
+        public double LeftEdgeEndPointZ { get; set; }
 
         protected double RightEdgeStartPointX { get; set; }
         protected double RightEdgeStartPointY { get; set; }
+        protected double RightEdgeStartPointZ { get; set; }
         protected double RightEdgeEndPointX { get; set; }
         protected double RightEdgeEndPointY { get; set; }
+        protected double RightEdgeEndPointZ { get; set; }
 
         protected double MiddleEdgeStartPointX { get; set; }
         protected double MiddleEdgeStartPointY { get; set; }
+        protected double MiddleEdgeStartPointZ { get; set; }
         protected double MiddleEdgeEndPointX { get; set; }
         protected double MiddleEdgeEndPointY { get; set; }
+        protected double MiddleEdgeEndPointZ { get; set; }
 
         public double HorizontalMove1LowestPoint { get; set; }
         public double HorizontalMove1HighestPoint { get; set; }
@@ -42,11 +49,13 @@ namespace RistekPluginSample
 
         public double MemberStartX { get; set; }
         public double MemberStartY { get; set; }
+        public double MemberStartZ { get; set; }
         public double MemberEndX { get; set; }
         public double MemberEndY { get; set; }
+        public double MemberEndZ { get; set; }
 
         public double MemberLength { get; set; }
-        public double DistanceY { get; set; }
+        public double DistanceFromRoofStart { get; set; }
 
         public double BeamSlopeRadians { get; set; }
         public double BeamSlopeDegrees { get; set; }
@@ -61,8 +70,10 @@ namespace RistekPluginSample
         public Member.MemberAlignment Alignement { get; set; }
 
 
-        public Beam2D(Member member)
+        public Beam2D(Member member, bool isRoofYDirection)
         {
+            IsRoofYDirection = isRoofYDirection;
+
             SetMemberLength(member);
             SetEdgePoints(member);
             CheckIsSelectedObjectLeftEdgeOnTop(member);
@@ -70,13 +81,21 @@ namespace RistekPluginSample
             SetMiddlePointsForCombinedEaves(member);
             SetAlignement(member);
             SetBorderPoints();
-            DistanceY = member.PartCSToGlobal.OffsetY;
+            if (IsRoofYDirection)
+            {
+                DistanceFromRoofStart = member.PartCSToGlobal.OffsetY;
+            }
+            else
+            {
+                DistanceFromRoofStart = member.PartCSToGlobal.OffsetX;
+            }
+
             if (IsMemberEndCombinedCut)
             {
                 SetMovesForCombinedCutMiddlePoint();
-            }          
+            }
         }
-               
+
         protected void SetMemberLength(Member member)
         {
             MemberLength = member.Length;
@@ -84,7 +103,6 @@ namespace RistekPluginSample
 
         protected void SetEdgePoints(Member member)
         {
-
             LeftEdgeStartPointX = Math.Round(member.LeftGeometryEdgeLine.StartPoint.X, 0);
             LeftEdgeStartPointY = Math.Round(member.LeftGeometryEdgeLine.StartPoint.Y, 0);
             LeftEdgeEndPointX = Math.Round(member.LeftGeometryEdgeLine.EndPoint.X, 0);

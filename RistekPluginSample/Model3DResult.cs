@@ -12,13 +12,26 @@ namespace RistekPluginSample
         public UiData UiData { get; set; }
         private Model3D _model3D { get; set; }
 
+        public double BeamStartExtensionX { get; set; }
+        public double BeamStartExtensionY { get; set; }
+        public double BeamEndExtensionX { get; set; }
+        public double BeamEndExtensionY { get; set; }
+        public double NewBeamOriginY { get; set; }
+        public double NewBeamOriginX { get; set; }
+        public double DistanceBeetweenSelectedBeamsX { get; set; }
+        public double DistanceBeetweenSelectedBeamsY { get; set; }
+
         private double verticalMoveForNewBeam;
         private double verticalEavesZMove;
         private double horizontalEavesXMove;
+        private double normalEavesYMove;
         private double normalEavesXMove;
         private double normalEavesZMove;
         private double xMoveForNewBeam;
+        private double yMoveForNewBeam;
         private double zMoveForNewBeam;
+        private double Beam3DNo1ThicknessY;
+        private double Beam3DNo1ThicknessX;
         private Member.MemberAlignment newBeamAlignment;
         private Member.MemberAlignment existBeamAlignment;
         private double xNew;
@@ -29,9 +42,35 @@ namespace RistekPluginSample
         {
             _model3D = model3D;
             UiData = uiData;
-            NewBeam = new Beam3D(new Member());
+            NewBeam = new Beam3D(new Member(), _model3D.IsRoofYDirection);
             ConvertUIAlignement();
+            PrepareBeamExtensions();
             CalculateNewBeamMovesForAlignement();
+            if (_model3D.IsRoofYDirection)
+            {
+                DistanceBeetweenSelectedBeamsY = _model3D.DistanceBeetweenSelectedBeams;
+                Beam3DNo1ThicknessY = _model3D.Beam3DNo1.Thickness;
+            }
+            else
+            {
+                DistanceBeetweenSelectedBeamsX = _model3D.DistanceBeetweenSelectedBeams;
+                Beam3DNo1ThicknessX = _model3D.Beam3DNo1.Thickness;
+            }
+        }
+
+        private void PrepareBeamExtensions()
+        {
+            if (_model3D.IsRoofYDirection)
+            {
+                BeamStartExtensionY = UiData.BeamStartExtensionValue;
+                BeamEndExtensionY = UiData.BeamStartExtensionValue;
+            }
+            else
+            {
+                BeamStartExtensionX = UiData.BeamStartExtensionValue;
+                BeamEndExtensionX = UiData.BeamStartExtensionValue;
+            }
+
         }
 
         public void CalculateNewBeamPointsForCastDistance()
@@ -87,20 +126,35 @@ namespace RistekPluginSample
 
         private void CalculateNewBeamMovesForAlignement()
         {
-            verticalMoveForNewBeam = UiData.BeamHeightValue / 2 / _model3D.Beam3DNo1.CosOfBeamSlope;
-            verticalEavesZMove = _model3D.Beam3DNo1.Width / _model3D.Beam3DNo1.CosOfBeamSlope;
-            horizontalEavesXMove = _model3D.Beam3DNo1.Width / 2 / _model3D.Beam3DNo1.SinOfBeamSlope;
+            if (_model3D.IsRoofYDirection)
+            {
+                verticalMoveForNewBeam = UiData.BeamHeightValue / 2 / _model3D.Beam3DNo1.CosOfBeamSlope;
+                verticalEavesZMove = _model3D.Beam3DNo1.Width / _model3D.Beam3DNo1.CosOfBeamSlope;
+                horizontalEavesXMove = _model3D.Beam3DNo1.Width / 2 / _model3D.Beam3DNo1.SinOfBeamSlope;
 
-            normalEavesXMove = _model3D.Beam3DNo1.Width / 2 * _model3D.Beam3DNo1.CosOfBeamSlopeAngleNotCasted;
-            normalEavesZMove = _model3D.Beam3DNo1.Width / 2 * _model3D.Beam3DNo1.SinOfBeamSlopeAngleNotCasted;
+                normalEavesXMove = _model3D.Beam3DNo1.Width / 2 * _model3D.Beam3DNo1.CosOfBeamSlopeAngleNotCasted;
+                normalEavesZMove = _model3D.Beam3DNo1.Width / 2 * _model3D.Beam3DNo1.SinOfBeamSlopeAngleNotCasted;
 
-            xMoveForNewBeam = UiData.BeamHeightValue / 2 * _model3D.Beam3DNo1.CosOfBeamSlopeAngleNotCasted;
-            zMoveForNewBeam = UiData.BeamHeightValue / 2 * _model3D.Beam3DNo1.SinOfBeamSlopeAngleNotCasted;
+                xMoveForNewBeam = UiData.BeamHeightValue / 2 * _model3D.Beam3DNo1.CosOfBeamSlopeAngleNotCasted;
+                zMoveForNewBeam = UiData.BeamHeightValue / 2 * _model3D.Beam3DNo1.SinOfBeamSlopeAngleNotCasted;
+            }
+            else
+            {
+                verticalMoveForNewBeam = UiData.BeamHeightValue / 2 / _model3D.Beam3DNo1.CosOfBeamSlope;
+                verticalEavesZMove = _model3D.Beam3DNo1.Width / _model3D.Beam3DNo1.CosOfBeamSlope;
+                horizontalEavesXMove = _model3D.Beam3DNo1.Width / 2 / _model3D.Beam3DNo1.SinOfBeamSlope;
+
+                normalEavesYMove = _model3D.Beam3DNo1.Width / 2 * _model3D.Beam3DNo1.CosOfBeamSlopeAngleNotCasted;
+                normalEavesZMove = _model3D.Beam3DNo1.Width / 2 * _model3D.Beam3DNo1.SinOfBeamSlopeAngleNotCasted;
+
+                yMoveForNewBeam = UiData.BeamHeightValue / 2 * _model3D.Beam3DNo1.CosOfBeamSlopeAngleNotCasted;
+                zMoveForNewBeam = UiData.BeamHeightValue / 2 * _model3D.Beam3DNo1.SinOfBeamSlopeAngleNotCasted;
+            }
+
         }
 
         public Point3D DetermineBeamOrigin()
         {
-
             if (UiData.IsRotatedToTheMainTruss)
             {
                 return PrepareOriginForRotatedBeam(_model3D.Beam3DNo1.IsSelectedMemberLeftEdgeOnTop, newBeamAlignment, existBeamAlignment);
@@ -115,7 +169,11 @@ namespace RistekPluginSample
         {
             Point3D newStartPoint3DWithExtension;
             Point3D newEndPoint3DWithExtension;
-            var beamOriginY = beam.Origin.Y;
+
+            NewBeamOriginY = beam.Origin.Y;
+            NewBeamOriginX = beam.Origin.X;
+
+
             Vector3D planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(_model3D.Beam3DNo1.StartPoint3D, _model3D.Beam3DNo1.EndPoint3D, _model3D.Beam3DNo2.EndPoint3D);
             Point3D startPoint3Dm0 = _model3D.Beam3DNo1.StartPoint3D;
             Point3D startPoint3Dm1 = _model3D.Beam3DNo2.StartPoint3D;
@@ -133,21 +191,21 @@ namespace RistekPluginSample
 
                 planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(startPoint3Dm0, endPoint3Dm0, endPoint3Dm1);
             }
-            planeNormalToFutureBeamTruss.Normalize();
+            planeNormalToFutureBeamTruss.Normalize(); ;
 
-            double distanceBeetweenExistBeams = Math.Abs(_model3D.Member1.PartCSToGlobal.OffsetY - _model3D.Member2.PartCSToGlobal.OffsetY);
-
-            bool isMinusDirection = startPoint3Dm0.Y > startPoint3Dm1.Y;
+            bool isMinusDirection = _model3D.IsRoofYDirection ?
+                startPoint3Dm0.Y > startPoint3Dm1.Y :
+                startPoint3Dm0.X > startPoint3Dm1.X;
 
             if (isMinusDirection)
             {
-                newStartPoint3DWithExtension = new Point3D(beam.Origin.X, beamOriginY - _model3D.Beam3DNo1.Thickness / 2 + UiData.BeamStartExtensionValue, beam.Origin.Z);
-                newEndPoint3DWithExtension = new Point3D(beam.Origin.X, beamOriginY + _model3D.Beam3DNo1.Thickness / 2 - distanceBeetweenExistBeams - UiData.BeamEndExtensionValue, beam.Origin.Z);
+                newStartPoint3DWithExtension = new Point3D(NewBeamOriginX + BeamStartExtensionX - Beam3DNo1ThicknessX / 2, NewBeamOriginY - Beam3DNo1ThicknessY / 2 + BeamStartExtensionY, beam.Origin.Z);
+                newEndPoint3DWithExtension = new Point3D(NewBeamOriginX - BeamEndExtensionX - DistanceBeetweenSelectedBeamsX + Beam3DNo1ThicknessX / 2, NewBeamOriginY + Beam3DNo1ThicknessY / 2 - DistanceBeetweenSelectedBeamsY - BeamEndExtensionY, beam.Origin.Z);
             }
             else
             {
-                newStartPoint3DWithExtension = new Point3D(beam.Origin.X, beamOriginY + _model3D.Beam3DNo1.Thickness / 2 - UiData.BeamStartExtensionValue, beam.Origin.Z);
-                newEndPoint3DWithExtension = new Point3D(beam.Origin.X, beamOriginY - _model3D.Beam3DNo1.Thickness / 2 + distanceBeetweenExistBeams + UiData.BeamEndExtensionValue, beam.Origin.Z);
+                newStartPoint3DWithExtension = new Point3D(NewBeamOriginX - BeamStartExtensionX + Beam3DNo1ThicknessX / 2, NewBeamOriginY + Beam3DNo1ThicknessY / 2 - BeamStartExtensionY, beam.Origin.Z);
+                newEndPoint3DWithExtension = new Point3D(NewBeamOriginX + BeamEndExtensionX + DistanceBeetweenSelectedBeamsX - Beam3DNo1ThicknessX / 2, NewBeamOriginY - Beam3DNo1ThicknessY / 2 + DistanceBeetweenSelectedBeamsY + BeamEndExtensionY, beam.Origin.Z);
             }
 
             if (UiData.IsRotatedToTheMainTruss)
@@ -981,7 +1039,7 @@ namespace RistekPluginSample
                             case Member.MemberAlignment.RightEdge:
                                 if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
                                 {
-                                    return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+                                    return new Point3D(xNew + xMoveForNewBeam, yNew /*+ yMoveForNewBeam*/, zNew - zMoveForNewBeam);
                                 }
                                 else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
                                 {
@@ -1129,7 +1187,7 @@ namespace RistekPluginSample
                                     }
                                     else
                                     {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint + _model3D.Beam3DNo1.HorizontalMove1LowestPoint + xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + _model3D.Beam3DNo1.VerticalMove1LowestPoint - zMoveForNewBeam);
+                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint + _model3D.Beam3DNo1.HorizontalMove1LowestPoint + xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + _model3D.Beam3DNo1.VerticalMove1LowestPoint - zMoveForNewBeam);
                                     }
                                 }
                                 else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
