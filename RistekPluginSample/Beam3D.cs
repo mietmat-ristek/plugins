@@ -6,14 +6,13 @@ namespace RistekPluginSample
 {
     public class Beam3D : Beam2D
     {
-        public double DistanceYExistBeam { get; set; }
         public Point3D StartPoint3D { get; set; }
         public Point3D EndPoint3D { get; set; }
 
         public double Width { get; set; }
         public double Thickness { get; set; }
 
-        public Beam3D(Member member) : base(member)
+        public Beam3D(Member member, bool isRoofYDirection) : base(member, isRoofYDirection)
         {
             SetBeamDimensions(member);
             CalculateBeam3DPoints();
@@ -67,8 +66,17 @@ namespace RistekPluginSample
 
         private void CalculateBeam3DPoints()
         {
-            StartPoint3D = new Point3D(MemberStartX, DistanceY, MemberStartY);
-            EndPoint3D = new Point3D(MemberEndX, DistanceY, MemberEndY);
+            if (IsRoofYDirection)
+            {
+                StartPoint3D = new Point3D(MemberStartX, DistanceFromRoofStart, MemberStartY);
+                EndPoint3D = new Point3D(MemberEndX, DistanceFromRoofStart, MemberEndY);
+            }
+            else
+            {
+                StartPoint3D = new Point3D(DistanceFromRoofStart, MemberStartX, MemberStartY);
+                EndPoint3D = new Point3D(DistanceFromRoofStart, MemberEndX, MemberEndY);
+            }
+
         }
 
         protected void CalculateBeamSlopeRadians()
