@@ -109,14 +109,7 @@ namespace RistekPluginSample
                 objectInput2.Index = 1;
                 objectInput2.Prompt = Strings.Strings.selectTheSecondBeam;
                 _preInputs.Add(objectInput2);
-            }
-            else if (_preInputs.Count > 1 && _preInputs[0].Valid && _preInputs[1].Valid)
-            {
-                //m0 = GetTrussMemberFromPluginInput_(_preInputs[0]);
-                //m1 = GetTrussMemberFromPluginInput_(_preInputs[1]);          
-
-                //_model3D = new Model3D(m0, m1, isRoofYDirection);
-            }
+            }         
 
             if (previousInput == null) return _preInputs != null ? _preInputs[0] : null;
             else if (previousInput.Index + 1 < _preInputs.Count) return _preInputs[previousInput.Index + 1];
@@ -789,7 +782,6 @@ namespace RistekPluginSample
             else if (_batten != null)
             {
                 addedNodes.Add(_batten);
-                //addedNodes.Add(_supportFolder);
                 if (_supportFolder != null)
                 {
                     addedNodes.Add(_supportFolder);
@@ -809,7 +801,6 @@ namespace RistekPluginSample
             else if (_purlin != null)
             {
                 addedNodes.Add(_purlin);
-                //addedNodes.Add(_supportFolder);
                 if (_supportFolder != null)
                 {
                     addedNodes.Add(_supportFolder);
@@ -829,7 +820,6 @@ namespace RistekPluginSample
             else if (_strongBack != null)
             {
                 addedNodes.Add(_strongBack);
-                //addedNodes.Add(_supportFolder);
                 if (_supportFolder != null)
                 {
                     addedNodes.Add(_supportFolder);
@@ -849,7 +839,6 @@ namespace RistekPluginSample
             else if (_metalWebStructure != null)
             {
                 addedNodes.Add(_metalWebStructure);
-                //addedNodes.Add(_supportFolder);
                 if (_supportFolder != null)
                 {
                     addedNodes.Add(_supportFolder);
@@ -869,7 +858,6 @@ namespace RistekPluginSample
             else
             {
                 addedNodes.Add(_planarBeam);
-                //addedNodes.Add(_supportFolder);
                 if (_supportFolder != null)
                 {
                     addedNodes.Add(_supportFolder);
@@ -968,10 +956,7 @@ namespace RistekPluginSample
                     default:
                         throw new ArgumentException(Strings.Strings.unknownAlignementOption);
                 }
-            }
-
-       
+            }       
         }
-
     }
 }
