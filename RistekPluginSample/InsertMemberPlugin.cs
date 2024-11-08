@@ -434,6 +434,7 @@ namespace RistekPluginSample
 
                 _timberBeam.AssemblyName = this.AssemblyName;
                 _timberBeam.FullClassName = this.FullClassName;
+                _timberBeam.Alignment = _model3DResult.ConvertToModelPartAlignmentNewBeam(_uIData.NewBeamAlignement.Text);
 
                 _timberBeam.Width = _uIData.BeamHeightValue;
                 _timberBeam.Thickness = _uIData.BeamThicknessValue;

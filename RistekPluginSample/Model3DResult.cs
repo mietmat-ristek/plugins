@@ -202,22 +202,51 @@ namespace RistekPluginSample
             {
                 newStartPoint3DWithExtension = new Point3D(NewBeamOriginX + BeamStartExtensionX - Beam3DNo1ThicknessX / 2, NewBeamOriginY - Beam3DNo1ThicknessY / 2 + BeamStartExtensionY, beam.Origin.Z);
                 newEndPoint3DWithExtension = new Point3D(NewBeamOriginX - BeamEndExtensionX - DistanceBeetweenSelectedBeamsX + Beam3DNo1ThicknessX / 2, NewBeamOriginY + Beam3DNo1ThicknessY / 2 - DistanceBeetweenSelectedBeamsY - BeamEndExtensionY, beam.Origin.Z);
+
+                if (UiData.IsRotatedToTheMainTruss)
+                {
+                    if (UiData.IsSelectedMemberLeftEdgeOnTop)
+                    {
+                        beam.SetAlignedStartPoint(newStartPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                        beam.SetAlignedEndPoint(newEndPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                    }
+                    else
+                    {
+                        beam.SetAlignedStartPoint(newStartPoint3DWithExtension, -planeNormalToFutureBeamTruss);
+                        beam.SetAlignedEndPoint(newEndPoint3DWithExtension, -planeNormalToFutureBeamTruss);
+                    }
+
+                }
+                else
+                {
+                    beam.SetAlignedStartPoint(newStartPoint3DWithExtension, new Vector3D(0, 0, 1));
+                    beam.SetAlignedEndPoint(newEndPoint3DWithExtension, new Vector3D(0, 0, 1));
+                }
+
             }
             else
             {
                 newStartPoint3DWithExtension = new Point3D(NewBeamOriginX - BeamStartExtensionX + Beam3DNo1ThicknessX / 2, NewBeamOriginY + Beam3DNo1ThicknessY / 2 - BeamStartExtensionY, beam.Origin.Z);
                 newEndPoint3DWithExtension = new Point3D(NewBeamOriginX + BeamEndExtensionX + DistanceBeetweenSelectedBeamsX - Beam3DNo1ThicknessX / 2, NewBeamOriginY - Beam3DNo1ThicknessY / 2 + DistanceBeetweenSelectedBeamsY + BeamEndExtensionY, beam.Origin.Z);
-            }
 
-            if (UiData.IsRotatedToTheMainTruss)
-            {
-                beam.SetAlignedStartPoint(newStartPoint3DWithExtension, planeNormalToFutureBeamTruss);
-                beam.SetAlignedEndPoint(newEndPoint3DWithExtension, planeNormalToFutureBeamTruss);
-            }
-            else
-            {
-                beam.SetAlignedStartPoint(newStartPoint3DWithExtension, new Vector3D(0, 0, 1));
-                beam.SetAlignedEndPoint(newEndPoint3DWithExtension, new Vector3D(0, 0, 1));
+                if (UiData.IsRotatedToTheMainTruss)
+                {
+                    if (UiData.IsSelectedMemberLeftEdgeOnTop)
+                    {
+                        beam.SetAlignedStartPoint(newStartPoint3DWithExtension, -planeNormalToFutureBeamTruss);
+                        beam.SetAlignedEndPoint(newEndPoint3DWithExtension, -planeNormalToFutureBeamTruss);
+                    }
+                    else
+                    {
+                        beam.SetAlignedStartPoint(newStartPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                        beam.SetAlignedEndPoint(newEndPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                    }
+                }
+                else
+                {
+                    beam.SetAlignedStartPoint(newStartPoint3DWithExtension, new Vector3D(0, 0, 1));
+                    beam.SetAlignedEndPoint(newEndPoint3DWithExtension, new Vector3D(0, 0, 1));
+                }
             }
         }
 
