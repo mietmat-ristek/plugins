@@ -113,9 +113,9 @@ namespace RistekPluginSample
             else if (_preInputs.Count > 1 && _preInputs[0].Valid && _preInputs[1].Valid)
             {
                 //m0 = GetTrussMemberFromPluginInput_(_preInputs[0]);
-                //m1 = GetTrussMemberFromPluginInput_(_preInputs[1]);
+                //m1 = GetTrussMemberFromPluginInput_(_preInputs[1]);          
 
-                _model3D = new Model3D(m0, m1, isRoofYDirection);
+                //_model3D = new Model3D(m0, m1, isRoofYDirection);
             }
 
             if (previousInput == null) return _preInputs != null ? _preInputs[0] : null;
@@ -149,7 +149,7 @@ namespace RistekPluginSample
                 else
                 {
                     m0 = GetTrussMemberFromPluginInput_(_preInputs[0]);
-                    m1 = GetTrussMemberFromPluginInput_(_preInputs[1]);
+                    m1 = GetTrussMemberFromPluginInput_(_preInputs[1]);                  
 
                     isRoofYDirection = IsRoofYDirection(m0, m1);
                     isRoofXDirection = IsRoofXDirection(m0, m1);
@@ -275,7 +275,9 @@ namespace RistekPluginSample
             _dialog.Title = NameForMenu;
             _dialog.Cursor = Cursors.Arrow;
 
-            _uIData = new UiData(_model3D);
+
+
+            _uIData = new UiData(m0,m1,isRoofYDirection);
 
             CreateFinalButtonRow(_uIData.MainStack);
 
@@ -312,7 +314,6 @@ namespace RistekPluginSample
 
         private PlanarBeam _planarBeam;
 
-
         private ModelFolderNode _supportFolder;
 
         bool hasError = true;
@@ -323,6 +324,10 @@ namespace RistekPluginSample
                 return;
             }
             _uIData.CreateValuesFromTextBox();
+
+            m0.Alignment = ConvertToMemberAlignment(_uIData.ExistBeamAlignement.Text);
+            m1.Alignment = ConvertToMemberAlignment(_uIData.ExistBeamAlignement.Text);
+            _model3D = new Model3D(m0, m1, isRoofYDirection);           
             _model3DResult = new Model3DResult(_model3D, _uIData);
 
             if (!_uIData.IsNewBeamMultiplyed)
@@ -365,7 +370,65 @@ namespace RistekPluginSample
 
         private void CreateSingleBeam()
         {
-            if (_uIData.BeamType.Text == Constants.TimberBeam)
+            if (_uIData.BeamType.Text == Constants.PlanarBeam)
+            {
+                _planarBeam = new PlanarBeam(Constants.PlanarBeam, true);
+                Member member = new Member("Member");
+
+                _planarBeam.UIName = Constants.PlanarBeam;
+                _planarBeam.Alignment = _model3DResult.ConvertToModelPartAlignmentNewBeam(_uIData.NewBeamAlignement.Text);
+
+                _planarBeam.Thickness = _uIData.BeamThicknessValue;
+
+                if (_uIData.BeamDistanceType.Text == Constants.horizontalCast)
+                {
+                    _model3DResult.CalculateNewBeamPointsForCastDistance();
+                }
+                else
+                {
+                    _model3DResult.CalculateNewBeamPointsForDistanceAlongTheBeam();
+                }
+
+                //_planarBeam.Origin = _model3DResult.DetermineBeamOrigin();
+                _planarBeam.Origin = new Point3D(_model3DResult.xNew, _model3DResult.yNew, _model3DResult.zNew);
+
+                member.Thickness = _planarBeam.Thickness;
+                member.SetWidth(_uIData.BeamHeightValue);
+
+                _planarBeam.MyMember.Width = _uIData.BeamHeightValue;
+                _planarBeam.MyMember.SizeY = _uIData.BeamHeightValue;
+
+                _model3DResult.SetBeamLocationWithExtensions(_planarBeam, member);
+                PluginEngine?.PluginUpdate3D(true);
+
+            }
+            else if (_uIData.BeamType.Text == Constants.SteelBeam3D)
+            {
+                _steelBeam3D = new SteelBeam3D(Constants.SteelBeam3D);
+
+                _steelBeam3D.AssemblyName = this.AssemblyName;
+                _steelBeam3D.FullClassName = this.FullClassName;
+
+                _steelBeam3D.Width = _uIData.BeamThicknessValue;
+                _steelBeam3D.Height = _uIData.BeamHeightValue;
+
+
+                if (_uIData.BeamDistanceType.Text == Constants.horizontalCast)
+                {
+                    _model3DResult.CalculateNewBeamPointsForCastDistance();
+                }
+                else
+                {
+                    _model3DResult.CalculateNewBeamPointsForDistanceAlongTheBeam();
+                }
+
+                _steelBeam3D.Origin = new Point3D(_model3DResult.xNew, _model3DResult.yNew, _model3DResult.zNew);
+
+                _model3DResult.SetBeamLocationWithExtensions(_steelBeam3D);
+                _steelBeam3D.SectionGroupCode = "HEA";
+                _steelBeam3D.SectionName = "HEA 400";
+            }
+            else if (_uIData.BeamType.Text == Constants.TimberBeam)
             {
                 _timberBeam = new TimberBeam(Constants.TimberBeam);
 
@@ -385,7 +448,7 @@ namespace RistekPluginSample
                     _model3DResult.CalculateNewBeamPointsForDistanceAlongTheBeam();
                 }
 
-                _timberBeam.Origin = _model3DResult.DetermineBeamOrigin();
+                _timberBeam.Origin = new Point3D(_model3DResult.xNew, _model3DResult.yNew, _model3DResult.zNew);
 
                 _model3DResult.SetBeamLocationWithExtensions(_timberBeam);
             }
@@ -409,7 +472,7 @@ namespace RistekPluginSample
                     _model3DResult.CalculateNewBeamPointsForDistanceAlongTheBeam();
                 }
 
-                _bucklingSupport.Origin = _model3DResult.DetermineBeamOrigin();
+                _bucklingSupport.Origin = new Point3D(_model3DResult.xNew, _model3DResult.yNew, _model3DResult.zNew);
 
                 _model3DResult.SetBeamLocationWithExtensions(_bucklingSupport);
             }
@@ -433,7 +496,7 @@ namespace RistekPluginSample
                     _model3DResult.CalculateNewBeamPointsForDistanceAlongTheBeam();
                 }
 
-                _support.Origin = _model3DResult.DetermineBeamOrigin();
+                _support.Origin = new Point3D(_model3DResult.xNew, _model3DResult.yNew, _model3DResult.zNew);
 
                 _model3DResult.SetBeamLocationWithExtensions(_support);
             }
@@ -457,38 +520,13 @@ namespace RistekPluginSample
                     _model3DResult.CalculateNewBeamPointsForDistanceAlongTheBeam();
                 }
 
-                _steelBeam.Origin = _model3DResult.DetermineBeamOrigin();
+                _steelBeam.Origin = new Point3D(_model3DResult.xNew, _model3DResult.yNew, _model3DResult.zNew);
 
                 _model3DResult.SetBeamLocationWithExtensions(_steelBeam);
                 _steelBeam.SectionGroupCode = "HEA";
                 _steelBeam.SectionName = "HEA 400";
             }
-            else if (_uIData.BeamType.Text == Constants.SteelBeam3D)
-            {
-                _steelBeam3D = new SteelBeam3D(Constants.SteelBeam3D);
 
-                _steelBeam3D.AssemblyName = this.AssemblyName;
-                _steelBeam3D.FullClassName = this.FullClassName;
-
-                _steelBeam3D.Width = _uIData.BeamThicknessValue;
-                _steelBeam3D.Height = _uIData.BeamHeightValue;
-
-
-                if (_uIData.BeamDistanceType.Text == Constants.horizontalCast)
-                {
-                    _model3DResult.CalculateNewBeamPointsForCastDistance();
-                }
-                else
-                {
-                    _model3DResult.CalculateNewBeamPointsForDistanceAlongTheBeam();
-                }
-
-                _steelBeam3D.Origin = _model3DResult.DetermineBeamOrigin();
-
-                _model3DResult.SetBeamLocationWithExtensions(_steelBeam3D);
-                _steelBeam3D.SectionGroupCode = "HEA";
-                _steelBeam3D.SectionName = "HEA 400";
-            }
             else if (_uIData.BeamType.Text == Constants.TimberMember)
             {
                 _timberMember = new TimberMember3D(Constants.TimberMember);
@@ -509,36 +547,9 @@ namespace RistekPluginSample
                     _model3DResult.CalculateNewBeamPointsForDistanceAlongTheBeam();
                 }
 
-                _timberMember.Origin = _model3DResult.DetermineBeamOrigin();
+                _timberMember.Origin = new Point3D(_model3DResult.xNew, _model3DResult.yNew, _model3DResult.zNew);
 
                 _model3DResult.SetBeamLocationWithExtensions(_timberMember);
-            }
-            else if (_uIData.BeamType.Text == Constants.PlanarBeam)
-            {
-                _planarBeam = new PlanarBeam(Constants.PlanarBeam, true);
-                Member member = new Member("Member");
-
-                _planarBeam.UIName = Constants.PlanarBeam;
-
-                _planarBeam.Thickness = _uIData.BeamThicknessValue;
-
-                if (_uIData.BeamDistanceType.Text == Constants.horizontalCast)
-                {
-                    _model3DResult.CalculateNewBeamPointsForCastDistance();
-                }
-                else
-                {
-                    _model3DResult.CalculateNewBeamPointsForDistanceAlongTheBeam();
-                }
-
-                _planarBeam.Origin = _model3DResult.DetermineBeamOrigin();
-                member.Thickness = _planarBeam.Thickness;
-                member.SetWidth(_uIData.BeamHeightValue);
-                _planarBeam.MyMember.Width = _uIData.BeamHeightValue;
-                _planarBeam.MyMember.SizeY = _uIData.BeamHeightValue;
-                _model3DResult.SetBeamLocationWithExtensions(_planarBeam, member);
-                PluginEngine?.PluginUpdate3D(true);
-
             }
             else if (_uIData.BeamType.Text == Constants.Batten)
             {
@@ -559,7 +570,7 @@ namespace RistekPluginSample
                     _model3DResult.CalculateNewBeamPointsForDistanceAlongTheBeam();
                 }
 
-                _batten.Origin = _model3DResult.DetermineBeamOrigin();
+                _batten.Origin = new Point3D(_model3DResult.xNew, _model3DResult.yNew, _model3DResult.zNew);
 
                 _model3DResult.SetBeamLocationWithExtensions(_batten);
             }
@@ -582,7 +593,7 @@ namespace RistekPluginSample
                     _model3DResult.CalculateNewBeamPointsForDistanceAlongTheBeam();
                 }
 
-                _purlin.Origin = _model3DResult.DetermineBeamOrigin();
+                _purlin.Origin = new Point3D(_model3DResult.xNew, _model3DResult.yNew, _model3DResult.zNew);
 
                 _model3DResult.SetBeamLocationWithExtensions(_purlin);
             }
@@ -605,7 +616,7 @@ namespace RistekPluginSample
                     _model3DResult.CalculateNewBeamPointsForDistanceAlongTheBeam();
                 }
 
-                _strongBack.Origin = _model3DResult.DetermineBeamOrigin();
+                _strongBack.Origin = new Point3D(_model3DResult.xNew, _model3DResult.yNew, _model3DResult.zNew);
 
                 _model3DResult.SetBeamLocationWithExtensions(_strongBack);
             }
@@ -628,7 +639,7 @@ namespace RistekPluginSample
                     _model3DResult.CalculateNewBeamPointsForDistanceAlongTheBeam();
                 }
 
-                _metalWebStructure.Origin = _model3DResult.DetermineBeamOrigin();
+                _metalWebStructure.Origin = new Point3D(_model3DResult.xNew, _model3DResult.yNew, _model3DResult.zNew);
                 member.Thickness = _metalWebStructure.Thickness;
                 member.SetWidth(_uIData.BeamHeightValue);
 
@@ -921,6 +932,44 @@ namespace RistekPluginSample
 
         public void ContentElementEdited(ModelOverlayContentElement moce, object newValue)
         {
+        }
+
+        private Member.MemberAlignment ConvertToMemberAlignment(string alignmentOption)
+        {
+            string topEdgeTranslation = Strings.Strings.topEdge;
+            string bottomEdgeTranslation = Strings.Strings.bottomEdge;
+            string centerTranslation = Strings.Strings.center;
+
+            if (_uIData.IsSelectedMemberLeftEdgeOnTop)
+            {
+                switch (alignmentOption)
+                {
+                    case var option when option == topEdgeTranslation:
+                        return Member.MemberAlignment.LeftEdge;
+                    case var option when option == bottomEdgeTranslation:
+                        return Member.MemberAlignment.RightEdge;
+                    case var option when option == centerTranslation:
+                        return Member.MemberAlignment.Center;
+                    default:
+                        throw new ArgumentException(Strings.Strings.unknownAlignementOption);
+                }
+            }
+            else
+            {
+                switch (alignmentOption)
+                {
+                    case var option when option == topEdgeTranslation:
+                        return Member.MemberAlignment.RightEdge;
+                    case var option when option == bottomEdgeTranslation:
+                        return Member.MemberAlignment.LeftEdge;
+                    case var option when option == centerTranslation:
+                        return Member.MemberAlignment.Center;
+                    default:
+                        throw new ArgumentException(Strings.Strings.unknownAlignementOption);
+                }
+            }
+
+       
         }
 
     }

@@ -21,31 +21,32 @@ namespace RistekPluginSample
         public double DistanceBeetweenSelectedBeamsX { get; set; }
         public double DistanceBeetweenSelectedBeamsY { get; set; }
 
-        private double verticalMoveForNewBeam;
-        private double verticalEavesZMove;
-        private double horizontalEavesXMove;
-        private double normalEavesYMove;
-        private double normalEavesXMove;
-        private double normalEavesZMove;
-        private double xMoveForNewBeam;
-        private double yMoveForNewBeam;
-        private double zMoveForNewBeam;
+        //private double verticalMoveForNewBeam;
+        //private double verticalEavesZMove;
+        //private double horizontalEavesXMove;
+        //private double normalEavesYMove;
+        //private double normalEavesXMove;
+        //private double normalEavesZMove;
+        //private double xMoveForNewBeam;
+        //private double yMoveForNewBeam;
+        //private double zMoveForNewBeam;
         private double Beam3DNo1ThicknessY;
         private double Beam3DNo1ThicknessX;
-        private Member.MemberAlignment newBeamAlignment;
-        private Member.MemberAlignment existBeamAlignment;
-        private double xNew;
-        private double yNew;
-        private double zNew;
+        //private Member.MemberAlignment newBeamAlignment;
+        //private Member.MemberAlignment existBeamAlignment;
+        public double xNew;
+        public double yNew;
+        public double zNew;
 
         public Model3DResult(Model3D model3D, UiData uiData)
         {
             _model3D = model3D;
+            //_model3D.Member1.Alignment = ConvertToMemberAlignment(uiData.ExistBeamAlignement.Text);
             UiData = uiData;
             NewBeam = new Beam3D(new Member(), _model3D.IsRoofYDirection);
-            ConvertUIAlignement();
+            //ConvertUIAlignement();
             PrepareBeamExtensions();
-            CalculateNewBeamMovesForAlignement();
+            //CalculateNewBeamMovesForAlignement();
             if (_model3D.IsRoofYDirection)
             {
                 DistanceBeetweenSelectedBeamsY = _model3D.DistanceBeetweenSelectedBeams;
@@ -124,46 +125,46 @@ namespace RistekPluginSample
             NewBeam.EndPoint3D = new Point3D(xNew, _model3D.Member2.PartCSToGlobal.OffsetY, zNew);
         }
 
-        private void CalculateNewBeamMovesForAlignement()
-        {
-            if (_model3D.IsRoofYDirection)
-            {
-                verticalMoveForNewBeam = UiData.BeamHeightValue / 2 / _model3D.Beam3DNo1.CosOfBeamSlope;
-                verticalEavesZMove = _model3D.Beam3DNo1.Width / _model3D.Beam3DNo1.CosOfBeamSlope;
-                horizontalEavesXMove = _model3D.Beam3DNo1.Width / 2 / _model3D.Beam3DNo1.SinOfBeamSlope;
+        //private void CalculateNewBeamMovesForAlignement()
+        //{
+        //    if (_model3D.IsRoofYDirection)
+        //    {
+        //        verticalMoveForNewBeam = UiData.BeamHeightValue / 2 / _model3D.Beam3DNo1.CosOfBeamSlope;
+        //        verticalEavesZMove = _model3D.Beam3DNo1.Width / _model3D.Beam3DNo1.CosOfBeamSlope;
+        //        horizontalEavesXMove = _model3D.Beam3DNo1.Width / 2 / _model3D.Beam3DNo1.SinOfBeamSlope;
 
-                normalEavesXMove = _model3D.Beam3DNo1.Width / 2 * _model3D.Beam3DNo1.CosOfBeamSlopeAngleNotCasted;
-                normalEavesZMove = _model3D.Beam3DNo1.Width / 2 * _model3D.Beam3DNo1.SinOfBeamSlopeAngleNotCasted;
+        //        normalEavesXMove = _model3D.Beam3DNo1.Width / 2 * _model3D.Beam3DNo1.CosOfBeamSlopeAngleNotCasted;
+        //        normalEavesZMove = _model3D.Beam3DNo1.Width / 2 * _model3D.Beam3DNo1.SinOfBeamSlopeAngleNotCasted;
 
-                xMoveForNewBeam = UiData.BeamHeightValue / 2 * _model3D.Beam3DNo1.CosOfBeamSlopeAngleNotCasted;
-                zMoveForNewBeam = UiData.BeamHeightValue / 2 * _model3D.Beam3DNo1.SinOfBeamSlopeAngleNotCasted;
-            }
-            else
-            {
-                verticalMoveForNewBeam = UiData.BeamHeightValue / 2 / _model3D.Beam3DNo1.CosOfBeamSlope;
-                verticalEavesZMove = _model3D.Beam3DNo1.Width / _model3D.Beam3DNo1.CosOfBeamSlope;
-                horizontalEavesXMove = _model3D.Beam3DNo1.Width / 2 / _model3D.Beam3DNo1.SinOfBeamSlope;
+        //        xMoveForNewBeam = UiData.BeamHeightValue / 2 * _model3D.Beam3DNo1.CosOfBeamSlopeAngleNotCasted;
+        //        zMoveForNewBeam = UiData.BeamHeightValue / 2 * _model3D.Beam3DNo1.SinOfBeamSlopeAngleNotCasted;
+        //    }
+        //    else
+        //    {
+        //        verticalMoveForNewBeam = UiData.BeamHeightValue / 2 / _model3D.Beam3DNo1.CosOfBeamSlope;
+        //        verticalEavesZMove = _model3D.Beam3DNo1.Width / _model3D.Beam3DNo1.CosOfBeamSlope;
+        //        horizontalEavesXMove = _model3D.Beam3DNo1.Width / 2 / _model3D.Beam3DNo1.SinOfBeamSlope;
 
-                normalEavesYMove = _model3D.Beam3DNo1.Width / 2 * _model3D.Beam3DNo1.CosOfBeamSlopeAngleNotCasted;
-                normalEavesZMove = _model3D.Beam3DNo1.Width / 2 * _model3D.Beam3DNo1.SinOfBeamSlopeAngleNotCasted;
+        //        normalEavesYMove = _model3D.Beam3DNo1.Width / 2 * _model3D.Beam3DNo1.CosOfBeamSlopeAngleNotCasted;
+        //        normalEavesZMove = _model3D.Beam3DNo1.Width / 2 * _model3D.Beam3DNo1.SinOfBeamSlopeAngleNotCasted;
 
-                yMoveForNewBeam = UiData.BeamHeightValue / 2 * _model3D.Beam3DNo1.CosOfBeamSlopeAngleNotCasted;
-                zMoveForNewBeam = UiData.BeamHeightValue / 2 * _model3D.Beam3DNo1.SinOfBeamSlopeAngleNotCasted;
-            }
+        //        yMoveForNewBeam = UiData.BeamHeightValue / 2 * _model3D.Beam3DNo1.CosOfBeamSlopeAngleNotCasted;
+        //        zMoveForNewBeam = UiData.BeamHeightValue / 2 * _model3D.Beam3DNo1.SinOfBeamSlopeAngleNotCasted;
+        //    }
 
-        }
+        //}
 
-        public Point3D DetermineBeamOrigin()
-        {
-            if (UiData.IsRotatedToTheMainTruss)
-            {
-                return PrepareOriginForRotatedBeam(_model3D.Beam3DNo1.IsSelectedMemberLeftEdgeOnTop, newBeamAlignment, existBeamAlignment);
-            }
-            else
-            {
-                return PrepareOriginForNotRotatedBeam(_model3D.Beam3DNo1.IsSelectedMemberLeftEdgeOnTop, newBeamAlignment, existBeamAlignment);
-            }
-        }
+        //public Point3D DetermineBeamOrigin()
+        //{
+        //    if (UiData.IsRotatedToTheMainTruss)
+        //    {
+        //        return PrepareOriginForRotatedBeam(_model3D.Beam3DNo1.IsSelectedMemberLeftEdgeOnTop, newBeamAlignment, existBeamAlignment);
+        //    }
+        //    else
+        //    {
+        //        return PrepareOriginForNotRotatedBeam(_model3D.Beam3DNo1.IsSelectedMemberLeftEdgeOnTop, newBeamAlignment, existBeamAlignment);
+        //    }
+        //}
 
         public void SetBeamLocationWithExtensions(Member3D beam)
         {
@@ -220,13 +221,13 @@ namespace RistekPluginSample
             }
         }
 
-        public void SetBeamLocationWithExtensions(MetalWebStructure beam, Member member)
+        public void SetBeamLocationWithExtensions(PlanarStructure planarStructure, Member member)
         {
             Point3D newStartPoint3DWithExtension;
             Point3D newEndPoint3DWithExtension;
 
-            NewBeamOriginY = beam.Origin.Y;
-            NewBeamOriginX = beam.Origin.X;
+            NewBeamOriginY = planarStructure.Origin.Y;
+            NewBeamOriginX = planarStructure.Origin.X;
 
 
             Vector3D planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(_model3D.Beam3DNo1.StartPoint3D, _model3D.Beam3DNo1.EndPoint3D, _model3D.Beam3DNo2.EndPoint3D);
@@ -254,1719 +255,1801 @@ namespace RistekPluginSample
 
             if (isMinusDirection)
             {
-                newStartPoint3DWithExtension = new Point3D(NewBeamOriginX + BeamStartExtensionX - Beam3DNo1ThicknessX / 2, NewBeamOriginY - Beam3DNo1ThicknessY / 2 + BeamStartExtensionY, beam.Origin.Z);
-                newEndPoint3DWithExtension = new Point3D(NewBeamOriginX - BeamEndExtensionX - DistanceBeetweenSelectedBeamsX + Beam3DNo1ThicknessX / 2, NewBeamOriginY + Beam3DNo1ThicknessY / 2 - DistanceBeetweenSelectedBeamsY - BeamEndExtensionY, beam.Origin.Z);
+                newStartPoint3DWithExtension = new Point3D(NewBeamOriginX + BeamStartExtensionX - Beam3DNo1ThicknessX / 2, NewBeamOriginY - Beam3DNo1ThicknessY / 2 + BeamStartExtensionY, planarStructure.Origin.Z);
+                newEndPoint3DWithExtension = new Point3D(NewBeamOriginX - BeamEndExtensionX - DistanceBeetweenSelectedBeamsX + Beam3DNo1ThicknessX / 2, NewBeamOriginY + Beam3DNo1ThicknessY / 2 - DistanceBeetweenSelectedBeamsY - BeamEndExtensionY, planarStructure.Origin.Z);
+
+                if (UiData.IsRotatedToTheMainTruss)
+                {
+                    if (UiData.IsSelectedMemberLeftEdgeOnTop)
+                    {
+                        planarStructure.SetAlignedStartPoint(newStartPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                        planarStructure.SetAlignedEndPoint(newEndPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                    }
+                    else
+                    {
+                        planarStructure.SetAlignedStartPoint(newStartPoint3DWithExtension, -planeNormalToFutureBeamTruss);
+                        planarStructure.SetAlignedEndPoint(newEndPoint3DWithExtension, -planeNormalToFutureBeamTruss);
+                    }
+
+                }
+                else
+                {
+                    planarStructure.SetAlignedStartPoint(newStartPoint3DWithExtension, new Vector3D(0, 0, 1));
+                    planarStructure.SetAlignedEndPoint(newEndPoint3DWithExtension, new Vector3D(0, 0, 1));
+                }
+
             }
             else
             {
-                newStartPoint3DWithExtension = new Point3D(NewBeamOriginX - BeamStartExtensionX + Beam3DNo1ThicknessX / 2, NewBeamOriginY + Beam3DNo1ThicknessY / 2 - BeamStartExtensionY, beam.Origin.Z);
-                newEndPoint3DWithExtension = new Point3D(NewBeamOriginX + BeamEndExtensionX + DistanceBeetweenSelectedBeamsX - Beam3DNo1ThicknessX / 2, NewBeamOriginY - Beam3DNo1ThicknessY / 2 + DistanceBeetweenSelectedBeamsY + BeamEndExtensionY, beam.Origin.Z);
+                newStartPoint3DWithExtension = new Point3D(NewBeamOriginX - BeamStartExtensionX + Beam3DNo1ThicknessX / 2, NewBeamOriginY + Beam3DNo1ThicknessY / 2 - BeamStartExtensionY, planarStructure.Origin.Z);
+                newEndPoint3DWithExtension = new Point3D(NewBeamOriginX + BeamEndExtensionX + DistanceBeetweenSelectedBeamsX - Beam3DNo1ThicknessX / 2, NewBeamOriginY - Beam3DNo1ThicknessY / 2 + DistanceBeetweenSelectedBeamsY + BeamEndExtensionY, planarStructure.Origin.Z);
+
+                if (UiData.IsRotatedToTheMainTruss)
+                {
+                    if (UiData.IsSelectedMemberLeftEdgeOnTop)
+                    {
+                        planarStructure.SetAlignedStartPoint(newStartPoint3DWithExtension, -planeNormalToFutureBeamTruss);
+                        planarStructure.SetAlignedEndPoint(newEndPoint3DWithExtension, -planeNormalToFutureBeamTruss);
+                    }
+                    else
+                    {
+                        planarStructure.SetAlignedStartPoint(newStartPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                        planarStructure.SetAlignedEndPoint(newEndPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                    }
+                }
+                else
+                {
+                    planarStructure.SetAlignedStartPoint(newStartPoint3DWithExtension, new Vector3D(0, 0, 1));
+                    planarStructure.SetAlignedEndPoint(newEndPoint3DWithExtension, new Vector3D(0, 0, 1));
+                }
             }
 
-            if (UiData.IsRotatedToTheMainTruss)
-            {
-                beam.SetAlignedStartPoint(newStartPoint3DWithExtension, planeNormalToFutureBeamTruss);
-                beam.SetAlignedEndPoint(newEndPoint3DWithExtension, planeNormalToFutureBeamTruss);
-                member.AlignedStartPoint = new Point(newStartPoint3DWithExtension.Y, 0);
-                member.AlignedEndPoint = new Point(newEndPoint3DWithExtension.Y, 0);
-            }
-            else
-            {
-                beam.SetAlignedStartPoint(newStartPoint3DWithExtension, new Vector3D(0, 0, 1));
-                beam.SetAlignedEndPoint(newEndPoint3DWithExtension, new Vector3D(0, 0, 1));
-                member.AlignedStartPoint = new Point(newStartPoint3DWithExtension.Y, 0);
-                member.AlignedEndPoint = new Point(newEndPoint3DWithExtension.Y, 0);
-            }
+            member.AlignedStartPoint = new Point(newStartPoint3DWithExtension.Y, 0);
+            member.AlignedEndPoint = new Point(newEndPoint3DWithExtension.Y, 0);
 
-            beam.AddMember(member, true);
-            beam.UpdateMemberCuts(member, true);
+            planarStructure.AddMember(member, true);
+            planarStructure.UpdateMemberCuts(member, true);
         }
 
-        public void SetBeamLocationWithExtensions(PlanarBeam planarBeam, Member member)
-        {
-            Point3D newStartPoint3DWithExtension;
-            Point3D newEndPoint3DWithExtension;
+        //private void ConvertUIAlignement()
+        //{
+        //    newBeamAlignment = ConvertToMemberAlignmentNewBeam(UiData.NewBeamAlignement.SelectedItem.ToString());
+        //    existBeamAlignment = GetBeamAlignment(UiData.ExistBeamAlignement.SelectedItem.ToString(), Strings.Strings.existBeamAlignement);
 
-            NewBeamOriginY = planarBeam.Origin.Y;
-            NewBeamOriginX = planarBeam.Origin.X;
+        //}
+
+        //private Member.MemberAlignment GetBeamAlignment(string alignmentOption, string alignmentName)
+        //{
+        //    try
+        //    {
+        //        return ConvertToMemberAlignment(alignmentOption);
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        MessageBox.Show($"{Strings.Strings.convertToMemberAlignementError} {alignmentName}: {ex.Message}");
+        //        throw;
+        //    }
+        //}
+
+        //private Member.MemberAlignment ConvertToMemberAlignmentNewBeam(string alignmentOption)
+        //{
+        //    string topEdgeTranslation = Strings.Strings.topEdge;
+        //    string bottomEdgeTranslation = Strings.Strings.bottomEdge;
+        //    string centerTranslation = Strings.Strings.center;
+
+        //    switch (alignmentOption)
+        //    {
+        //        case var option when option == topEdgeTranslation:
+        //            return Member.MemberAlignment.LeftEdge;
+        //        case var option when option == bottomEdgeTranslation:
+        //            return Member.MemberAlignment.RightEdge;
+        //        case var option when option == centerTranslation:
+        //            return Member.MemberAlignment.Center;
+        //        default:
+        //            throw new ArgumentException(Strings.Strings.unknownAlignementOption);
+        //    }
+
+        //}
+
+        //private Member.MemberAlignment ConvertToMemberAlignment(string alignmentOption)
+        //{
+        //    string topEdgeTranslation = Strings.Strings.topEdge;
+        //    string bottomEdgeTranslation = Strings.Strings.bottomEdge;
+        //    string centerTranslation = Strings.Strings.center;
+
+        //    if (UiData.IsSelectedMemberLeftEdgeOnTop)
+        //    {
+        //        switch (alignmentOption)
+        //        {
+        //            case var option when option == topEdgeTranslation:
+        //                return Member.MemberAlignment.LeftEdge;
+        //            case var option when option == bottomEdgeTranslation:
+        //                return Member.MemberAlignment.RightEdge;
+        //            case var option when option == centerTranslation:
+        //                return Member.MemberAlignment.Center;
+        //            default:
+        //                throw new ArgumentException(Strings.Strings.unknownAlignementOption);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        switch (alignmentOption)
+        //        {
+        //            case var option when option == topEdgeTranslation:
+        //                return Member.MemberAlignment.RightEdge;
+        //            case var option when option == bottomEdgeTranslation:
+        //                return Member.MemberAlignment.LeftEdge;
+        //            case var option when option == centerTranslation:
+        //                return Member.MemberAlignment.Center;
+        //            default:
+        //                throw new ArgumentException(Strings.Strings.unknownAlignementOption);
+        //        }
+        //    }
 
 
-            Vector3D planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(_model3D.Beam3DNo1.StartPoint3D, _model3D.Beam3DNo1.EndPoint3D, _model3D.Beam3DNo2.EndPoint3D);
-            Point3D startPoint3Dm0 = _model3D.Beam3DNo1.StartPoint3D;
-            Point3D startPoint3Dm1 = _model3D.Beam3DNo2.StartPoint3D;
-            Point3D endPoint3Dm0 = _model3D.Beam3DNo1.EndPoint3D;
-            Point3D endPoint3Dm1 = _model3D.Beam3DNo2.EndPoint3D;
+        //}
 
-            if (_model3D.Beam3DNo1.IsMemberEndCombinedCut && _model3D.Beam3DNo1.Alignement == Member.MemberAlignment.Center)
-            {
-                startPoint3Dm0.X = _model3D.Member1StartPointXEdgeLeft;
-                startPoint3Dm0.Z = _model3D.Member1StartPointZEdgeLeft;
-                endPoint3Dm0.X = _model3D.Member1EndPointXEdgeLeft;
-                endPoint3Dm0.Z = _model3D.Member1EndPointZEdgeLeft;
-                endPoint3Dm1.X = _model3D.Member2EndPointXEdgeLeft;
-                endPoint3Dm1.Z = _model3D.Member2EndPointZEdgeLeft;
+        //public Model3DNode.ModelPartAlignment ConvertToModelPartAlignment(string alignmentOption)
+        //{
+        //    string topEdgeTranslation = Strings.Strings.topEdge;
+        //    string bottomEdgeTranslation = Strings.Strings.bottomEdge;
+        //    string centerTranslation = Strings.Strings.center;
 
-                planeNormalToFutureBeamTruss = MyUtils.CalculateNormal(startPoint3Dm0, endPoint3Dm0, endPoint3Dm1);
-            }
-            planeNormalToFutureBeamTruss.Normalize(); ;
+        //    if (UiData.IsSelectedMemberLeftEdgeOnTop)
+        //    {
+        //        switch (alignmentOption)
+        //        {
+        //            case var option when option == topEdgeTranslation:
+        //                return Model3DNode.ModelPartAlignment.TopCenter;
+        //            case var option when option == bottomEdgeTranslation:
+        //                return Model3DNode.ModelPartAlignment.BottomCenter;
+        //            case var option when option == centerTranslation:
+        //                return Model3DNode.ModelPartAlignment.Center;
+        //            default:
+        //                throw new ArgumentException(Strings.Strings.unknownAlignementOption);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        switch (alignmentOption)
+        //        {
+        //            case var option when option == topEdgeTranslation:
+        //                return Model3DNode.ModelPartAlignment.BottomCenter;
+        //            case var option when option == bottomEdgeTranslation:
+        //                return Model3DNode.ModelPartAlignment.TopCenter;
+        //            case var option when option == centerTranslation:
+        //                return Model3DNode.ModelPartAlignment.Center;
+        //            default:
+        //                throw new ArgumentException(Strings.Strings.unknownAlignementOption);
+        //        }
+        //    }
 
-            bool isMinusDirection = _model3D.IsRoofYDirection ?
-                startPoint3Dm0.Y > startPoint3Dm1.Y :
-                startPoint3Dm0.X > startPoint3Dm1.X;
+        //}
 
-            if (isMinusDirection)
-            {
-                newStartPoint3DWithExtension = new Point3D(NewBeamOriginX + BeamStartExtensionX - Beam3DNo1ThicknessX / 2, NewBeamOriginY - Beam3DNo1ThicknessY / 2 + BeamStartExtensionY, planarBeam.Origin.Z);
-                newEndPoint3DWithExtension = new Point3D(NewBeamOriginX - BeamEndExtensionX - DistanceBeetweenSelectedBeamsX + Beam3DNo1ThicknessX / 2, NewBeamOriginY + Beam3DNo1ThicknessY / 2 - DistanceBeetweenSelectedBeamsY - BeamEndExtensionY, planarBeam.Origin.Z);
-            }
-            else
-            {
-                newStartPoint3DWithExtension = new Point3D(NewBeamOriginX - BeamStartExtensionX + Beam3DNo1ThicknessX / 2, NewBeamOriginY + Beam3DNo1ThicknessY / 2 - BeamStartExtensionY, planarBeam.Origin.Z);
-                newEndPoint3DWithExtension = new Point3D(NewBeamOriginX + BeamEndExtensionX + DistanceBeetweenSelectedBeamsX - Beam3DNo1ThicknessX / 2, NewBeamOriginY - Beam3DNo1ThicknessY / 2 + DistanceBeetweenSelectedBeamsY + BeamEndExtensionY, planarBeam.Origin.Z);
-            }
-
-            if (UiData.IsRotatedToTheMainTruss)
-            {
-                planarBeam.SetAlignedStartPoint(newStartPoint3DWithExtension, planeNormalToFutureBeamTruss);
-                planarBeam.SetAlignedEndPoint(newEndPoint3DWithExtension, planeNormalToFutureBeamTruss);
-                member.AlignedStartPoint = new Point(newStartPoint3DWithExtension.Y, 0);
-                member.AlignedEndPoint = new Point(newEndPoint3DWithExtension.Y, 0);
-            }
-            else
-            {
-                planarBeam.SetAlignedStartPoint(newStartPoint3DWithExtension, new Vector3D(0, 0, 1));
-                planarBeam.SetAlignedEndPoint(newEndPoint3DWithExtension, new Vector3D(0, 0, 1));
-                member.AlignedStartPoint = new Point(newStartPoint3DWithExtension.Y, 0);
-                member.AlignedEndPoint = new Point(newEndPoint3DWithExtension.Y, 0);
-            }
-
-            planarBeam.AddMember(member,true);
-            planarBeam.UpdateMemberCuts(member,true);
-        }
-
-        private void ConvertUIAlignement()
-        {
-            newBeamAlignment = GetBeamAlignment(UiData.NewBeamAlignement.SelectedItem.ToString(), Strings.Strings.newBeamAlignement);
-            existBeamAlignment = GetBeamAlignment(UiData.ExistBeamAlignement.SelectedItem.ToString(), Strings.Strings.existBeamAlignement);
-        }
-
-        private Member.MemberAlignment GetBeamAlignment(string alignmentOption, string alignmentName)
-        {
-            try
-            {
-                return ConvertToMemberAlignment(alignmentOption);
-            }
-            catch (ArgumentException ex)
-            {
-                MessageBox.Show($"{Strings.Strings.convertToMemberAlignementError} {alignmentName}: {ex.Message}");
-                throw;
-            }
-        }
-
-        private Member.MemberAlignment ConvertToMemberAlignment(string alignmentOption)
+        public Model3DNode.ModelPartAlignment ConvertToModelPartAlignmentNewBeam(string alignmentOption)
         {
             string topEdgeTranslation = Strings.Strings.topEdge;
             string bottomEdgeTranslation = Strings.Strings.bottomEdge;
             string centerTranslation = Strings.Strings.center;
 
-            switch (alignmentOption)
+            if (UiData.IsRotatedToTheMainTruss)
             {
-                case var option when option == topEdgeTranslation:
-                    return Member.MemberAlignment.RightEdge;
-                case var option when option == bottomEdgeTranslation:
-                    return Member.MemberAlignment.LeftEdge;
-                case var option when option == centerTranslation:
-                    return Member.MemberAlignment.Center;
-                default:
-                    throw new ArgumentException(Strings.Strings.unknownAlignementOption);
-            }
-        }
-
-        private Point3D PrepareOriginForNotRotatedBeam(bool isLeftEdgeOnTop, Member.MemberAlignment newBeamAlignment, Member.MemberAlignment existBeamAlignment)
-        {
-            if (isLeftEdgeOnTop)
-            {
-                switch (existBeamAlignment)
+                switch (alignmentOption)
                 {
-                    case Member.MemberAlignment.RightEdge:
-                        switch (newBeamAlignment)
-                        {
-                            case Member.MemberAlignment.RightEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    return new Point3D(xNew, yNew, zNew - UiData.BeamHeightValue / 2);
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew - UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove - UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2 - UiData.BeamHeightValue / 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
-                                    }
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew - UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 - UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove - UiData.BeamHeightValue / 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
-                                    }
-                                }
-                            case Member.MemberAlignment.LeftEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    return new Point3D(xNew, yNew, zNew + UiData.BeamHeightValue / 2);
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew + UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove + UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2 + UiData.BeamHeightValue / 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
-                                    }
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew + UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 + UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove + UiData.BeamHeightValue / 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
-                                    }
-                                }
-                            default:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    return new Point3D(xNew, yNew, zNew);
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint);
-                                    }
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint);
-                                    }
-                                }
-                        }
-
-                    case Member.MemberAlignment.LeftEdge:
-                        switch (newBeamAlignment)
-                        {
-                            case Member.MemberAlignment.RightEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew - UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove - UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2 - UiData.BeamHeightValue / 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
-                                    }
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    return new Point3D(xNew, yNew, zNew - UiData.BeamHeightValue / 2);
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew - UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 - UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew - normalEavesZMove - UiData.BeamHeightValue / 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - UiData.BeamHeightValue / 2);
-                                    }
-                                }
-                            case Member.MemberAlignment.LeftEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew + UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove + UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2 + UiData.BeamHeightValue / 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
-                                    }
-
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    return new Point3D(xNew, yNew, zNew + UiData.BeamHeightValue / 2);
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew + UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 + UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew - normalEavesZMove + UiData.BeamHeightValue / 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint + UiData.BeamHeightValue / 2);
-                                    }
-                                }
-                            default:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _model3D.Beam3DNo1.VerticalMove2LowestPoint);
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    return new Point3D(xNew, yNew, zNew);
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew - normalEavesZMove);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint);
-                                    }
-                                }
-                        }
-
+                    case var option when option == topEdgeTranslation:
+                        return Model3DNode.ModelPartAlignment.BottomCenter;
+                    case var option when option == bottomEdgeTranslation:
+                        return Model3DNode.ModelPartAlignment.TopCenter;
+                    case var option when option == centerTranslation:
+                        return Model3DNode.ModelPartAlignment.Center;
                     default:
-                        switch (newBeamAlignment)
-                        {
-                            case Member.MemberAlignment.RightEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew - UiData.BeamHeightValue / 2);
-
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 - UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove - UiData.BeamHeightValue / 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint - UiData.BeamHeightValue / 2);
-                                    }
-                                }
-                                else
-                                {
-                                    return new Point3D(xNew, yNew, zNew - UiData.BeamHeightValue / 2);
-                                }
-                            case Member.MemberAlignment.LeftEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew + UiData.BeamHeightValue / 2);
-
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 + UiData.BeamHeightValue / 2);
-
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove + UiData.BeamHeightValue / 2);
-
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + UiData.BeamHeightValue / 2);
-                                    }
-                                }
-                                else
-                                {
-                                    return new Point3D(xNew, yNew, zNew + UiData.BeamHeightValue / 2);
-                                }
-                            default:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint);
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
-
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
-
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove);
-
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint);
-                                    }
-                                }
-                                else
-                                {
-                                    return new Point3D(xNew, yNew, zNew);
-                                }
-                        }
+                        throw new ArgumentException(Strings.Strings.unknownAlignementOption);
                 }
             }
             else
             {
-                switch (existBeamAlignment)
+                switch (alignmentOption)
                 {
-                    case Member.MemberAlignment.RightEdge:
-                        switch (newBeamAlignment)
-                        {
-                            case Member.MemberAlignment.RightEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    return new Point3D(xNew, yNew, zNew - UiData.BeamHeightValue / 2);
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew - UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove - UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2 - UiData.BeamHeightValue / 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
-                                    }
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew - UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 - UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove - UiData.BeamHeightValue / 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
-                                    }
-                                }
-                            case Member.MemberAlignment.LeftEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    return new Point3D(xNew, yNew, zNew + UiData.BeamHeightValue / 2);
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew + UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove + UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2 + UiData.BeamHeightValue / 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
-                                    }
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew + UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 + UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove + UiData.BeamHeightValue / 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
-                                    }
-                                }
-                            default:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    return new Point3D(xNew, yNew, zNew);
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint);
-                                    }
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint);
-                                    }
-                                }
-                        }
-
-                    case Member.MemberAlignment.LeftEdge:
-                        switch (newBeamAlignment)
-                        {
-                            case Member.MemberAlignment.RightEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew - UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove - UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2 - UiData.BeamHeightValue / 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
-                                    }
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    return new Point3D(xNew, yNew, zNew - UiData.BeamHeightValue / 2);
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew - UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 - UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove - UiData.BeamHeightValue / 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - UiData.BeamHeightValue / 2);
-                                    }
-                                }
-                            case Member.MemberAlignment.LeftEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew + UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove + UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2 + UiData.BeamHeightValue / 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
-                                    }
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    return new Point3D(xNew, yNew, zNew + UiData.BeamHeightValue / 2);
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew + UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 + UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove + UiData.BeamHeightValue / 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint + UiData.BeamHeightValue / 2);
-                                    }
-                                }
-                            default:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _model3D.Beam3DNo1.VerticalMove2LowestPoint);
-                                    }
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    return new Point3D(xNew, yNew, zNew);
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint);
-                                    }
-                                }
-                        }
-
+                    case var option when option == topEdgeTranslation:
+                        return Model3DNode.ModelPartAlignment.TopCenter;
+                    case var option when option == bottomEdgeTranslation:
+                        return Model3DNode.ModelPartAlignment.BottomCenter;
+                    case var option when option == centerTranslation:
+                        return Model3DNode.ModelPartAlignment.Center;
                     default:
-                        switch (newBeamAlignment)
-                        {
-                            case Member.MemberAlignment.RightEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew - UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 - UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove - UiData.BeamHeightValue / 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
-                                    }
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew - UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 - UiData.BeamHeightValue / 2);
-
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove - UiData.BeamHeightValue / 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint - UiData.BeamHeightValue / 2);
-                                    }
-                                }
-                                else
-                                {
-                                    return new Point3D(xNew, yNew, zNew - UiData.BeamHeightValue / 2);
-                                }
-                            case Member.MemberAlignment.LeftEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew + UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 + UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove + UiData.BeamHeightValue / 2);
-
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
-                                    }
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew + UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 + UiData.BeamHeightValue / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove + UiData.BeamHeightValue / 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + UiData.BeamHeightValue / 2);
-                                    }
-                                }
-                                else
-                                {
-                                    return new Point3D(xNew, yNew, zNew + UiData.BeamHeightValue / 2);
-                                }
-                            default:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint);
-                                    }
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint);
-                                    }
-                                }
-                                else
-                                {
-                                    return new Point3D(xNew, yNew, zNew);
-                                }
-                        }
+                        throw new ArgumentException(Strings.Strings.unknownAlignementOption);
                 }
             }
+
+
 
         }
 
-        private Point3D PrepareOriginForRotatedBeam(bool isLeftEdgeOnTop, Member.MemberAlignment newBeamAlignment, Member.MemberAlignment existBeamAlignment)
-        {
-            if (isLeftEdgeOnTop)
-            {
-                switch (existBeamAlignment)
-                {
-                    case Member.MemberAlignment.RightEdge:
-                        switch (newBeamAlignment)
-                        {
-                            case Member.MemberAlignment.RightEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    return new Point3D(xNew + xMoveForNewBeam, yNew /*+ yMoveForNewBeam*/, zNew - zMoveForNewBeam);
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew + normalEavesZMove * 2 - zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint + xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint - zMoveForNewBeam);
-                                    }
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove + xMoveForNewBeam, yNew, zNew + normalEavesZMove - zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint + xMoveForNewBeam, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint - zMoveForNewBeam);
-                                    }
-                                }
-                            case Member.MemberAlignment.LeftEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew + normalEavesZMove * 2 + zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint - xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint + zMoveForNewBeam);
-                                    }
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove - xMoveForNewBeam, yNew, zNew + normalEavesZMove + zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint - xMoveForNewBeam, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint + zMoveForNewBeam);
-                                    }
-                                }
-                            default:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    return new Point3D(xNew, yNew, zNew);
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint);
-                                    }
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint);
-                                    }
-                                }
-                        }
+        //private Point3D PrepareOriginForNotRotatedBeam(bool isLeftEdgeOnTop, Member.MemberAlignment newBeamAlignment, Member.MemberAlignment existBeamAlignment)
+        //{
+        //    if (isLeftEdgeOnTop)
+        //    {
+        //        switch (existBeamAlignment)
+        //        {
+        //            case Member.MemberAlignment.RightEdge:
+        //                switch (newBeamAlignment)
+        //                {
+        //                    case Member.MemberAlignment.RightEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew - UiData.BeamHeightValue / 2);
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2 - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove, yNew, zNew - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
+        //                            }
+        //                        }
+        //                    case Member.MemberAlignment.LeftEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew + UiData.BeamHeightValue / 2);
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2 + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove, yNew, zNew + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
+        //                            }
+        //                        }
+        //                    default:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew);
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint);
+        //                            }
+        //                        }
+        //                }
 
-                    case Member.MemberAlignment.LeftEdge:
-                        switch (newBeamAlignment)
-                        {
-                            case Member.MemberAlignment.RightEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - verticalEavesZMove - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew - normalEavesZMove * 2 - zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint + _model3D.Beam3DNo1.HorizontalMove1LowestPoint + xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + _model3D.Beam3DNo1.VerticalMove1LowestPoint - zMoveForNewBeam);
-                                    }
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove + xMoveForNewBeam, yNew, zNew - normalEavesZMove - zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint + xMoveForNewBeam, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint - zMoveForNewBeam);
-                                    }
-                                }
-                            case Member.MemberAlignment.LeftEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - verticalEavesZMove + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew - normalEavesZMove * 2 + zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + _model3D.Beam3DNo1.VerticalMove1LowestPoint + zMoveForNewBeam);
-                                    }
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove - xMoveForNewBeam, yNew, zNew - normalEavesZMove + zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - xMoveForNewBeam, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + zMoveForNewBeam);
-                                    }
-                                }
-                            default:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + _model3D.Beam3DNo1.VerticalMove1LowestPoint);
-                                    }
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    return new Point3D(xNew, yNew, zNew);
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew - normalEavesZMove);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint);
-                                    }
-                                }
-                        }
+        //            case Member.MemberAlignment.LeftEdge:
+        //                switch (newBeamAlignment)
+        //                {
+        //                    case Member.MemberAlignment.RightEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew - verticalEavesZMove - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2 - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
+        //                            }
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew - UiData.BeamHeightValue / 2);
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove, yNew, zNew - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove, yNew, zNew - normalEavesZMove - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - UiData.BeamHeightValue / 2);
+        //                            }
+        //                        }
+        //                    case Member.MemberAlignment.LeftEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew - verticalEavesZMove + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2 + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
+        //                            }
 
-                    default:
-                        switch (newBeamAlignment)
-                        {
-                            case Member.MemberAlignment.RightEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove + xMoveForNewBeam, yNew, zNew - normalEavesZMove - zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint + xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint - zMoveForNewBeam);
-                                    }
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove + xMoveForNewBeam, yNew, zNew + normalEavesZMove - zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - zMoveForNewBeam);
-                                    }
-                                }
-                                else
-                                {
-                                    return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                }
-                            case Member.MemberAlignment.LeftEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove - xMoveForNewBeam, yNew, zNew - normalEavesZMove + zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint - xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + zMoveForNewBeam);
-                                    }
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - xMoveForNewBeam - normalEavesXMove, yNew, zNew + zMoveForNewBeam + normalEavesZMove);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint - xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint + zMoveForNewBeam);
-                                    }
-                                }
-                                else
-                                {
-                                    return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                }
-                            default:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew - normalEavesZMove);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint);
-                                    }
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint);
-                                    }
-                                }
-                                else
-                                {
-                                    return new Point3D(xNew, yNew, zNew);
-                                }
-                        }
-                }
-            }
-            else
-            {
-                switch (existBeamAlignment)
-                {
-                    case Member.MemberAlignment.RightEdge:
-                        switch (newBeamAlignment)
-                        {
-                            case Member.MemberAlignment.RightEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew + normalEavesZMove * 2 - zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - xMoveForNewBeam, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint - zMoveForNewBeam);
-                                    }
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove - xMoveForNewBeam, yNew, zNew + normalEavesZMove - zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint - xMoveForNewBeam, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint - zMoveForNewBeam);
-                                    }
-                                }
-                            case Member.MemberAlignment.LeftEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew + normalEavesZMove * 2 + zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint + xMoveForNewBeam, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + zMoveForNewBeam);
-                                    }
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove + xMoveForNewBeam, yNew, zNew + normalEavesZMove + zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint + xMoveForNewBeam, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint + zMoveForNewBeam);
-                                    }
-                                }
-                            default:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    return new Point3D(xNew, yNew, zNew);
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint);
-                                    }
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint);
-                                    }
-                                }
-                        }
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew + UiData.BeamHeightValue / 2);
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove, yNew, zNew + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove, yNew, zNew - normalEavesZMove + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint + UiData.BeamHeightValue / 2);
+        //                            }
+        //                        }
+        //                    default:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _model3D.Beam3DNo1.VerticalMove2LowestPoint);
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew);
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove, yNew, zNew);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove, yNew, zNew - normalEavesZMove);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint);
+        //                            }
+        //                        }
+        //                }
 
-                    case Member.MemberAlignment.LeftEdge:
-                        switch (newBeamAlignment)
-                        {
-                            case Member.MemberAlignment.RightEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - verticalEavesZMove - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew - normalEavesZMove * 2 - zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint - _model3D.Beam3DNo1.HorizontalMove1LowestPoint - xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + _model3D.Beam3DNo1.VerticalMove1LowestPoint - zMoveForNewBeam);
-                                    }
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove - xMoveForNewBeam, yNew, zNew - normalEavesZMove - zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint - xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - zMoveForNewBeam);
-                                    }
-                                }
-                            case Member.MemberAlignment.LeftEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - verticalEavesZMove + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew - normalEavesZMove * 2 + zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + _model3D.Beam3DNo1.VerticalMove1LowestPoint + zMoveForNewBeam);
-                                    }
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove + xMoveForNewBeam, yNew, zNew - normalEavesZMove + zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint + zMoveForNewBeam);
-                                    }
-                                }
-                            default:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + _model3D.Beam3DNo1.VerticalMove1LowestPoint);
-                                    }
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    return new Point3D(xNew, yNew, zNew);
-                                }
-                                else
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint);
-                                    }
-                                }
-                        }
+        //            default:
+        //                switch (newBeamAlignment)
+        //                {
+        //                    case Member.MemberAlignment.RightEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove, yNew, zNew - UiData.BeamHeightValue / 2);
 
-                    default:
-                        switch (newBeamAlignment)
-                        {
-                            case Member.MemberAlignment.RightEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove - xMoveForNewBeam, yNew, zNew - normalEavesZMove - zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint - xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint - zMoveForNewBeam);
-                                    }
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 - zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove - xMoveForNewBeam, yNew, zNew + normalEavesZMove - zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - xMoveForNewBeam, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint - zMoveForNewBeam);
-                                    }
-                                }
-                                else
-                                {
-                                    return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
-                                }
-                            case Member.MemberAlignment.LeftEdge:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove + xMoveForNewBeam, yNew, zNew - normalEavesZMove + zMoveForNewBeam);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint + xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + zMoveForNewBeam);
-                                    }
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 + zMoveForNewBeam);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + xMoveForNewBeam + normalEavesXMove, yNew, zNew + zMoveForNewBeam + normalEavesZMove);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint + xMoveForNewBeam, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + zMoveForNewBeam);
-                                    }
-                                }
-                                else
-                                {
-                                    return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
-                                }
-                            default:
-                                if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint);
-                                    }
-                                }
-                                else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
-                                {
-                                    if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
-                                    {
-                                        return new Point3D(xNew + horizontalEavesXMove, yNew, zNew);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
-                                    {
-                                        return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
-                                    }
-                                    else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
-                                    {
-                                        return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove);
-                                    }
-                                    else
-                                    {
-                                        return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint);
-                                    }
-                                }
-                                else
-                                {
-                                    return new Point3D(xNew, yNew, zNew);
-                                }
-                        }
-                }
-            }
-        }
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint - UiData.BeamHeightValue / 2);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew - UiData.BeamHeightValue / 2);
+        //                        }
+        //                    case Member.MemberAlignment.LeftEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove, yNew, zNew + UiData.BeamHeightValue / 2);
+
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 + UiData.BeamHeightValue / 2);
+
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove + UiData.BeamHeightValue / 2);
+
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + UiData.BeamHeightValue / 2);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew + UiData.BeamHeightValue / 2);
+        //                        }
+        //                    default:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint);
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
+
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
+
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove);
+
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew);
+        //                        }
+        //                }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        switch (existBeamAlignment)
+        //        {
+        //            case Member.MemberAlignment.RightEdge:
+        //                switch (newBeamAlignment)
+        //                {
+        //                    case Member.MemberAlignment.RightEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew - UiData.BeamHeightValue / 2);
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2 - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove, yNew, zNew - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
+        //                            }
+        //                        }
+        //                    case Member.MemberAlignment.LeftEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew + UiData.BeamHeightValue / 2);
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2 + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove, yNew, zNew + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
+        //                            }
+        //                        }
+        //                    default:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew);
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove, yNew, zNew);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint);
+        //                            }
+        //                        }
+        //                }
+
+        //            case Member.MemberAlignment.LeftEdge:
+        //                switch (newBeamAlignment)
+        //                {
+        //                    case Member.MemberAlignment.RightEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew - verticalEavesZMove - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2 - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
+        //                            }
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew - UiData.BeamHeightValue / 2);
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove, yNew, zNew - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - UiData.BeamHeightValue / 2);
+        //                            }
+        //                        }
+        //                    case Member.MemberAlignment.LeftEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew - verticalEavesZMove + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2 + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
+        //                            }
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew + UiData.BeamHeightValue / 2);
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove, yNew, zNew + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint + UiData.BeamHeightValue / 2);
+        //                            }
+        //                        }
+        //                    default:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew - verticalEavesZMove);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - _model3D.Beam3DNo1.VerticalMove2LowestPoint);
+        //                            }
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew);
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint);
+        //                            }
+        //                        }
+        //                }
+
+        //            default:
+        //                switch (newBeamAlignment)
+        //                {
+        //                    case Member.MemberAlignment.RightEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove, yNew, zNew - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint - UiData.BeamHeightValue / 2);
+        //                            }
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove, yNew, zNew - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 - UiData.BeamHeightValue / 2);
+
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove - UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint - UiData.BeamHeightValue / 2);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew - UiData.BeamHeightValue / 2);
+        //                        }
+        //                    case Member.MemberAlignment.LeftEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove, yNew, zNew + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2 + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove + UiData.BeamHeightValue / 2);
+
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + UiData.BeamHeightValue / 2);
+        //                            }
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove, yNew, zNew + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2 + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove + UiData.BeamHeightValue / 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + UiData.BeamHeightValue / 2);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew + UiData.BeamHeightValue / 2);
+        //                        }
+        //                    default:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint);
+        //                            }
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove, yNew, zNew);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew);
+        //                        }
+        //                }
+        //        }
+        //    }
+
+        //}
+
+        //private Point3D PrepareOriginForRotatedBeam(bool isLeftEdgeOnTop, Member.MemberAlignment newBeamAlignment, Member.MemberAlignment existBeamAlignment)
+        //{
+        //    if (isLeftEdgeOnTop)
+        //    {
+        //        switch (existBeamAlignment)
+        //        {
+        //            case Member.MemberAlignment.RightEdge:
+        //                switch (newBeamAlignment)
+        //                {
+        //                    case Member.MemberAlignment.RightEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            return new Point3D(xNew + xMoveForNewBeam, yNew /*+ yMoveForNewBeam*/, zNew - zMoveForNewBeam);
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew + normalEavesZMove * 2 - zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint + xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint - zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove + xMoveForNewBeam, yNew, zNew + normalEavesZMove - zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint + xMoveForNewBeam, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint - zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                    case Member.MemberAlignment.LeftEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew + normalEavesZMove * 2 + zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint - xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint + zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove - xMoveForNewBeam, yNew, zNew + normalEavesZMove + zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint - xMoveForNewBeam, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint + zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                    default:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew);
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint + _model3D.Beam3DNo1.VerticalMove2LowestPoint);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint);
+        //                            }
+        //                        }
+        //                }
+
+        //            case Member.MemberAlignment.LeftEdge:
+        //                switch (newBeamAlignment)
+        //                {
+        //                    case Member.MemberAlignment.RightEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - verticalEavesZMove - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew - normalEavesZMove * 2 - zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint + _model3D.Beam3DNo1.HorizontalMove1LowestPoint + xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + _model3D.Beam3DNo1.VerticalMove1LowestPoint - zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove + xMoveForNewBeam, yNew, zNew - normalEavesZMove - zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint + xMoveForNewBeam, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint - zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                    case Member.MemberAlignment.LeftEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - verticalEavesZMove + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew - normalEavesZMove * 2 + zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + _model3D.Beam3DNo1.VerticalMove1LowestPoint + zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove - xMoveForNewBeam, yNew, zNew - normalEavesZMove + zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - xMoveForNewBeam, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                    default:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew - verticalEavesZMove);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + _model3D.Beam3DNo1.VerticalMove1LowestPoint);
+        //                            }
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew);
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove, yNew, zNew);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove, yNew, zNew - normalEavesZMove);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint);
+        //                            }
+        //                        }
+        //                }
+
+        //            default:
+        //                switch (newBeamAlignment)
+        //                {
+        //                    case Member.MemberAlignment.RightEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove + xMoveForNewBeam, yNew, zNew - normalEavesZMove - zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint + xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint - zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove + xMoveForNewBeam, yNew, zNew + normalEavesZMove - zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+        //                        }
+        //                    case Member.MemberAlignment.LeftEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove - xMoveForNewBeam, yNew, zNew - normalEavesZMove + zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint - xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - xMoveForNewBeam - normalEavesXMove, yNew, zNew + zMoveForNewBeam + normalEavesZMove);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint - xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint + zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+        //                        }
+        //                    default:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove, yNew, zNew);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove, yNew, zNew - normalEavesZMove);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint);
+        //                            }
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove, yNew, zNew + normalEavesZMove);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew);
+        //                        }
+        //                }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        switch (existBeamAlignment)
+        //        {
+        //            case Member.MemberAlignment.RightEdge:
+        //                switch (newBeamAlignment)
+        //                {
+        //                    case Member.MemberAlignment.RightEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew + normalEavesZMove * 2 - zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - xMoveForNewBeam, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint - zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove - xMoveForNewBeam, yNew, zNew + normalEavesZMove - zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint - xMoveForNewBeam, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint - zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                    case Member.MemberAlignment.LeftEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew + normalEavesZMove * 2 + zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint + xMoveForNewBeam, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove + xMoveForNewBeam, yNew, zNew + normalEavesZMove + zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint + xMoveForNewBeam, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint + zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                    default:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew);
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove * 2, yNew, zNew);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove * 2, yNew, zNew + normalEavesZMove * 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove, yNew, zNew);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove2LowestPoint);
+        //                            }
+        //                        }
+        //                }
+
+        //            case Member.MemberAlignment.LeftEdge:
+        //                switch (newBeamAlignment)
+        //                {
+        //                    case Member.MemberAlignment.RightEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - verticalEavesZMove - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove * 2 - xMoveForNewBeam, yNew, zNew - normalEavesZMove * 2 - zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint - _model3D.Beam3DNo1.HorizontalMove1LowestPoint - xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + _model3D.Beam3DNo1.VerticalMove1LowestPoint - zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove - xMoveForNewBeam, yNew, zNew - normalEavesZMove - zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint - xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint - zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                    case Member.MemberAlignment.LeftEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - verticalEavesZMove + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove * 2 + xMoveForNewBeam, yNew, zNew - normalEavesZMove * 2 + zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + _model3D.Beam3DNo1.VerticalMove1LowestPoint + zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove + xMoveForNewBeam, yNew, zNew - normalEavesZMove + zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint + xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint + zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                    default:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove * 2, yNew, zNew);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew - verticalEavesZMove);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove * 2, yNew, zNew - normalEavesZMove * 2);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + _model3D.Beam3DNo1.VerticalMove1LowestPoint);
+        //                            }
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew);
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew - _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove1LowestPoint);
+        //                            }
+        //                        }
+        //                }
+
+        //            default:
+        //                switch (newBeamAlignment)
+        //                {
+        //                    case Member.MemberAlignment.RightEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove - xMoveForNewBeam, yNew, zNew - normalEavesZMove - zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint - xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint - zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew - xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 - zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove - xMoveForNewBeam, yNew, zNew + normalEavesZMove - zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint - xMoveForNewBeam, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint - zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            return new Point3D(xNew - xMoveForNewBeam, yNew, zNew - zMoveForNewBeam);
+        //                        }
+        //                    case Member.MemberAlignment.LeftEdge:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew + xMoveForNewBeam, yNew, zNew - verticalEavesZMove / 2 + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove + xMoveForNewBeam, yNew, zNew - normalEavesZMove + zMoveForNewBeam);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint + xMoveForNewBeam, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint + zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + verticalEavesZMove / 2 + zMoveForNewBeam);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + xMoveForNewBeam + normalEavesXMove, yNew, zNew + zMoveForNewBeam + normalEavesZMove);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint + xMoveForNewBeam, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint + zMoveForNewBeam);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            return new Point3D(xNew + xMoveForNewBeam, yNew, zNew + zMoveForNewBeam);
+        //                        }
+        //                    default:
+        //                        if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.RightEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew - horizontalEavesXMove, yNew, zNew);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew - verticalEavesZMove / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew - normalEavesXMove, yNew, zNew - normalEavesZMove);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove2LowestPoint, yNew, zNew - _model3D.Beam3DNo1.VerticalMove2LowestPoint);
+        //                            }
+        //                        }
+        //                        else if (_model3D.Beam3DNo1.Alignement == Member.MemberAlignment.LeftEdge)
+        //                        {
+        //                            if (_model3D.Beam3DNo1.IsMemberEndHorizontalCut)
+        //                            {
+        //                                return new Point3D(xNew + horizontalEavesXMove, yNew, zNew);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndVerticalCut)
+        //                            {
+        //                                return new Point3D(xNew, yNew, zNew + verticalEavesZMove / 2);
+        //                            }
+        //                            else if (_model3D.Beam3DNo1.IsMemberEndNormalCut)
+        //                            {
+        //                                return new Point3D(xNew + normalEavesXMove, yNew, zNew + normalEavesZMove);
+        //                            }
+        //                            else
+        //                            {
+        //                                return new Point3D(xNew + _model3D.Beam3DNo1.HorizontalMove1LowestPoint, yNew, zNew + _model3D.Beam3DNo1.VerticalMove1LowestPoint);
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            return new Point3D(xNew, yNew, zNew);
+        //                        }
+        //                }
+        //        }
+        //    }
+        //}
     }
 }

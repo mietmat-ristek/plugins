@@ -38,18 +38,31 @@ namespace RistekPluginSample
         public double BeamEndExtensionValue { get; set; }
         public double BeamMultiplySpacingValue { get; set; }
 
+        public Member Member1 { get; set; }
+        public Member Member2 { get; set; }
+
+        public Beam2D Beam2Dm1 { get; set; }
+        public Beam2D Beam2Dm2 { get; set; }
+
+        public bool IsSelectedMemberLeftEdgeOnTop { get; }
         public bool IsRotatedToTheMainTruss { get; set; }
         public bool IsNewBeamMultiplyed { get; set; }
         public bool CastToTheHorizontalDistance { get; set; }
 
-        private Model3D _model3D { get; set; }
+        //private Model3D _model3D { get; set; }
 
         public double horizontalCastLength;
         double alongBeamLength;
 
-        public UiData(Model3D model3D)
+        public UiData(Member member1, Member member2, bool isRoofYDirection)
         {
-            _model3D = model3D;
+            Member1 = member1;
+            Member2 = member2;
+
+            Beam2Dm1 = new Beam2D(member1, isRoofYDirection);
+            Beam2Dm2 = new Beam2D(member2, isRoofYDirection);
+
+            IsSelectedMemberLeftEdgeOnTop = Member1.StartPoint.X < Member1.EndPoint.X;
 
             MainStack = new StackPanel() { Name = Constants.MainStack, Margin = new Thickness(8) };
             MainStack.Orientation = Orientation.Vertical;
@@ -87,7 +100,7 @@ namespace RistekPluginSample
             var selectedBeamLengthStack = new StackPanel() { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 8) };
 
             var selectedBeamLengthStackText = new TextBlock() { Text = Strings.Strings.beamLength, Margin = new Thickness(0, 0, 8, 0) };
-            var selectedBeamLengthStackValue = new TextBlock() { Text = Math.Round(_model3D.SelectedBeamLength, 0).ToString() + Constants.mm, Margin = new Thickness(0, 0, 8, 0) };
+            var selectedBeamLengthStackValue = new TextBlock() { Text = Math.Round(Member1.Length, 0).ToString() + Constants.mm, Margin = new Thickness(0, 0, 8, 0) };
             selectedBeamLengthStack.Children.Add(selectedBeamLengthStackText);
             selectedBeamLengthStack.Children.Add(selectedBeamLengthStackValue);
 
@@ -100,17 +113,19 @@ namespace RistekPluginSample
             var comboBoxText = new TextBlock() { Text = Strings.Strings.selectionOfBeamType, Margin = new Thickness(0, 0, 8, 0) };
             comboBoxStack.Children.Add(comboBoxText);
             BeamType = new ComboBox() { Width = Double.NaN, Margin = new Thickness(0, 0, 4, 0) };
-            BeamType.Items.Add(Strings.Strings.timberBeam);
-            BeamType.Items.Add(Strings.Strings.support);
-            BeamType.Items.Add(Strings.Strings.bucklingSupport);
-            BeamType.Items.Add(Strings.Strings.steelBeam);
-            BeamType.Items.Add(Strings.Strings.steelBeam3D);
-            BeamType.Items.Add(Strings.Strings.timberMember);
-            BeamType.Items.Add(Strings.Strings.purlin);
-            BeamType.Items.Add(Strings.Strings.batten);
-            BeamType.Items.Add(Strings.Strings.strongBack);
-            BeamType.Items.Add(Strings.Strings.metalWebStructure);
             BeamType.Items.Add(Strings.Strings.planarBeam);
+            BeamType.Items.Add(Strings.Strings.steelBeam3D);
+            BeamType.Items.Add(Strings.Strings.timberBeam);
+
+            //BeamType.Items.Add(Strings.Strings.support);
+            //BeamType.Items.Add(Strings.Strings.bucklingSupport);
+            //BeamType.Items.Add(Strings.Strings.steelBeam);
+            //BeamType.Items.Add(Strings.Strings.timberMember);
+            //BeamType.Items.Add(Strings.Strings.purlin);
+            //BeamType.Items.Add(Strings.Strings.batten);
+            //BeamType.Items.Add(Strings.Strings.strongBack);
+            //BeamType.Items.Add(Strings.Strings.metalWebStructure);
+
             BeamType.SelectedIndex = 0;
             comboBoxStack.Children.Add(BeamType);
 
@@ -161,11 +176,11 @@ namespace RistekPluginSample
 
             var beam0StartXStackText = new TextBlock() { Text = Constants.X, Margin = new Thickness(0, 0, 8, 0) };
             selectedBeam0CoordinatesStack.Children.Add(beam0StartXStackText);
-            var beam0StartXValueStackText = new TextBlock() { Text = _model3D.Beam3DNo1.MemberStartX.ToString(), Margin = new Thickness(0, 0, 8, 0) };
+            var beam0StartXValueStackText = new TextBlock() { Text = Member1.StartPoint.X.ToString(), Margin = new Thickness(0, 0, 8, 0) };
             selectedBeam0CoordinatesStack.Children.Add(beam0StartXValueStackText);
             var beam0StartYStackText = new TextBlock() { Text = Constants.Y, Margin = new Thickness(0, 0, 8, 0) };
             selectedBeam0CoordinatesStack.Children.Add(beam0StartYStackText);
-            var beam0StartYValueStackText = new TextBlock() { Text = _model3D.Beam3DNo1.MemberStartY.ToString(), Margin = new Thickness(0, 0, 8, 0) };
+            var beam0StartYValueStackText = new TextBlock() { Text = Member1.StartPoint.Y.ToString(), Margin = new Thickness(0, 0, 8, 0) };
             selectedBeam0CoordinatesStack.Children.Add(beam0StartYValueStackText);
 
             var endPoint0StackText = new TextBlock() { Text = Strings.Strings.endPoint, Margin = new Thickness(0, 0, 8, 0), FontWeight = FontWeights.Bold };
@@ -173,11 +188,11 @@ namespace RistekPluginSample
 
             var beam0SEndXStackText = new TextBlock() { Text = Constants.X, Margin = new Thickness(0, 0, 8, 0) };
             selectedBeam0CoordinatesStack.Children.Add(beam0SEndXStackText);
-            var beam0EndXValueStackText = new TextBlock() { Text = _model3D.Beam3DNo1.MemberEndX.ToString(), Margin = new Thickness(0, 0, 8, 0) };
+            var beam0EndXValueStackText = new TextBlock() { Text = Member1.EndPoint.X.ToString(), Margin = new Thickness(0, 0, 8, 0) };
             selectedBeam0CoordinatesStack.Children.Add(beam0EndXValueStackText);
             var beam0EndYStackText = new TextBlock() { Text = Constants.Y, Margin = new Thickness(0, 0, 8, 0) };
             selectedBeam0CoordinatesStack.Children.Add(beam0EndYStackText);
-            var beam0EndYValueStackText = new TextBlock() { Text = _model3D.Beam3DNo1.MemberEndY.ToString(), Margin = new Thickness(0, 0, 8, 0) };
+            var beam0EndYValueStackText = new TextBlock() { Text = Member1.EndPoint.Y.ToString(), Margin = new Thickness(0, 0, 8, 0) };
             selectedBeam0CoordinatesStack.Children.Add(beam0EndYValueStackText);
             MainStack.Children.Add(selectedBeam0CoordinatesStack);
 
@@ -191,11 +206,11 @@ namespace RistekPluginSample
 
             var beam1StartXStackText = new TextBlock() { Text = Constants.X, Margin = new Thickness(0, 0, 8, 0) };
             selectedBeam1CoordinatesStack.Children.Add(beam1StartXStackText);
-            var beam1StartXValueStackText = new TextBlock() { Text = _model3D.Beam3DNo2.MemberStartX.ToString(), Margin = new Thickness(0, 0, 8, 0) };
+            var beam1StartXValueStackText = new TextBlock() { Text = Member2.StartPoint.X.ToString(), Margin = new Thickness(0, 0, 8, 0) };
             selectedBeam1CoordinatesStack.Children.Add(beam1StartXValueStackText);
             var beam1StartYStackText = new TextBlock() { Text = Constants.Y, Margin = new Thickness(0, 0, 8, 0) };
             selectedBeam1CoordinatesStack.Children.Add(beam1StartYStackText);
-            var beam1StartYValueStackText = new TextBlock() { Text = _model3D.Beam3DNo2.MemberStartY.ToString(), Margin = new Thickness(0, 0, 8, 0) };
+            var beam1StartYValueStackText = new TextBlock() { Text = Member2.StartPoint.Y.ToString(), Margin = new Thickness(0, 0, 8, 0) };
             selectedBeam1CoordinatesStack.Children.Add(beam1StartYValueStackText);
 
             var endPoint1StackText = new TextBlock() { Text = Strings.Strings.endPoint, Margin = new Thickness(0, 0, 8, 0), FontWeight = FontWeights.Bold };
@@ -203,11 +218,11 @@ namespace RistekPluginSample
 
             var beam1SEndXStackText = new TextBlock() { Text = Constants.X, Margin = new Thickness(0, 0, 8, 0) };
             selectedBeam1CoordinatesStack.Children.Add(beam1SEndXStackText);
-            var beam1EndXValueStackText = new TextBlock() { Text = _model3D.Beam3DNo2.MemberEndX.ToString(), Margin = new Thickness(0, 0, 8, 0) };
+            var beam1EndXValueStackText = new TextBlock() { Text = Member2.EndPoint.X.ToString(), Margin = new Thickness(0, 0, 8, 0) };
             selectedBeam1CoordinatesStack.Children.Add(beam1EndXValueStackText);
             var beam1EndYStackText = new TextBlock() { Text = Constants.Y, Margin = new Thickness(0, 0, 8, 0) };
             selectedBeam1CoordinatesStack.Children.Add(beam1EndYStackText);
-            var beam1EndYValueStackText = new TextBlock() { Text = _model3D.Beam3DNo2.MemberEndY.ToString(), Margin = new Thickness(0, 0, 8, 0) };
+            var beam1EndYValueStackText = new TextBlock() { Text = Member2.EndPoint.Y.ToString(), Margin = new Thickness(0, 0, 8, 0) };
             selectedBeam1CoordinatesStack.Children.Add(beam1EndYValueStackText);
 
             MainStack.Children.Add(selectedBeam1CoordinatesStack);
@@ -337,19 +352,19 @@ namespace RistekPluginSample
 
         private void BeamHorizontalInsertionDistance_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (_model3D.Beam3DNo1.IsSelectedMemberLeftEdgeOnTop && ExistBeamAlignement.SelectedIndex == 0)
+            if (IsSelectedMemberLeftEdgeOnTop && ExistBeamAlignement.SelectedIndex == 0)
             {
                 SetMaxBeamLengthForExpectedAlignement(Member.MemberAlignment.LeftEdge);
             }
-            else if (_model3D.Beam3DNo1.IsSelectedMemberLeftEdgeOnTop && ExistBeamAlignement.SelectedIndex == 1)
+            else if (IsSelectedMemberLeftEdgeOnTop && ExistBeamAlignement.SelectedIndex == 1)
             {
                 SetMaxBeamLengthForExpectedAlignement(Member.MemberAlignment.RightEdge);
             }
-            else if (!_model3D.Beam3DNo1.IsSelectedMemberLeftEdgeOnTop && ExistBeamAlignement.SelectedIndex == 1)
+            else if (!IsSelectedMemberLeftEdgeOnTop && ExistBeamAlignement.SelectedIndex == 1)
             {
                 SetMaxBeamLengthForExpectedAlignement(Member.MemberAlignment.LeftEdge);
             }
-            else if (!_model3D.Beam3DNo1.IsSelectedMemberLeftEdgeOnTop && ExistBeamAlignement.SelectedIndex == 0)
+            else if (!IsSelectedMemberLeftEdgeOnTop && ExistBeamAlignement.SelectedIndex == 0)
             {
                 SetMaxBeamLengthForExpectedAlignement(Member.MemberAlignment.RightEdge);
             }
@@ -386,40 +401,40 @@ namespace RistekPluginSample
 
             if (existBeamAlignment.ToString() == Constants.RightEdge)
             {
-                m0XStart = Math.Round(_model3D.Member1.RightGeometryEdgeLine.StartPoint.X, 0);
-                m0YStart = Math.Round(_model3D.Member1.RightGeometryEdgeLine.StartPoint.Y, 0);
-                m0XEnd = Math.Round(_model3D.Member1.RightGeometryEdgeLine.EndPoint.X, 0);
-                m0YEnd = Math.Round(_model3D.Member1.RightGeometryEdgeLine.EndPoint.Y, 0);
+                m0XStart = Math.Round(Member1.RightGeometryEdgeLine.StartPoint.X, 0);
+                m0YStart = Math.Round(Member1.RightGeometryEdgeLine.StartPoint.Y, 0);
+                m0XEnd = Math.Round(Member1.RightGeometryEdgeLine.EndPoint.X, 0);
+                m0YEnd = Math.Round(Member1.RightGeometryEdgeLine.EndPoint.Y, 0);
             }
             else if (existBeamAlignment.ToString() == Constants.LeftEdge)
             {
-                m0XStart = Math.Round(_model3D.Member1.LeftGeometryEdgeLine.StartPoint.X, 0);
-                m0YStart = Math.Round(_model3D.Member1.LeftGeometryEdgeLine.StartPoint.Y, 0);
-                m0XEnd = Math.Round(_model3D.Member1.LeftGeometryEdgeLine.EndPoint.X, 0);
-                m0YEnd = Math.Round(_model3D.Member1.LeftGeometryEdgeLine.EndPoint.Y, 0);
+                m0XStart = Math.Round(Member1.LeftGeometryEdgeLine.StartPoint.X, 0);
+                m0YStart = Math.Round(Member1.LeftGeometryEdgeLine.StartPoint.Y, 0);
+                m0XEnd = Math.Round(Member1.LeftGeometryEdgeLine.EndPoint.X, 0);
+                m0YEnd = Math.Round(Member1.LeftGeometryEdgeLine.EndPoint.Y, 0);
             }
             else
             {
-                if (!_model3D.Beam3DNo1.IsMemberEndCombinedCut)
+                if (!Beam2Dm1.IsMemberEndCombinedCut)
                 {
-                    m0XStart = Math.Round(_model3D.Member1.MiddleCuttedLineWithBooleanCuts.StartPoint.X, 0);
-                    m0YStart = Math.Round(_model3D.Member1.MiddleCuttedLineWithBooleanCuts.StartPoint.Y, 0);
-                    m0XEnd = Math.Round(_model3D.Member1.MiddleCuttedLineWithBooleanCuts.EndPoint.X, 0);
-                    m0YEnd = Math.Round(_model3D.Member1.MiddleCuttedLineWithBooleanCuts.EndPoint.Y, 0);
+                    m0XStart = Math.Round(Member1.MiddleCuttedLineWithBooleanCuts.StartPoint.X, 0);
+                    m0YStart = Math.Round(Member1.MiddleCuttedLineWithBooleanCuts.StartPoint.Y, 0);
+                    m0XEnd = Math.Round(Member1.MiddleCuttedLineWithBooleanCuts.EndPoint.X, 0);
+                    m0YEnd = Math.Round(Member1.MiddleCuttedLineWithBooleanCuts.EndPoint.Y, 0);
                 }
                 else
                 {
-                    m0XStart = Math.Round(_model3D.Beam3DNo1.TheLowestStartPointForCombinedCuttedBeam.X, 0);
-                    m0YStart = Math.Round(_model3D.Beam3DNo1.TheLowestStartPointForCombinedCuttedBeam.Y, 0);
-                    m0XEnd = Math.Round(_model3D.Beam3DNo1.TheHighestStartPointForCombinedCuttedBeam.X, 0);
-                    m0YEnd = Math.Round(_model3D.Beam3DNo1.TheHighestStartPointForCombinedCuttedBeam.Y, 0);
+                    m0XStart = Math.Round(Beam2Dm1.TheLowestStartPointForCombinedCuttedBeam.X, 0);
+                    m0YStart = Math.Round(Beam2Dm1.TheLowestStartPointForCombinedCuttedBeam.Y, 0);
+                    m0XEnd = Math.Round(Beam2Dm1.TheHighestStartPointForCombinedCuttedBeam.X, 0);
+                    m0YEnd = Math.Round(Beam2Dm1.TheHighestStartPointForCombinedCuttedBeam.Y, 0);
                 }
 
             }
 
 
-            var startPoint3Dm0 = new Point3D(m0XStart, _model3D.Beam3DNo1.DistanceFromRoofStart, m0YStart);
-            var endPoint3Dm0 = new Point3D(m0XEnd, _model3D.Beam3DNo1.DistanceFromRoofStart, m0YEnd);
+            var startPoint3Dm0 = new Point3D(m0XStart, Beam2Dm1.DistanceFromRoofStart, m0YStart);
+            var endPoint3Dm0 = new Point3D(m0XEnd, Beam2Dm1.DistanceFromRoofStart, m0YEnd);
             double deltaX = endPoint3Dm0.X - startPoint3Dm0.X;
             double deltaY = endPoint3Dm0.Y - startPoint3Dm0.Y;
             double deltaZ = endPoint3Dm0.Z - startPoint3Dm0.Z;
