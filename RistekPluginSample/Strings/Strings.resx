@@ -339,6 +339,30 @@
   <data name="timberBeam" xml:space="preserve">
     <value>Timber Beam</value>
   </data>
+  <data name="timberMember" xml:space="preserve">
+    <value>Timber Member</value>
+  </data>
+  <data name="batten" xml:space="preserve">
+    <value>Batten</value>
+  </data>
+  <data name="purlin" xml:space="preserve">
+    <value>Purlin</value>
+  </data>
+  <data name="strongBack" xml:space="preserve">
+    <value>Strong Back</value>
+  </data>
+  <data name="metalWebStructure" xml:space="preserve">
+    <value>Metal Web Structure</value>
+  </data>
+  <data name="steelBeam3D" xml:space="preserve">
+    <value>Steel Beam 3D</value>
+  </data>
+  <data name="bucklingSupport" xml:space="preserve">
+    <value>Buckling Support</value>
+  </data>  
+    <data name="support" xml:space="preserve">
+    <value>Support</value>
+  </data>  
   <data name="steelBeam" xml:space="preserve">
     <value>Steel Beam</value>
   </data>
@@ -374,5 +398,8 @@
   </data>
   <data name="alongBeam" xml:space="preserve">
     <value>Along beam</value>
+  </data>
+  <data name="planarBeam" xml:space="preserve">
+    <value>Planar Beam</value>
   </data>  
 </root>

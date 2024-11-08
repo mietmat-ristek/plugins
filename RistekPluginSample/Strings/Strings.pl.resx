@@ -345,6 +345,30 @@
   <data name="steelBeam" xml:space="preserve">
     <value>Belka stalowa</value>
   </data>
+  <data name="timberMember" xml:space="preserve">
+    <value>Belka drewniana</value>
+  </data>
+    <data name="batten" xml:space="preserve">
+    <value>Listwa</value>
+  </data> 
+    <data name="purlin" xml:space="preserve">
+    <value>Płatew</value>
+  </data>
+  <data name="strongBack" xml:space="preserve">
+    <value>Strong Back</value>
+  </data>
+  <data name="metalWebStructure" xml:space="preserve">
+    <value>Metal Web Structure</value>
+  </data>
+  <data name="steelBeam3D" xml:space="preserve">
+    <value>Belka stalowa 3D</value>
+  </data>
+  <data name="bucklingSupport" xml:space="preserve">
+    <value>Buckling Support</value>
+  </data>
+  <data name="support" xml:space="preserve">
+    <value>Support</value>
+  </data>
   <data name="selectionOfBeamType" xml:space="preserve">
     <value>Wybór rodzaju belki</value>
   </data>
@@ -377,5 +401,8 @@
   </data>
   <data name="beamLength" xml:space="preserve">
     <value>Selected beam length</value>
+  </data>
+  <data name="planarBeam" xml:space="preserve">
+    <value>Planar Beam</value>
   </data>
 </root>
