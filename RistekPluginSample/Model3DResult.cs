@@ -238,13 +238,29 @@ namespace RistekPluginSample
                 {
                     if (UiData.IsSelectedMemberLeftEdgeOnTop)
                     {
-                        planarStructure.SetAlignedStartPoint(newStartPoint3DWithExtension, planeNormalToFutureBeamTruss);
-                        planarStructure.SetAlignedEndPoint(newEndPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                        if (_model3D.IsRoofYDirection)
+                        {
+                            planarStructure.SetAlignedStartPoint(newStartPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                            planarStructure.SetAlignedEndPoint(newEndPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                        }
+                        else
+                        {
+                            planarStructure.SetAlignedStartPoint(newStartPoint3DWithExtension, -planeNormalToFutureBeamTruss);
+                            planarStructure.SetAlignedEndPoint(newEndPoint3DWithExtension, -planeNormalToFutureBeamTruss);
+                        }
                     }
                     else
                     {
-                        planarStructure.SetAlignedStartPoint(newStartPoint3DWithExtension, -planeNormalToFutureBeamTruss);
-                        planarStructure.SetAlignedEndPoint(newEndPoint3DWithExtension, -planeNormalToFutureBeamTruss);
+                        if (_model3D.IsRoofYDirection)
+                        {
+                            planarStructure.SetAlignedStartPoint(newStartPoint3DWithExtension, -planeNormalToFutureBeamTruss);
+                            planarStructure.SetAlignedEndPoint(newEndPoint3DWithExtension, -planeNormalToFutureBeamTruss);
+                        }
+                        else
+                        {
+                            planarStructure.SetAlignedStartPoint(newStartPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                            planarStructure.SetAlignedEndPoint(newEndPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                        }
                     }
 
                 }
@@ -264,13 +280,30 @@ namespace RistekPluginSample
                 {
                     if (UiData.IsSelectedMemberLeftEdgeOnTop)
                     {
-                        planarStructure.SetAlignedStartPoint(newStartPoint3DWithExtension, -planeNormalToFutureBeamTruss);
-                        planarStructure.SetAlignedEndPoint(newEndPoint3DWithExtension, -planeNormalToFutureBeamTruss);
+                        if (_model3D.IsRoofYDirection)
+                        {
+                            planarStructure.SetAlignedStartPoint(newStartPoint3DWithExtension, -planeNormalToFutureBeamTruss);
+                            planarStructure.SetAlignedEndPoint(newEndPoint3DWithExtension, -planeNormalToFutureBeamTruss);
+                        }
+                        else
+                        {
+                            planarStructure.SetAlignedStartPoint(newStartPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                            planarStructure.SetAlignedEndPoint(newEndPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                        }
+
                     }
                     else
                     {
-                        planarStructure.SetAlignedStartPoint(newStartPoint3DWithExtension, planeNormalToFutureBeamTruss);
-                        planarStructure.SetAlignedEndPoint(newEndPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                        if (_model3D.IsRoofYDirection)
+                        {
+                            planarStructure.SetAlignedStartPoint(newStartPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                            planarStructure.SetAlignedEndPoint(newEndPoint3DWithExtension, planeNormalToFutureBeamTruss);
+                        }
+                        else
+                        {
+                            planarStructure.SetAlignedStartPoint(newStartPoint3DWithExtension, -planeNormalToFutureBeamTruss);
+                            planarStructure.SetAlignedEndPoint(newEndPoint3DWithExtension, -planeNormalToFutureBeamTruss);
+                        }
                     }
                 }
                 else
